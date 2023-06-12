@@ -18,7 +18,7 @@ package trie
 
 import (
 	"bytes"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 	"testing"
 )
 

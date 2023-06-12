@@ -22,8 +22,8 @@ import (
 	"reflect"
 	"testing"
 
-	platon "github.com/PlatONnetwork/AppChain-Go"
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	platon "github.com/PlatONnetwork/PlatON-Go"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 // Verify that Client implements the ethereum interfaces.

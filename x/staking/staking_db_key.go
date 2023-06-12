@@ -19,11 +19,11 @@ package staking
 import (
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/math"
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/math"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
 )
 
 const (

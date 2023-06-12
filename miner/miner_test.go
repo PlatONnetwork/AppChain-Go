@@ -2,11 +2,11 @@ package miner
 
 import (
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/event"
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus"
+	"github.com/PlatONnetwork/PlatON-Go/consensus"
 	"github.com/stretchr/testify/assert"
 )
 

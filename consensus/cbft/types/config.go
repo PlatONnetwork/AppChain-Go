@@ -20,9 +20,9 @@ package types
 import (
 	"crypto/ecdsa"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 type OptionsConfig struct {

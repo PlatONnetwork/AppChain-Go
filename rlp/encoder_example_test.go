@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 type MyCoolType struct {

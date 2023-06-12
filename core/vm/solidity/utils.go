@@ -1,8 +1,8 @@
 package solidity
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/core/vm/solidity/checkpoint"
-	"github.com/PlatONnetwork/AppChain-Go/core/vm/solidity/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm/solidity/checkpoint"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm/solidity/types"
 )
 
 func ICheckpointToCheckpoint(cp *checkpoint.ICheckpointSigAggregatorCheckpoint) *types.Checkpoint {

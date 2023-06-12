@@ -26,7 +26,7 @@ import (
 	"sync"
 	"unicode"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 var (

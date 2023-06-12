@@ -6,13 +6,13 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts/abi/bind"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/ethclient"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/rootchain"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/manager"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi/bind"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/ethclient"
+	"github.com/PlatONnetwork/PlatON-Go/innerbindings/rootchain"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/manager"
 )
 
 type RootchainConnector struct {

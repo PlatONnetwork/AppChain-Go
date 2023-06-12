@@ -3,14 +3,14 @@ package vm
 import (
 	"context"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 
 	"hash/fnv"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/lru"
+	"github.com/PlatONnetwork/PlatON-Go/core/lru"
 
 	"github.com/PlatONnetwork/wagon/exec"
 	"github.com/pkg/errors"

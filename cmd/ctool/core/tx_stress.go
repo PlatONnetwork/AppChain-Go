@@ -17,7 +17,7 @@
 package core
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
 
 	"gopkg.in/urfave/cli.v1"
 )

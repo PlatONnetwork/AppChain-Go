@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/PlatONnetwork/AppChain-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/event"
 )
 
 // This example demonstrates how SubscriptionScope can be used to control the lifetime of

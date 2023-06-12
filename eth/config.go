@@ -17,17 +17,17 @@
 package eth
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/config"
-	"github.com/PlatONnetwork/AppChain-Go/miner"
+	"github.com/PlatONnetwork/PlatON-Go/innerbindings/config"
+	"github.com/PlatONnetwork/PlatON-Go/miner"
 	"math/big"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
-	"github.com/PlatONnetwork/AppChain-Go/core"
-	"github.com/PlatONnetwork/AppChain-Go/eth/downloader"
-	"github.com/PlatONnetwork/AppChain-Go/eth/gasprice"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/PlatON-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/eth/downloader"
+	"github.com/PlatONnetwork/PlatON-Go/eth/gasprice"
 )
 
 // DefaultFullGPOConfig contains default gasprice oracle settings for full node.

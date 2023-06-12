@@ -24,9 +24,9 @@ import (
 
 	graphqlEth "github.com/AlayaNetwork/graphql-go"
 
-	json2 "github.com/PlatONnetwork/AppChain-Go/common/json"
-	"github.com/PlatONnetwork/AppChain-Go/internal/ethapi"
-	"github.com/PlatONnetwork/AppChain-Go/node"
+	json2 "github.com/PlatONnetwork/PlatON-Go/common/json"
+	"github.com/PlatONnetwork/PlatON-Go/internal/ethapi"
+	"github.com/PlatONnetwork/PlatON-Go/node"
 )
 
 type handler struct {

@@ -16,7 +16,7 @@
 
 package staking
 
-import "github.com/PlatONnetwork/AppChain-Go/common"
+import "github.com/PlatONnetwork/PlatON-Go/common"
 
 var (
 	ErrWrongBlsPubKey               = common.NewBizError(301000, "Invalid BLS public key length")

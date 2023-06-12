@@ -16,7 +16,7 @@
 
 package vm
 
-import "github.com/PlatONnetwork/AppChain-Go/common"
+import "github.com/PlatONnetwork/PlatON-Go/common"
 
 // the inner contract addr  table
 var (

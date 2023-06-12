@@ -21,7 +21,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 // Handler returns a log handler which logs to the unit test log of t.

@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/p2p/simulations/pipes"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/simulations/pipes"
 	"sync"
 	"testing"
 )

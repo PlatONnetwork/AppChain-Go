@@ -21,8 +21,8 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/event"
 )
 
 // Config contains the settings of the global account manager.

@@ -1,10 +1,10 @@
 package core
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	dag3 "github.com/PlatONnetwork/AppChain-Go/core/dag"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	dag3 "github.com/PlatONnetwork/PlatON-Go/core/dag"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 type TxDag struct {
