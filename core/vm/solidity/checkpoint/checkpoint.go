@@ -30,15 +30,14 @@ var (
 
 // ICheckpointSigAggregatorCheckpoint is an auto generated low-level Go binding around an user-defined struct.
 type ICheckpointSigAggregatorCheckpoint struct {
-	Proposer    common.Address
-	Start       *big.Int
-	End         *big.Int
-	RootHash    [32]byte
-	AccountHash [32]byte
-	ChainId     *big.Int
-	Current     []*big.Int
-	Rewards     []*big.Int
-	Slashing    []*big.Int
+	Proposer common.Address
+	Hashes   [][32]byte
+	Start    *big.Int
+	End      *big.Int
+	Current  []*big.Int
+	Rewards  []*big.Int
+	ChainId  *big.Int
+	Slashing []*big.Int
 }
 
 // ICheckpointSigAggregatorPendingCheckpoint is an auto generated low-level Go binding around an user-defined struct.
@@ -49,7 +48,7 @@ type ICheckpointSigAggregatorPendingCheckpoint struct {
 
 // CheckpointMetaData contains all meta data concerning the Checkpoint contract.
 var CheckpointMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"end\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"root\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"signedValidators\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"name\":\"CheckpointSigAggregated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"pendingCheckpoint\",\"outputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"end\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"rootHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"accountHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"current\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"rewards\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"slashing\",\"type\":\"uint256[]\"}],\"internalType\":\"structICheckpointSigAggregator.Checkpoint\",\"name\":\"checkpoint\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"blockNum\",\"type\":\"uint256\"}],\"internalType\":\"structICheckpointSigAggregator.PendingCheckpoint\",\"name\":\"pcp\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"end\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"rootHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"accountHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"current\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"rewards\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"slashing\",\"type\":\"uint256[]\"}],\"internalType\":\"structICheckpointSigAggregator.Checkpoint\",\"name\":\"cp\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"validatorId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"name\":\"propose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"number\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"validatorId\",\"type\":\"uint256\"}],\"name\":\"shouldPropose\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"end\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"root\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"signedValidators\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"name\":\"CheckpointSigAggregated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"pendingCheckpoint\",\"outputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"},{\"internalType\":\"bytes32[]\",\"name\":\"hashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"end\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"current\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"rewards\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"slashing\",\"type\":\"uint256[]\"}],\"internalType\":\"structICheckpointSigAggregator.Checkpoint\",\"name\":\"checkpoint\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"blockNum\",\"type\":\"uint256\"}],\"internalType\":\"structICheckpointSigAggregator.PendingCheckpoint\",\"name\":\"pcp\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"},{\"internalType\":\"bytes32[]\",\"name\":\"hashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"end\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"current\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"rewards\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"slashing\",\"type\":\"uint256[]\"}],\"internalType\":\"structICheckpointSigAggregator.Checkpoint\",\"name\":\"cp\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"validatorId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"name\":\"propose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"number\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"validatorId\",\"type\":\"uint256\"}],\"name\":\"shouldPropose\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // CheckpointABI is the input ABI used to generate the binding from.
@@ -200,7 +199,7 @@ func (_Checkpoint *CheckpointTransactorRaw) Transact(opts *bind.TransactOpts, me
 
 // PendingCheckpoint is a free data retrieval call binding the contract method 0x959799cc.
 //
-// Solidity: function pendingCheckpoint() view returns(((address,uint256,uint256,bytes32,bytes32,uint256,uint256[],uint256[],uint256[]),uint256) pcp)
+// Solidity: function pendingCheckpoint() view returns(((address,bytes32[],uint256,uint256,uint256[],uint256[],uint256,uint256[]),uint256) pcp)
 func (_Checkpoint *CheckpointCaller) PendingCheckpoint(opts *bind.CallOpts) (ICheckpointSigAggregatorPendingCheckpoint, error) {
 	var out []interface{}
 	err := _Checkpoint.contract.Call(opts, &out, "pendingCheckpoint")
@@ -217,14 +216,14 @@ func (_Checkpoint *CheckpointCaller) PendingCheckpoint(opts *bind.CallOpts) (ICh
 
 // PendingCheckpoint is a free data retrieval call binding the contract method 0x959799cc.
 //
-// Solidity: function pendingCheckpoint() view returns(((address,uint256,uint256,bytes32,bytes32,uint256,uint256[],uint256[],uint256[]),uint256) pcp)
+// Solidity: function pendingCheckpoint() view returns(((address,bytes32[],uint256,uint256,uint256[],uint256[],uint256,uint256[]),uint256) pcp)
 func (_Checkpoint *CheckpointSession) PendingCheckpoint() (ICheckpointSigAggregatorPendingCheckpoint, error) {
 	return _Checkpoint.Contract.PendingCheckpoint(&_Checkpoint.CallOpts)
 }
 
 // PendingCheckpoint is a free data retrieval call binding the contract method 0x959799cc.
 //
-// Solidity: function pendingCheckpoint() view returns(((address,uint256,uint256,bytes32,bytes32,uint256,uint256[],uint256[],uint256[]),uint256) pcp)
+// Solidity: function pendingCheckpoint() view returns(((address,bytes32[],uint256,uint256,uint256[],uint256[],uint256,uint256[]),uint256) pcp)
 func (_Checkpoint *CheckpointCallerSession) PendingCheckpoint() (ICheckpointSigAggregatorPendingCheckpoint, error) {
 	return _Checkpoint.Contract.PendingCheckpoint(&_Checkpoint.CallOpts)
 }
@@ -260,23 +259,23 @@ func (_Checkpoint *CheckpointCallerSession) ShouldPropose(number *big.Int, valid
 	return _Checkpoint.Contract.ShouldPropose(&_Checkpoint.CallOpts, number, validatorId)
 }
 
-// Propose is a paid mutator transaction binding the contract method 0x5ecf775e.
+// Propose is a paid mutator transaction binding the contract method 0x85fb9cea.
 //
-// Solidity: function propose((address,uint256,uint256,bytes32,bytes32,uint256,uint256[],uint256[],uint256[]) cp, uint256 validatorId, bytes signature) returns()
+// Solidity: function propose((address,bytes32[],uint256,uint256,uint256[],uint256[],uint256,uint256[]) cp, uint256 validatorId, bytes signature) returns()
 func (_Checkpoint *CheckpointTransactor) Propose(opts *bind.TransactOpts, cp ICheckpointSigAggregatorCheckpoint, validatorId *big.Int, signature []byte) (*types.Transaction, error) {
 	return _Checkpoint.contract.Transact(opts, "propose", cp, validatorId, signature)
 }
 
-// Propose is a paid mutator transaction binding the contract method 0x5ecf775e.
+// Propose is a paid mutator transaction binding the contract method 0x85fb9cea.
 //
-// Solidity: function propose((address,uint256,uint256,bytes32,bytes32,uint256,uint256[],uint256[],uint256[]) cp, uint256 validatorId, bytes signature) returns()
+// Solidity: function propose((address,bytes32[],uint256,uint256,uint256[],uint256[],uint256,uint256[]) cp, uint256 validatorId, bytes signature) returns()
 func (_Checkpoint *CheckpointSession) Propose(cp ICheckpointSigAggregatorCheckpoint, validatorId *big.Int, signature []byte) (*types.Transaction, error) {
 	return _Checkpoint.Contract.Propose(&_Checkpoint.TransactOpts, cp, validatorId, signature)
 }
 
-// Propose is a paid mutator transaction binding the contract method 0x5ecf775e.
+// Propose is a paid mutator transaction binding the contract method 0x85fb9cea.
 //
-// Solidity: function propose((address,uint256,uint256,bytes32,bytes32,uint256,uint256[],uint256[],uint256[]) cp, uint256 validatorId, bytes signature) returns()
+// Solidity: function propose((address,bytes32[],uint256,uint256,uint256[],uint256[],uint256,uint256[]) cp, uint256 validatorId, bytes signature) returns()
 func (_Checkpoint *CheckpointTransactorSession) Propose(cp ICheckpointSigAggregatorCheckpoint, validatorId *big.Int, signature []byte) (*types.Transaction, error) {
 	return _Checkpoint.Contract.Propose(&_Checkpoint.TransactOpts, cp, validatorId, signature)
 }

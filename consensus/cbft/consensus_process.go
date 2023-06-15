@@ -47,6 +47,7 @@ func (cbft *Cbft) OnPrepareBlock(id string, msg *protocols.PrepareBlock) error {
 		cbft.log.Error("Verify header fail", "number", msg.Block.Number(), "hash", msg.Block.Hash(), "err", err)
 		return err
 	}
+
 	var parentBlock *types.Block
 	// get parent header
 	parentBlock = cbft.blockTree.FindBlockByHash(msg.Block.Header().ParentHash)

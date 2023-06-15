@@ -3,7 +3,9 @@ package manager
 import (
 	"crypto/ecdsa"
 	"errors"
-	"fmt"
+	"fmt"	"math/big"
+	"os"
+	"sync"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/keystore"
 	"github.com/PlatONnetwork/PlatON-Go/common"
 	"github.com/PlatONnetwork/PlatON-Go/core/types"
@@ -50,6 +52,7 @@ func (m *ManagerAccount) Address() common.Address {
 }
 
 func (m *ManagerAccount) Nonce() uint64 {
+	/*
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 	if err := m.checkNonce(); err != nil {
@@ -58,10 +61,18 @@ func (m *ManagerAccount) Nonce() uint64 {
 	nonce := m.nonce
 	m.nonce++
 	return nonce
+	*/
+	return m.NonceFn(m.address)
 }
 func (m *ManagerAccount) checkNonce() error {
 	nonce := m.NonceFn(m.address)
-	if m.nonce-nonce > 5 {
+	distance := func(a, b uint64) uint64 {
+		if a < b {
+			a, b = b, a
+		}
+		return a - b
+	}
+	if distance(m.nonce, nonce) > 5 {
 		return errors.New(fmt.Sprintf("nonce is too big, cache:%d, state:%d", m.nonce, nonce))
 	}
 	return nil
@@ -82,10 +93,14 @@ func (m *ManagerAccount) Reset(nonce uint64) {
 }
 
 func (m *ManagerAccount) Sign(tx *types.Transaction, chainId *big.Int) (*types.Transaction, error) {
-	signature, err := crypto.Sign(m.signer.Hash(tx, chainId).Bytes(), m.private)
+	signer := m.signer
+	if chainId != nil {
+		signer = types.NewPIP11Signer(chainId, chainId)
+	}
+	signature, err := crypto.Sign(signer.Hash(tx, chainId).Bytes(), m.private)
 	if err != nil {
 		return nil, err
 	}
-	tx, err = tx.WithSignature(m.signer, signature)
+	tx, err = tx.WithSignature(signer, signature)
 	return tx, nil
 }

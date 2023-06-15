@@ -695,7 +695,7 @@ func (cbft *Cbft) VerifyRootChainTx(parentBlock *types.Block, block *types.Block
 			stakeTx = txs[0]
 		}
 		header := block.Header()
-		if err := cbft.rootChainCheck.CheckStakeStateSyncExtra(parentBlock.Header(), header, stakeTx); err != nil {
+		if err := cbft.rootChainCheck.CheckStakeStateSyncExtra(parentBlock, header, stakeTx); err != nil {
 			cbft.log.Error("Verify header stake state extra failed", "number", header.Number, "hash", header.Hash, "err", err)
 			return fmt.Errorf("verify header stake state extra failed, number:%d, hash:%s", header.Number.Uint64(), header.Hash().String())
 		}

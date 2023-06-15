@@ -14,13 +14,12 @@ interface ICheckpointSigAggregator {
 
     struct Checkpoint {
         address proposer;
+        bytes32[] hashes;
         uint256 start;
         uint256 end;
-        bytes32 rootHash;
-        bytes32 accountHash;
-        uint256 chainId;
         uint256[] current;
         uint256[] rewards;
+        uint256 chainId;
         uint256[] slashing;
     }
 

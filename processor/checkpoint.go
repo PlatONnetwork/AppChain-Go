@@ -136,6 +136,7 @@ func (p *CheckpointProcessor) loop() {
 			p.newChildBlockCh <- block
 		case <-p.exitCh:
 			log.Info("Checkpoint loop stopping...")
+			return
 		}
 	}
 }
@@ -274,7 +275,7 @@ func (p *CheckpointProcessor) createAndSendCheckpointToAppChain(block *types.Blo
 
 	proposer := p.bft.CurrentProposer()
 
-	log.Info("Creating and sign new checkpoint", "proposer", proposer.Address, "start", start, "end", end, "root", root, "accountRoot", accountRootHash)
+	log.Info("Creating and sign new checkpoint", "proposer", proposer.Address.String(), "start", start, "end", end, "root", root, "accountRoot", accountRootHash)
 
 	validators, err := plugin.StakingInstance().GetValidator(block.NumberU64())
 	if err != nil {
@@ -288,16 +289,19 @@ func (p *CheckpointProcessor) createAndSendCheckpointToAppChain(block *types.Blo
 	}
 	// TODO: slashing
 
+	hashes := make([][32]byte, 2)
+	hashes[0] = root
+	hashes[1] = accountRootHash
+
 	cp := &Checkpoint{
-		Proposer:    common.Address(proposer.Address),
-		Start:       big.NewInt(0).SetUint64(start),
-		End:         big.NewInt(0).SetUint64(end),
-		RootHash:    root,
-		AccountHash: accountRootHash,
-		ChainId:     p.chainId,
-		Current:     convertToBigInt(current),
-		Rewards:     rewards,
-		Slashing:    make([]*big.Int, 0),
+		Proposer: common.Address(proposer.Address),
+		Hashes:   hashes,
+		Start:    big.NewInt(0).SetUint64(start),
+		End:      big.NewInt(0).SetUint64(end),
+		Current:  convertToBigInt(current),
+		Rewards:  rewards,
+		ChainId:  p.chainId,
+		Slashing: make([]*big.Int, 0),
 	}
 
 	tcp := solidity.ICheckpointToCheckpoint((*checkpoint.ICheckpointSigAggregatorCheckpoint)(cp))
@@ -353,8 +357,8 @@ func (p *CheckpointProcessor) createAndSendCheckpointToRootchain(aggEv *checkpoi
 			"proposer", tcp.Proposer,
 			"start", tcp.Start,
 			"end", tcp.End,
-			"rootHash", hex.EncodeToString(tcp.RootHash[:]),
-			"accountHash", hex.EncodeToString(tcp.AccountHash[:]),
+			"rootHash", hex.EncodeToString(tcp.Hashes[0][:]),
+			"accountHash", hex.EncodeToString(tcp.Hashes[1][:]),
 			"signedValidators", strings.Join(s, ","),
 			"signature", hex.EncodeToString(aggEv.Signature),
 		)
