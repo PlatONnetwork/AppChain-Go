@@ -2,17 +2,19 @@ package rootchain
 
 import (
 	"context"
-	appchain "github.com/PlatONnetwork/AppChain-Go"
 	"github.com/PlatONnetwork/AppChain-Go/common"
 	comvm "github.com/PlatONnetwork/AppChain-Go/common/vm"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/core/vm"
-	"github.com/PlatONnetwork/AppChain-Go/ethclient"
 	"github.com/PlatONnetwork/AppChain-Go/ethdb"
 	"github.com/PlatONnetwork/AppChain-Go/event"
 	"github.com/PlatONnetwork/AppChain-Go/innerbindings/config"
 	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/log"
+	eth "github.com/ethereum/go-ethereum"
+	ecommon "github.com/ethereum/go-ethereum/common"
+	etypes "github.com/ethereum/go-ethereum/core/types"
+	eclient "github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
 	"sort"
 	"sync"
@@ -75,13 +77,12 @@ func (em *EventManager) Listen() error {
 		log.Warn("the rpc address for platon is empty, please check if it is required")
 		return nil
 	}
-	client, err := ethclient.Dial(em.RCConfig.PlatonRPCAddr)
+	client, err := eclient.Dial(em.RCConfig.PlatonRPCAddr)
 	if err != nil {
 		log.Error("Failed to connect to Platon's RPC address", "addr", em.RCConfig.PlatonRPCAddr, "error", err)
 		return err
 	}
-	newHeadChan := make(chan *types.Header)
-	client.SetNameSpace("platon")
+	newHeadChan := make(chan *etypes.Header)
 	newHeadSubscribe, err := client.SubscribeNewHead(context.Background(), newHeadChan)
 	if err != nil {
 		close(newHeadChan)
@@ -109,18 +110,19 @@ func (em *EventManager) Listen() error {
 			em.mu.RLock()
 			fromBlockNumber := em.fromBlockNumber
 			em.mu.RUnlock()
-			filterParams := appchain.FilterQuery{
+			filterParams := eth.FilterQuery{
 				FromBlock: new(big.Int).SetUint64(fromBlockNumber),
 				ToBlock:   newHead.Number,
-				Addresses: []common.Address{
-					em.RCConfig.StakingInfoAddress,
-					em.RCConfig.RootChainAddress,
+				Addresses: []ecommon.Address{
+					ecommon.BytesToAddress(em.RCConfig.StakingInfoAddress.Bytes()),
+					ecommon.BytesToAddress(em.RCConfig.RootChainAddress.Bytes()),
 				},
-				Topics: [][]common.Hash{{helper.StakedID, helper.UnstakeInitID,
-					helper.SignerChangeID, helper.StakeUpdateID, helper.NewHeaderBlockID}},
+				Topics: [][]ecommon.Hash{{ecommon.BytesToHash(helper.StakedID.Bytes()), ecommon.BytesToHash(helper.UnstakeInitID.Bytes()),
+					ecommon.BytesToHash(helper.SignerChangeID.Bytes()), ecommon.BytesToHash(helper.StakeUpdateID.Bytes()),
+					ecommon.BytesToHash(helper.NewHeaderBlockID.Bytes())}},
 			}
 
-			logs, err := client.FilterPlatONLogs(context.Background(), filterParams)
+			logs, err := client.FilterLogs(context.Background(), filterParams)
 			if err != nil {
 				log.Error("failed to get filtered logs", "fromBlock", filterParams.FromBlock, "toBlock", filterParams.ToBlock, "error", err)
 				// TODO 处理获取事件失败的情况
@@ -131,18 +133,32 @@ func (em *EventManager) Listen() error {
 			for _, log := range logs {
 				// checkpoint events are not stored and are notified directly to the special handling logic.
 				// feed.Send()
-				tmpLog := log
-				if tmpLog.Topics[0] == helper.NewHeaderBlockID {
-					em.checkpointEventFeed.Send(&tmpLog)
+				topics := make([]common.Hash, 0)
+				for i := 0; i < len(log.Topics); i++ {
+					topics = append(topics, common.BytesToHash(log.Topics[i].Bytes()))
+				}
+				localLog := &types.Log{
+					Address:     common.BytesToAddress(log.Address.Bytes()),
+					Topics:      topics,
+					Data:        log.Data,
+					BlockNumber: log.BlockNumber,
+					TxHash:      common.BytesToHash(log.TxHash.Bytes()),
+					TxIndex:     log.TxIndex,
+					BlockHash:   common.BytesToHash(log.BlockHash.Bytes()),
+					Index:       log.Index,
+					Removed:     log.Removed,
+				}
+				if localLog.Topics[0] == helper.NewHeaderBlockID {
+					em.checkpointEventFeed.Send(localLog)
 					continue
 				}
 
-				logs, ok := blockLogsTemp[tmpLog.BlockNumber]
+				logs, ok := blockLogsTemp[localLog.BlockNumber]
 				if !ok {
 					logs = make(LogListSort, 0)
 				}
-				logs = append(logs, &tmpLog)
-				blockLogsTemp[tmpLog.BlockNumber] = logs
+				logs = append(logs, localLog)
+				blockLogsTemp[localLog.BlockNumber] = logs
 			}
 			em.mu.Lock()
 			// If a block that has already been listened to appears, it is skipped.
