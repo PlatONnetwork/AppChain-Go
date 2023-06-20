@@ -54,6 +54,20 @@ func (em *EventManager) SubscribeEvents(ch chan *types.Log) event.Subscription {
 	return em.checkpointEventFeed.Subscribe(ch)
 }
 
+type LogListSort []*types.Log
+
+func (ls LogListSort) Len() int {
+	return len(ls)
+}
+
+func (ls LogListSort) Less(i, j int) bool {
+	return ls[i].Index < ls[j].Index
+}
+
+func (ls LogListSort) Swap(i, j int) {
+	ls[i], ls[j] = ls[j], ls[i]
+}
+
 func (em *EventManager) Listen() error {
 	// If it is an authenticator node, this rpc address needs to be configured.
 	// Not required if it is a normal node.
@@ -113,22 +127,22 @@ func (em *EventManager) Listen() error {
 				break
 			}
 			log.Debug("get event success", "fromBlock", filterParams.FromBlock, "toBlock", filterParams.ToBlock, "logLength", len(logs))
-			blockLogsTemp := make(map[uint64][]*types.Log)
+			blockLogsTemp := make(map[uint64]LogListSort)
 			for _, log := range logs {
 				// checkpoint events are not stored and are notified directly to the special handling logic.
 				// feed.Send()
-				tmplog := log
-				if log.Topics[0] == helper.NewHeaderBlockID {
-					em.checkpointEventFeed.Send(&tmplog)
+				tmpLog := log
+				if tmpLog.Topics[0] == helper.NewHeaderBlockID {
+					em.checkpointEventFeed.Send(&tmpLog)
 					continue
 				}
 
-				logs, ok := blockLogsTemp[log.BlockNumber]
+				logs, ok := blockLogsTemp[tmpLog.BlockNumber]
 				if !ok {
-					logs = make([]*types.Log, 0)
+					logs = make(LogListSort, 0)
 				}
-				logs = append(logs, &log)
-				blockLogsTemp[log.BlockNumber] = logs
+				logs = append(logs, &tmpLog)
+				blockLogsTemp[tmpLog.BlockNumber] = logs
 			}
 			em.mu.Lock()
 			// If a block that has already been listened to appears, it is skipped.
@@ -137,6 +151,7 @@ func (em *EventManager) Listen() error {
 				if _, ok := em.blockLogs[k]; ok {
 					continue
 				}
+				sort.Sort(&v)
 				em.blockLogs[k] = v
 			}
 			// Make the latest block +1, as the starting block high for the next fetch event.

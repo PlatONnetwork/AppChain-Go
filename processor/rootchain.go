@@ -5,36 +5,27 @@ import (
 	"encoding/hex"
 	"math/big"
 	"strings"
-
-	"github.com/PlatONnetwork/PlatON-Go/accounts/abi/bind"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
 	"github.com/PlatONnetwork/PlatON-Go/common"
-	"github.com/PlatONnetwork/PlatON-Go/core/types"
-	"github.com/PlatONnetwork/PlatON-Go/ethclient"
-	"github.com/PlatONnetwork/PlatON-Go/innerbindings/rootchain"
+	"github.com/PlatONnetwork/PlatON-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/PlatON-Go/log"
 	"github.com/PlatONnetwork/PlatON-Go/manager"
+	ethereum "github.com/ethereum/go-ethereum"
+	ecom "github.com/ethereum/go-ethereum/common"
+	etypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 type RootchainConnector struct {
 	managerAccount *manager.ManagerAccount
 	platonClient   *ethclient.Client
-	caller         *rootchain.RootchainCaller
-	transactor     *rootchain.RootchainTransactor
+	contractAddr   ecom.Address
 
 	chainId *big.Int
 }
 
 func NewRootchainConnector(managerAccount *manager.ManagerAccount, platonAddr string, contractAddr common.Address) (*RootchainConnector, error) {
 	client, err := ethclient.Dial(platonAddr)
-	if err != nil {
-		return nil, err
-	}
-	client.SetNameSpace("platon")
-	caller, err := rootchain.NewRootchainCaller(contractAddr, client)
-	if err != nil {
-		return nil, err
-	}
-	transactor, err := rootchain.NewRootchainTransactor(contractAddr, client)
 	if err != nil {
 		return nil, err
 	}
@@ -47,18 +38,31 @@ func NewRootchainConnector(managerAccount *manager.ManagerAccount, platonAddr st
 	return &RootchainConnector{
 		managerAccount: managerAccount,
 		platonClient:   client,
-		caller:         caller,
-		transactor:     transactor,
+		contractAddr:   toEthAddress(contractAddr),
 		chainId:        chainId,
 	}, nil
 }
 
 func (c *RootchainConnector) CurrentHeaderBlock(blockInterval uint64) (uint64, error) {
-	currentHeaderBlock, err := c.caller.CurrentHeaderBlock(nil)
+	data, err := helper.RootChainAbi.Pack("currentHeaderBlock")
+	if err != nil {
+		return 0, err
+	}
+
+	out, err := c.platonClient.CallContract(context.Background(), ethereum.CallMsg{
+		To:   &c.contractAddr,
+		Data: data,
+	}, nil)
 	if err != nil {
 		log.Error("Cannot fetch current header block from rootchain contract", "err", err)
 		return 0, err
 	}
+
+	res, err := helper.RootChainAbi.Unpack("currentHeaderBlock", out)
+	if err != nil {
+		return 0, err
+	}
+	currentHeaderBlock := *abi.ConvertType(res[0], new(*big.Int)).(**big.Int)
 
 	return currentHeaderBlock.Uint64() / blockInterval, nil
 }
@@ -72,11 +76,38 @@ func (c *RootchainConnector) GetHeaderInfo(number, blockInterval uint64) (
 	err error,
 ) {
 	checkpointBigInt := big.NewInt(0).Mul(big.NewInt(0).SetUint64(number), big.NewInt(0).SetUint64(blockInterval))
-
-	headerBlock, err := c.caller.HeaderBlocks(nil, checkpointBigInt)
+	data, err := helper.RootChainAbi.Pack("headerBlocks", checkpointBigInt)
 	if err != nil {
 		return root, start, end, createdAt, proposer, err
 	}
+
+	out, err := c.platonClient.CallContract(context.Background(), ethereum.CallMsg{
+		To:   &c.contractAddr,
+		Data: data,
+	}, nil)
+	if err != nil {
+		log.Error("Cannot fetch current header block from rootchain contract", "err", err)
+		return root, start, end, createdAt, proposer, err
+	}
+
+	res, err := helper.RootChainAbi.Unpack("headerBlocks", out)
+	if err != nil {
+		return root, start, end, createdAt, proposer, err
+	}
+
+	headerBlock := new(struct {
+		Root      [32]byte
+		Start     *big.Int
+		End       *big.Int
+		CreatedAt *big.Int
+		Proposer  common.Address
+	})
+
+	headerBlock.Root = res[0].([32]byte)
+	headerBlock.Start = res[1].(*big.Int)
+	headerBlock.End = res[2].(*big.Int)
+	headerBlock.CreatedAt = res[3].(*big.Int)
+	headerBlock.Proposer = res[4].(common.Address)
 
 	return headerBlock.Root,
 		headerBlock.Start.Uint64(),
@@ -87,11 +118,25 @@ func (c *RootchainConnector) GetHeaderInfo(number, blockInterval uint64) (
 }
 
 func (c *RootchainConnector) GetLatestChildBlock() (uint64, error) {
-	latestChildBlock, err := c.caller.GetLastChildBlock(nil)
+	data, err := helper.RootChainAbi.Pack("getLastChildBlock")
+	if err != nil {
+		return 0, err
+	}
+
+	out, err := c.platonClient.CallContract(context.Background(), ethereum.CallMsg{
+		To:   &c.contractAddr,
+		Data: data,
+	}, nil)
 	if err != nil {
 		log.Error("Could not fetch current child block from rootchain contract", "err", err)
 		return 0, err
 	}
+
+	res, err := helper.RootChainAbi.Unpack("getLastChildBlock", out)
+	if err != nil {
+		return 0, err
+	}
+	latestChildBlock := *abi.ConvertType(res[0], new(*big.Int)).(**big.Int)
 
 	return latestChildBlock.Uint64(), nil
 }
@@ -106,11 +151,40 @@ func (c *RootchainConnector) SendCheckpoint(signedData []byte, signedValidators 
 		"signature", hex.EncodeToString(signature),
 	)
 
-	_, err := c.transactor.SubmitCheckpoint(&bind.TransactOpts{
-		From: c.managerAccount.Address(),
-		Signer: func(s types.Signer, a common.Address, t *types.Transaction) (*types.Transaction, error) {
-			return c.managerAccount.Sign(t, c.chainId)
-		},
-	}, signedData, signedValidators, signature)
-	return err
+	data, err := helper.RootChainAbi.Pack("submitCheckpoint", signedData, signedValidators, signature)
+	if err != nil {
+		return err
+	}
+
+	nonce, err := c.platonClient.PendingNonceAt(context.Background(), toEthAddress(c.managerAccount.Address()))
+	if err != nil {
+		return err
+	}
+
+	gasPrice, err := c.platonClient.SuggestGasPrice(context.Background())
+	if err != nil {
+		return err
+	}
+
+	msg := ethereum.CallMsg{
+		From:     toEthAddress(c.managerAccount.Address()),
+		To:       &c.contractAddr,
+		GasPrice: gasPrice,
+		Data:     data,
+	}
+	gasLimit, err := c.platonClient.EstimateGas(context.Background(), msg)
+	if err != nil {
+		return err
+	}
+
+	rawTx := etypes.NewTransaction(nonce, c.contractAddr, big.NewInt(0), gasLimit, gasPrice, data)
+	signedTx, err := c.managerAccount.SignEthTx(rawTx, c.chainId)
+	if err != nil {
+		return err
+	}
+	return c.platonClient.SendTransaction(context.Background(), signedTx)
+}
+
+func toEthAddress(addr common.Address) ecom.Address {
+	return ecom.BytesToAddress(addr.Bytes())
 }

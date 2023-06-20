@@ -262,7 +262,7 @@ func (p *CheckpointProcessor) createAndSendCheckpointToAppChain(block *types.Blo
 	log.Info("Root hash calculated", "rootHash", root)
 
 	endBlockHeader := p.chain.GetHeaderByNumber(end)
-	verifiers, err := plugin.StakingInstance().GetVerifierList(endBlockHeader.Hash(), endBlockHeader.Number.Uint64(), false)
+	verifiers, err := plugin.StakingInstance().GetVerifierListFilterInitNode(endBlockHeader.Hash(), endBlockHeader.Number.Uint64(), false)
 	//verifiers = sortVerifierList(verifiers)
 	if err != nil {
 		log.Info("Failed to get verifier list", "hash", endBlockHeader.Hash(), "number", endBlockHeader.Number, "err", err)

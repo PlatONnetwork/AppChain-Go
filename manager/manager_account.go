@@ -3,17 +3,15 @@ package manager
 import (
 	"crypto/ecdsa"
 	"errors"
-	"fmt"	"math/big"
+	"fmt"	
+  "math/big"
 	"os"
 	"sync"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/keystore"
 	"github.com/PlatONnetwork/PlatON-Go/common"
-	"github.com/PlatONnetwork/PlatON-Go/core/types"
 	"github.com/PlatONnetwork/PlatON-Go/crypto"
 	"github.com/PlatONnetwork/PlatON-Go/log"
-	"math/big"
-	"os"
-	"sync"
+	etypes "github.com/ethereum/go-ethereum/core/types"
 )
 
 type GetNonceFunc func(addr common.Address) uint64
@@ -103,4 +101,8 @@ func (m *ManagerAccount) Sign(tx *types.Transaction, chainId *big.Int) (*types.T
 	}
 	tx, err = tx.WithSignature(signer, signature)
 	return tx, nil
+}
+
+func (m *ManagerAccount) SignEthTx(tx *etypes.Transaction, chainId *big.Int) (*etypes.Transaction, error) {
+	return etypes.SignTx(tx, etypes.NewEIP155Signer(chainId), m.private)
 }

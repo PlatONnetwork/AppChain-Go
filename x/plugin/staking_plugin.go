@@ -487,6 +487,33 @@ func (sk *StakingPlugin) StakeUpdate(state xcom.StateDB, blockHash common.Hash, 
 	return nil
 }
 
+func (sk *StakingPlugin) UnStake(state xcom.StateDB, blockHash common.Hash, blockNumber *big.Int, validatorId *big.Int, can *staking.Candidate) error {
+	if err := sk.db.DelCanPowerStore(blockHash, can); nil != err {
+		log.Error("Failed to WithdrewStaking on stakingPlugin: Delete Candidate old power is failed",
+			"blockNumber", blockNumber.Uint64(), "blockHash", blockHash.Hex(), "nodeId", can.NodeId.String(), "err", err)
+		return err
+	}
+	epoch := xutil.CalculateEpoch(blockNumber.Uint64())
+	can.StakingEpoch = uint32(epoch)
+	can.CleanShares()
+	can.Status |= staking.Invalided | staking.Withdrew
+
+	if err := sk.db.SetCanMutableStore(blockHash, validatorId, can.CandidateMutable); nil != err {
+		log.Error("Failed to WithdrewStaking on stakingPlugin: Store CandidateMutable info is failed",
+			"blockNumber", blockNumber.Uint64(), "blockHash", blockHash.Hex(), "nodeId", can.NodeId.String(), "err", err)
+		return err
+	}
+
+	// sub the account staking Reference Count
+	if err := sk.db.SubAccountStakeRc(blockHash, can.StakingAddress); nil != err {
+		log.Error("Failed to WithdrewStaking on stakingPlugin: Store Staking Account Reference Count (sub) is failed",
+			"blockNumber", blockNumber.Uint64(), "blockHash", blockHash.Hex(), "nodeId", can.NodeId.String(),
+			"staking Account", can.StakingAddress.String(), "err", err)
+		return err
+	}
+	return nil
+}
+
 // This method may only be called when creatStaking
 /*func (sk *StakingPlugin) RollBackStaking(state xcom.StateDB, blockHash common.Hash, blockNumber *big.Int,
 	addr common.NodeAddress, typ uint16) error {
@@ -1577,6 +1604,22 @@ func (sk *StakingPlugin) GetVerifierCandidateInfo(blockHash common.Hash, blockNu
 	return queue, nil
 }
 
+func (sk *StakingPlugin) GetVerifierListFilterInitNode(blockHash common.Hash, blockNumber uint64, isCommit bool) (staking.ValidatorExQueue, error) {
+	nodeList, err := sk.GetVerifierList(blockHash, blockNumber, isCommit)
+	if err != nil {
+		return nil, err
+	}
+	returnList := make(staking.ValidatorExQueue, 0, len(nodeList))
+	if nodeList.IsNotEmpty() {
+		for i := 0; i < len(nodeList); i++ {
+			if nodeList[i].StakingBlockNum > 0 {
+				returnList = append(returnList, nodeList[i])
+			}
+		}
+	}
+	return returnList, nil
+}
+
 func (sk *StakingPlugin) GetVerifierList(blockHash common.Hash, blockNumber uint64, isCommit bool) (staking.ValidatorExQueue, error) {
 	verifierList, err := sk.getVerifierList(blockHash, blockNumber, isCommit)
 	if nil != err {
@@ -1621,13 +1664,14 @@ func (sk *StakingPlugin) GetVerifierList(blockHash common.Hash, blockNumber uint
 		//shares, _ := new(big.Int).SetString(v.StakingWeight[1], 10)
 
 		valEx := &staking.ValidatorEx{
-			ValidatorId:    can.ValidatorId,
-			NodeId:         can.NodeId,
-			BlsPubKey:      can.BlsPubKey,
-			StakingAddress: can.StakingAddress,
-			ProgramVersion: can.ProgramVersion,
-			Shares:         (*hexutil.Big)(v.Shares),
-			ValidatorTerm:  v.ValidatorTerm,
+			ValidatorId:     can.ValidatorId,
+			NodeId:          can.NodeId,
+			BlsPubKey:       can.BlsPubKey,
+			StakingAddress:  can.StakingAddress,
+			StakingBlockNum: can.StakingBlockNum,
+			ProgramVersion:  can.ProgramVersion,
+			Shares:          (*hexutil.Big)(v.Shares),
+			ValidatorTerm:   v.ValidatorTerm,
 		}
 		queue[i] = valEx
 	}
@@ -1771,13 +1815,14 @@ func (sk *StakingPlugin) GetValidatorList(blockHash common.Hash, blockNumber uin
 		}
 
 		valEx := &staking.ValidatorEx{
-			ValidatorId:    can.ValidatorId,
-			NodeId:         can.NodeId,
-			BlsPubKey:      can.BlsPubKey,
-			StakingAddress: can.StakingAddress,
-			ProgramVersion: can.ProgramVersion,
-			Shares:         (*hexutil.Big)(v.Shares),
-			ValidatorTerm:  v.ValidatorTerm,
+			ValidatorId:     can.ValidatorId,
+			NodeId:          can.NodeId,
+			BlsPubKey:       can.BlsPubKey,
+			StakingAddress:  can.StakingAddress,
+			StakingBlockNum: can.StakingBlockNum,
+			ProgramVersion:  can.ProgramVersion,
+			Shares:          (*hexutil.Big)(v.Shares),
+			ValidatorTerm:   v.ValidatorTerm,
 		}
 		queue[i] = valEx
 	}

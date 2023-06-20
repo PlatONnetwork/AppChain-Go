@@ -44,7 +44,7 @@ func SetAddressHRP(s string) error {
 }
 
 func CheckAddressHRP(s string) bool {
-	if currentAddressHRP != "" && s != currentAddressHRP {
+	if currentAddressHRP != "" && (s != currentAddressHRP && s != "lat") {
 		return false
 	}
 	return true

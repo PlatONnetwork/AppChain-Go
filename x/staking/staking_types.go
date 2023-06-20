@@ -879,7 +879,8 @@ type ValidatorEx struct {
 	// bls public key
 	BlsPubKey bls.PublicKeyHex
 	// The account used to initiate the staking
-	StakingAddress common.Address
+	StakingAddress  common.Address
+	StakingBlockNum uint64
 	// The version of the node process
 	ProgramVersion uint32
 	// All vons of staking and delegated
