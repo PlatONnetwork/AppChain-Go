@@ -264,7 +264,7 @@ func (c *CheckpointSigAggregatorContract) Propose(input []byte) ([]byte, error) 
 	if pending.Emitted {
 		log.Warn("Pending checkpoint propose signatures already aggregated", "proposer", pending.Proposer,
 			"start", pending.Start, "end", pending.End)
-		return nil, ErrEmitted
+		return nil, nil
 	}
 
 	var aggSig bls.Sign
