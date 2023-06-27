@@ -211,6 +211,9 @@ func (stkc *StakingContract) handleUnstakeInit(vLog *types.Log) ([]byte, error) 
 	log.Debug("StakingOperation: unstakeInit event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
 		"validatorId", event.ValidatorId, "validatorOwner", event.User, "nonce", event.Nonce, "deactivationEpoch", event.DeactivationEpoch,
 		"amount", event.Amount)
+	if txHash == common.ZeroHash {
+		return nil, nil
+	}
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
 		log.Error("Failed to update stakeInfo by GetCandidateInfo", "txHash", txHash,
@@ -251,7 +254,9 @@ func (stkc *StakingContract) handleStakeUpdate(vLog *types.Log) ([]byte, error) 
 	state := stkc.Evm.StateDB
 	log.Debug("StakingOperation: stakeUpdate event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
 		"validatorId", event.ValidatorId, "newAmount", event.NewAmount, "nonce", event.Nonce)
-
+	if txHash == common.ZeroHash {
+		return nil, nil
+	}
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
 		log.Error("Failed to update stakeInfo by GetCandidateInfo", "txHash", txHash,
