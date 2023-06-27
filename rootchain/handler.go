@@ -53,6 +53,8 @@ func NewEventManager(stateDB vm.StateDB, db ethdb.Database, rcConfig *config.Roo
 	if start.Uint64() > 0 {
 		eventManager.fromBlockNumber = start.Uint64() + 1
 	}
+	// Listening for irreversible blocks
+	go eventManager.resultLoop()
 	return eventManager
 }
 
