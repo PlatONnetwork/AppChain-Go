@@ -13,7 +13,6 @@ import (
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/crypto"
 	"github.com/PlatONnetwork/AppChain-Go/log"
-	etypes "github.com/ethereum/go-ethereum/core/types"
 )
 
 type GetNonceFunc func(addr common.Address) uint64
@@ -53,14 +52,14 @@ func (m *ManagerAccount) Address() common.Address {
 
 func (m *ManagerAccount) Nonce() uint64 {
 	/*
-	m.mutex.Lock()
-	defer m.mutex.Unlock()
-	if err := m.checkNonce(); err != nil {
-		m.log.Warn("check nonce exception", "err", err)
-	}
-	nonce := m.nonce
-	m.nonce++
-	return nonce
+		m.mutex.Lock()
+		defer m.mutex.Unlock()
+		if err := m.checkNonce(); err != nil {
+			m.log.Warn("check nonce exception", "err", err)
+		}
+		nonce := m.nonce
+		m.nonce++
+		return nonce
 	*/
 	return m.NonceFn(m.address)
 }
@@ -103,8 +102,4 @@ func (m *ManagerAccount) Sign(tx *types.Transaction, chainId *big.Int) (*types.T
 	}
 	tx, err = tx.WithSignature(signer, signature)
 	return tx, nil
-}
-
-func (m *ManagerAccount) SignEthTx(tx *etypes.Transaction, chainId *big.Int) (*etypes.Transaction, error) {
-	return etypes.SignTx(tx, etypes.NewEIP155Signer(chainId), m.private)
 }
