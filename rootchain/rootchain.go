@@ -9,8 +9,8 @@ import (
 	"github.com/PlatONnetwork/AppChain-Go/core/state"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/core/vm"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"math/big"
 )
 

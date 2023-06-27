@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/stakinginfo"
 	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/stakinginfo"
 	"math/big"
 
 	"github.com/PlatONnetwork/AppChain-Go/x/xcom"

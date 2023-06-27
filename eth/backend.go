@@ -20,6 +20,7 @@ package eth
 import (
 	"errors"
 	"fmt"
+
 	"math/big"
 	"os"
 	"sync"
@@ -53,8 +54,8 @@ import (
 	"github.com/PlatONnetwork/AppChain-Go/p2p"
 	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
 	"github.com/PlatONnetwork/AppChain-Go/params"
-	"github.com/PlatONnetwork/AppChain-Go/processor"
 	"github.com/PlatONnetwork/AppChain-Go/rootchain"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/processor"
 	"github.com/PlatONnetwork/AppChain-Go/rpc"
 	"github.com/PlatONnetwork/AppChain-Go/x/gov"
 	"github.com/PlatONnetwork/AppChain-Go/x/handler"

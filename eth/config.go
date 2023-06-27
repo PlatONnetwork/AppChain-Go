@@ -17,8 +17,8 @@
 package eth
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/config"
 	"github.com/PlatONnetwork/AppChain-Go/miner"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/config"
 	"math/big"
 	"time"
 

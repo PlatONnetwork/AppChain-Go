@@ -3,12 +3,12 @@ package processor
 import (
 	"context"
 	"encoding/hex"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"math/big"
 	"strings"
 
 	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
 	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/log"
 	"github.com/PlatONnetwork/AppChain-Go/manager"
 	ethereum "github.com/ethereum/go-ethereum"
