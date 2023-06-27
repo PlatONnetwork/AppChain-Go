@@ -223,6 +223,10 @@ func (em *EventManager) BuildEventList(startBlockNumber uint64, endBlockNumber u
 		logs := em.blockLogs[blockNumber]
 		logList = append(logList, logs...)
 		log.Debug("pack event", "blockNumber", blockNumber, "logsSize", len(logs), "totalSize", len(logList))
+		if len(logList) >= int(limit) {
+			endBlockNumber = blockNumber
+			break
+		}
 	}
 	log.Debug("packing event complete", "startBlockNumber", startBlockNumber, "endBlockNumber", endBlockNumber, "totalSize", len(logList))
 	return new(big.Int).SetUint64(endBlockNumber), logList, nil
