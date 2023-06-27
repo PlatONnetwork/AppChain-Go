@@ -1086,7 +1086,7 @@ func (w *worker) commitNewWork(interrupt *int32, noempty bool, timestamp int64, 
 	startTime := time.Now()
 	var pending map[common.Address]types.Transactions
 
-	pending, err = w.eth.TxPool().PendingLimited()
+	pending, err = w.eth.TxPool().PendingLimited(vm2.StakingContractAddr)
 	if err != nil {
 		log.Error("Failed to fetch pending transactions", "time", common.PrettyDuration(time.Since(startTime)), "err", err)
 		return err
@@ -1186,7 +1186,6 @@ func (w *worker) commitNewWork(interrupt *int32, noempty bool, timestamp int64, 
 
 	startTime = time.Now()
 	if !localTimeout && len(remoteTxs) > 0 {
-		// TODO 过滤外部发送的to地址为：Staking合约
 		txs := types.NewTransactionsByPriceAndNonce(w.current.signer, remoteTxs)
 
 		if failed, _ := w.committer.CommitTransactions(header, txs, interrupt, timestamp, blockDeadline, tempContractCache); failed {
