@@ -44,7 +44,7 @@ func SetAddressHRP(s string) error {
 }
 
 func CheckAddressHRP(s string) bool {
-	if currentAddressHRP != "" && (s != currentAddressHRP && s != "lat") {
+	if currentAddressHRP != "" && (s != currentAddressHRP) {
 		return false
 	}
 	return true
@@ -96,10 +96,6 @@ func Bech32ToAddress(s string) (Address, error) {
 	if err != nil {
 		return Address{}, err
 	}
-	if !CheckAddressHRP(hrpDecode) {
-		return Address{}, fmt.Errorf("the address hrp not compare right,input:%s", s)
-	}
-
 	if currentAddressHRP == "" {
 		log.Warn("the address hrp not set yet", "input", s)
 	} else if currentAddressHRP != hrpDecode {
@@ -262,7 +258,7 @@ func (a *Address) UnmarshalText(input []byte) error {
 		return err
 	}
 	if !CheckAddressHRP(hrpDecode) {
-		return fmt.Errorf("the address not compare current net,want %v,have %v", GetAddressHRP(), string(input))
+		log.Warn("address prefix does not match the current network", "want", GetAddressHRP(), "have", string(input))
 	}
 	a.SetBytes(converted)
 	return nil
@@ -281,7 +277,7 @@ func (a *Address) UnmarshalJSON(input []byte) error {
 		return &json.UnmarshalTypeError{Value: err.Error(), Type: addressT}
 	}
 	if !CheckAddressHRP(hrpDecode) {
-		return &json.UnmarshalTypeError{Value: fmt.Sprintf("hrpDecode not compare the current net,want %v,have %v", GetAddressHRP(), hrpDecode), Type: addressT}
+		log.Warn("hrpDecode not compare the current net", "want", GetAddressHRP(), "have", hrpDecode)
 	}
 	a.SetBytes(v)
 	return nil
