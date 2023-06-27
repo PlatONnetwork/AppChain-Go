@@ -317,7 +317,7 @@ func New(stack *node.Node, config *Config) (*Ethereum, error) {
 		log.Error("Failed to restore status tree", "blockNumber", currentBlock.Number(), "root", currentBlock.Root())
 		return nil, errors.New("failed to restore status tree")
 	}
-	rootEventManager := rootchain.NewEventManager(currentState, chainDb, config.RCConfig)
+	rootEventManager := rootchain.NewEventManager(currentState, chainDb, config.RCConfig, eth.eventMux.Subscribe(cbfttypes.CbftResult{}))
 
 	//todo init root chain
 	rootChain, err := rootchain.NewRootChain(blockChainCache, rootEventManager)
