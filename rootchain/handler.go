@@ -2,20 +2,18 @@ package rootchain
 
 import (
 	"context"
+	appchain "github.com/PlatONnetwork/AppChain-Go"
 	"github.com/PlatONnetwork/AppChain-Go/common"
 	comvm "github.com/PlatONnetwork/AppChain-Go/common/vm"
 	"github.com/PlatONnetwork/AppChain-Go/core/cbfttypes"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/core/vm"
+	"github.com/PlatONnetwork/AppChain-Go/ethclient"
 	"github.com/PlatONnetwork/AppChain-Go/ethdb"
 	"github.com/PlatONnetwork/AppChain-Go/event"
 	"github.com/PlatONnetwork/AppChain-Go/log"
 	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/config"
 	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
-	eth "github.com/ethereum/go-ethereum"
-	ecommon "github.com/ethereum/go-ethereum/common"
-	etypes "github.com/ethereum/go-ethereum/core/types"
-	eclient "github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
 	"sort"
 	"sync"
@@ -84,12 +82,13 @@ func (em *EventManager) Listen() error {
 		log.Warn("the rpc address for platon is empty, please check if it is required")
 		return nil
 	}
-	client, err := eclient.Dial(em.RCConfig.PlatonRPCAddr)
+	client, err := ethclient.Dial(em.RCConfig.PlatonRPCAddr)
 	if err != nil {
 		log.Error("Failed to connect to Platon's RPC address", "addr", em.RCConfig.PlatonRPCAddr, "error", err)
 		return err
 	}
-	newHeadChan := make(chan *etypes.Header)
+	client.SetNameSpace("platon")
+	newHeadChan := make(chan *types.Header)
 	newHeadSubscribe, err := client.SubscribeNewHead(context.Background(), newHeadChan)
 	if err != nil {
 		close(newHeadChan)
@@ -123,16 +122,15 @@ func (em *EventManager) Listen() error {
 			em.mu.RLock()
 			fromBlockNumber := em.fromBlockNumber
 			em.mu.RUnlock()
-			filterParams := eth.FilterQuery{
+			filterParams := appchain.FilterQuery{
 				FromBlock: new(big.Int).SetUint64(fromBlockNumber),
 				ToBlock:   newHead.Number,
-				Addresses: []ecommon.Address{
-					ecommon.BytesToAddress(em.RCConfig.StakingInfoAddress.Bytes()),
-					ecommon.BytesToAddress(em.RCConfig.RootChainAddress.Bytes()),
+				Addresses: []common.Address{
+					em.RCConfig.StakingInfoAddress,
+					em.RCConfig.RootChainAddress,
 				},
-				Topics: [][]ecommon.Hash{{ecommon.BytesToHash(helper.StakedID.Bytes()), ecommon.BytesToHash(helper.UnstakeInitID.Bytes()),
-					ecommon.BytesToHash(helper.SignerChangeID.Bytes()), ecommon.BytesToHash(helper.StakeUpdateID.Bytes()),
-					ecommon.BytesToHash(helper.NewHeaderBlockID.Bytes())}},
+				Topics: [][]common.Hash{{helper.StakedID, helper.UnstakeInitID,
+					helper.SignerChangeID, helper.StakeUpdateID, helper.NewHeaderBlockID}},
 			}
 
 			logs, err := client.FilterLogs(context.Background(), filterParams)
@@ -146,32 +144,18 @@ func (em *EventManager) Listen() error {
 			for _, log := range logs {
 				// checkpoint events are not stored and are notified directly to the special handling logic.
 				// feed.Send()
-				topics := make([]common.Hash, 0)
-				for i := 0; i < len(log.Topics); i++ {
-					topics = append(topics, common.BytesToHash(log.Topics[i].Bytes()))
-				}
-				localLog := &types.Log{
-					Address:     common.BytesToAddress(log.Address.Bytes()),
-					Topics:      topics,
-					Data:        log.Data,
-					BlockNumber: log.BlockNumber,
-					TxHash:      common.BytesToHash(log.TxHash.Bytes()),
-					TxIndex:     log.TxIndex,
-					BlockHash:   common.BytesToHash(log.BlockHash.Bytes()),
-					Index:       log.Index,
-					Removed:     log.Removed,
-				}
-				if localLog.Topics[0] == helper.NewHeaderBlockID {
-					em.checkpointEventFeed.Send(localLog)
+				tmpLog := log
+				if tmpLog.Topics[0] == helper.NewHeaderBlockID {
+					em.checkpointEventFeed.Send(&tmpLog)
 					continue
 				}
 
-				logs, ok := blockLogsTemp[localLog.BlockNumber]
+				logs, ok := blockLogsTemp[tmpLog.BlockNumber]
 				if !ok {
 					logs = make(LogListSort, 0)
 				}
-				logs = append(logs, localLog)
-				blockLogsTemp[localLog.BlockNumber] = logs
+				logs = append(logs, &tmpLog)
+				blockLogsTemp[tmpLog.BlockNumber] = logs
 			}
 			em.mu.Lock()
 			// If a block that has already been listened to appears, it is skipped.

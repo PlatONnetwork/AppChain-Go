@@ -365,16 +365,6 @@ func (ec *Client) FilterLogs(ctx context.Context, q platon.FilterQuery) ([]types
 	return result, err
 }
 
-func (ec *Client) FilterPlatONLogs(ctx context.Context, q platon.FilterQuery) ([]types.Log, error) {
-	var result []types.Log
-	arg, err := toFilterArg(q)
-	if err != nil {
-		return nil, err
-	}
-	err = ec.c.CallContext(ctx, &result, "platon_getLogs", arg)
-	return result, err
-}
-
 // SubscribeFilterLogs subscribes to the results of a streaming filter query.
 func (ec *Client) SubscribeFilterLogs(ctx context.Context, q platon.FilterQuery, ch chan<- types.Log) (platon.Subscription, error) {
 	arg, err := toFilterArg(q)
@@ -439,7 +429,7 @@ func (ec *Client) PendingNonceAt(ctx context.Context, account common.Address) (u
 // PendingTransactionCount returns the total number of transactions in the pending state.
 func (ec *Client) PendingTransactionCount(ctx context.Context) (uint, error) {
 	var num hexutil.Uint
-	err := ec.c.CallContext(ctx, &num, fmt.Sprintf("%s_getBlockTransactionCountByNumber",rpc.NameSpace), "pending")
+	err := ec.c.CallContext(ctx, &num, fmt.Sprintf("%s_getBlockTransactionCountByNumber", rpc.NameSpace), "pending")
 	return uint(num), err
 }
 
