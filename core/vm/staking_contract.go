@@ -240,6 +240,8 @@ func (stkc *StakingContract) handleShareMinted(vLog *types.Log) ([]byte, error) 
 	blockNumber := stkc.Evm.Context.BlockNumber
 	blockHash := stkc.Evm.Context.BlockHash
 	state := stkc.Evm.StateDB
+	log.Debug("StakingOperation: shareMinted event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+		"validatorId", event.ValidatorId, "validatorOwner", event.User, "amount", event.Amount, "tokens", event.Tokens)
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
 		log.Error("Failed to update stakeInfo by GetCandidateInfo", "txHash", txHash,
@@ -249,6 +251,10 @@ func (stkc *StakingContract) handleShareMinted(vLog *types.Log) ([]byte, error) 
 
 	if canOld.IsEmpty() {
 		log.Error("candidate does not exist", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
+		return nil, nil
+	}
+	if canOld.IsInvalid() {
+		log.Info("candidate in non-modifiable status", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
 		return nil, nil
 	}
 	canOld.DelegateTotal = new(big.Int).Add(canOld.DelegateTotal, event.Amount)
@@ -265,6 +271,8 @@ func (stkc *StakingContract) handleShareShareBurned(vLog *types.Log) ([]byte, er
 	blockNumber := stkc.Evm.Context.BlockNumber
 	blockHash := stkc.Evm.Context.BlockHash
 	state := stkc.Evm.StateDB
+	log.Debug("StakingOperation: shareBurned event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+		"validatorId", event.ValidatorId, "validatorOwner", event.User, "amount", event.Amount, "tokens", event.Tokens)
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
 		log.Error("Failed to update stakeInfo by GetCandidateInfo", "txHash", txHash,
@@ -274,6 +282,10 @@ func (stkc *StakingContract) handleShareShareBurned(vLog *types.Log) ([]byte, er
 
 	if canOld.IsEmpty() {
 		log.Error("candidate does not exist", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
+		return nil, nil
+	}
+	if canOld.IsInvalid() {
+		log.Info("candidate in non-modifiable status", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
 		return nil, nil
 	}
 	canOld.DelegateTotal = new(big.Int).Sub(canOld.DelegateTotal, event.Amount)
