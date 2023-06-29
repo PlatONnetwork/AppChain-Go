@@ -9,8 +9,8 @@ import (
 	"github.com/PlatONnetwork/AppChain-Go/core/state"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/core/vm"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"math/big"
 )
 
@@ -18,7 +18,7 @@ type RootChainReader interface {
 	//get root chain stake logs, return logs, end block number
 	GetStakeLogs(start *big.Int, limit uint64) ([]*types.Log, *big.Int, error)
 	//get logs base on block height range
-	GetStakeLogsRange(start, end *big.Int) ([]*types.Log, error)
+	GetStakeLogsRange(start, end *big.Int, limit uint64) ([]*types.Log, error)
 }
 
 type RootChainCheck interface {
@@ -76,7 +76,7 @@ func (r RootChain) CheckStakeStateSyncExtra(parent *types.Block, header *types.H
 	if end.Uint64() <= start.Uint64() {
 		return errors.New(fmt.Sprintf("the current event block height is no greater than the previous one, pre=%d, current=%d", start, end))
 	}
-	logs, err := r.GetStakeLogsRange(new(big.Int).SetUint64(start.Uint64()+1), end)
+	logs, err := r.GetStakeLogsRange(new(big.Int).SetUint64(start.Uint64()+1), end, 1000)
 	if err != nil {
 		return err
 	}
@@ -102,8 +102,8 @@ func (r RootChain) GetStakeLogs(start *big.Int, limit uint64) ([]*types.Log, *bi
 	return logs, endBlockNumber, nil
 }
 
-func (r RootChain) GetStakeLogsRange(start, end *big.Int) ([]*types.Log, error) {
-	_, logs, err := r.eventManager.BuildEventList(start.Uint64(), end.Uint64(), 0)
+func (r RootChain) GetStakeLogsRange(start, end *big.Int, limit uint64) ([]*types.Log, error) {
+	_, logs, err := r.eventManager.BuildEventList(start.Uint64(), end.Uint64(), limit)
 	if err != nil {
 		return nil, err
 	}

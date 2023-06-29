@@ -5,14 +5,15 @@ import (
 	appchain "github.com/PlatONnetwork/AppChain-Go"
 	"github.com/PlatONnetwork/AppChain-Go/common"
 	comvm "github.com/PlatONnetwork/AppChain-Go/common/vm"
+	"github.com/PlatONnetwork/AppChain-Go/core/cbfttypes"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/core/vm"
 	"github.com/PlatONnetwork/AppChain-Go/ethclient"
 	"github.com/PlatONnetwork/AppChain-Go/ethdb"
 	"github.com/PlatONnetwork/AppChain-Go/event"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/config"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/config"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"math/big"
 	"sort"
 	"sync"
@@ -31,21 +32,27 @@ type EventManager struct {
 	blockLogs map[uint64][]*types.Log
 
 	checkpointEventFeed event.Feed
+	bftResultSub        *event.TypeMuxSubscription
+	bftResultCh         chan *types.Block
 	mu                  sync.RWMutex
 }
 
-func NewEventManager(stateDB vm.StateDB, db ethdb.Database, rcConfig *config.RootChainContractConfig) *EventManager {
+func NewEventManager(stateDB vm.StateDB, db ethdb.Database, rcConfig *config.RootChainContractConfig, bftResultSub *event.TypeMuxSubscription) *EventManager {
 	start := new(big.Int).SetBytes(stateDB.GetState(comvm.StakingContractAddr, vm.BlockNumberKey))
 	eventManager := &EventManager{
 		exit:            make(chan struct{}),
 		db:              db,
 		RCConfig:        rcConfig,
 		fromBlockNumber: rcConfig.ContractDeployedNumber,
+		bftResultSub:    bftResultSub,
+		bftResultCh:     make(chan *types.Block, 32),
 		blockLogs:       make(map[uint64][]*types.Log, 0),
 	}
 	if start.Uint64() > 0 {
 		eventManager.fromBlockNumber = start.Uint64() + 1
 	}
+	// Listening for irreversible blocks
+	go eventManager.resultLoop()
 	return eventManager
 }
 
@@ -80,8 +87,8 @@ func (em *EventManager) Listen() error {
 		log.Error("Failed to connect to Platon's RPC address", "addr", em.RCConfig.PlatonRPCAddr, "error", err)
 		return err
 	}
-	newHeadChan := make(chan *types.Header)
 	client.SetNameSpace("platon")
+	newHeadChan := make(chan *types.Header)
 	newHeadSubscribe, err := client.SubscribeNewHead(context.Background(), newHeadChan)
 	if err != nil {
 		close(newHeadChan)
@@ -104,6 +111,12 @@ func (em *EventManager) Listen() error {
 			log.Error("subscription failure", "error", err)
 			// TODO 处理订阅区块头失败的情况
 			return err
+		case resultBlock := <-em.bftResultCh:
+			// Clear irreversible, already processed rootChain events
+			stopBlockNumber := types.DecodeStakeExtra(resultBlock.Extra())
+			if stopBlockNumber != nil && stopBlockNumber.Uint64() > 0 {
+				em.RemoveEvents(stopBlockNumber.Uint64())
+			}
 		case newHead := <-newHeadChan:
 			log.Trace("listening for a new block", "blockNumber", newHead.Number, "blockHash", newHead.Hash().TerminalString())
 			em.mu.RLock()
@@ -116,11 +129,11 @@ func (em *EventManager) Listen() error {
 					em.RCConfig.StakingInfoAddress,
 					em.RCConfig.RootChainAddress,
 				},
-				Topics: [][]common.Hash{{helper.StakedID, helper.UnstakeInitID,
-					helper.SignerChangeID, helper.StakeUpdateID, helper.NewHeaderBlockID}},
+				Topics: [][]common.Hash{{helper.StakedID, helper.UnstakeInitID, helper.SignerChangeID,
+					helper.ShareMintedID, helper.ShareBurnedID, helper.NewHeaderBlockID}},
 			}
 
-			logs, err := client.FilterPlatONLogs(context.Background(), filterParams)
+			logs, err := client.FilterLogs(context.Background(), filterParams)
 			if err != nil {
 				log.Error("failed to get filtered logs", "fromBlock", filterParams.FromBlock, "toBlock", filterParams.ToBlock, "error", err)
 				// TODO 处理获取事件失败的情况
@@ -207,9 +220,50 @@ func (em *EventManager) BuildEventList(startBlockNumber uint64, endBlockNumber u
 		logs := em.blockLogs[blockNumber]
 		logList = append(logList, logs...)
 		log.Debug("pack event", "blockNumber", blockNumber, "logsSize", len(logs), "totalSize", len(logList))
+		if len(logList) >= int(limit) {
+			endBlockNumber = blockNumber
+			break
+		}
 	}
 	log.Debug("packing event complete", "startBlockNumber", startBlockNumber, "endBlockNumber", endBlockNumber, "totalSize", len(logList))
 	return new(big.Int).SetUint64(endBlockNumber), logList, nil
+}
+
+func (em *EventManager) RemoveEvents(stopBlockNumber uint64) {
+	em.mu.Lock()
+	defer em.mu.Unlock()
+	for blockNumber := range em.blockLogs {
+		if blockNumber <= stopBlockNumber {
+			delete(em.blockLogs, blockNumber)
+		}
+	}
+}
+
+func (em *EventManager) resultLoop() {
+	defer em.bftResultSub.Unsubscribe()
+
+	for {
+		select {
+		case result := <-em.bftResultSub.Chan():
+			if result == nil {
+				continue
+			}
+			cbftResult, ok := result.Data.(cbfttypes.CbftResult)
+			if !ok {
+				log.Error("Receive bft result type error")
+				continue
+			}
+			block := cbftResult.Block
+			if block == nil {
+				log.Error("Cbft result error: block is nil")
+				continue
+			}
+			em.bftResultCh <- block
+		case <-em.exit:
+			log.Info("EventManager loop stopping...")
+			return
+		}
+	}
 }
 
 func (em *EventManager) Stop() {

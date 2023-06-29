@@ -22,8 +22,8 @@ import (
 	"crypto/elliptic"
 	"encoding/json"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/rootchain"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"strings"
 	"sync/atomic"
 
