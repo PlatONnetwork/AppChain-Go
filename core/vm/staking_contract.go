@@ -251,6 +251,7 @@ func (stkc *StakingContract) handleShareMinted(vLog *types.Log) ([]byte, error) 
 		log.Error("candidate does not exist", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
 		return nil, nil
 	}
+	canOld.DelegateTotal = new(big.Int).Add(canOld.DelegateTotal, event.Amount)
 	err = stkc.Plugin.StakeUpdateShares(state, blockHash, blockNumber, event.ValidatorId, new(big.Int).Add(canOld.Shares, event.Amount), canOld)
 	return nil, err
 }
@@ -275,6 +276,7 @@ func (stkc *StakingContract) handleShareShareBurned(vLog *types.Log) ([]byte, er
 		log.Error("candidate does not exist", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
 		return nil, nil
 	}
+	canOld.DelegateTotal = new(big.Int).Sub(canOld.DelegateTotal, event.Amount)
 	err = stkc.Plugin.StakeUpdateShares(state, blockHash, blockNumber, event.ValidatorId, new(big.Int).Sub(canOld.Shares, event.Amount), canOld)
 	return nil, err
 }

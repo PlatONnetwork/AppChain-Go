@@ -122,12 +122,8 @@ func (rmp *RewardMgrPlugin) EndBlock(blockHash common.Hash, head *types.Header, 
 	}
 
 	if xutil.IsEndOfEpoch(blockNumber) {
-		verifierList, err := rmp.AllocateStakingReward(blockNumber, blockHash, stakingReward, state)
+		_, err := rmp.AllocateStakingReward(blockNumber, blockHash, stakingReward, state)
 		if err != nil {
-			return err
-		}
-
-		if err := rmp.HandleDelegatePerReward(blockHash, blockNumber, verifierList, state); err != nil {
 			return err
 		}
 
@@ -403,14 +399,7 @@ func (rmp *RewardMgrPlugin) rewardStakingByValidatorList(state xcom.StateDB, lis
 	totalValidatorReward, totalValidatorDelegateReward := new(big.Int), new(big.Int)
 
 	for _, value := range list {
-		delegateReward, stakingReward := new(big.Int), new(big.Int).Set(everyValidatorReward)
-		if value.ShouldGiveDelegateReward() {
-			delegateReward, stakingReward = rmp.CalDelegateRewardAndNodeReward(everyValidatorReward, value.RewardPer)
-			totalValidatorDelegateReward.Add(totalValidatorDelegateReward, delegateReward)
-			log.Debug("allocate delegate reward of staking one-by-one", "nodeId", value.NodeId.TerminalString(), "staking reward", stakingReward, "per", value.RewardPer, "delegateReward", delegateReward)
-			//the  CurrentEpochDelegateReward will use by cal delegate reward Per
-			value.CurrentEpochDelegateReward.Add(value.CurrentEpochDelegateReward, delegateReward)
-		}
+		stakingReward := new(big.Int).Set(everyValidatorReward)
 		if value.BenefitAddress != vm.RewardManagerPoolAddr {
 			log.Debug("allocate staking reward one-by-one", "nodeId", value.NodeId.String(),
 				"benefitAddress", value.BenefitAddress.String(), "staking reward", stakingReward)
