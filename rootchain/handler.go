@@ -129,8 +129,8 @@ func (em *EventManager) Listen() error {
 					em.RCConfig.StakingInfoAddress,
 					em.RCConfig.RootChainAddress,
 				},
-				Topics: [][]common.Hash{{helper.StakedID, helper.UnstakeInitID,
-					helper.SignerChangeID, helper.StakeUpdateID, helper.NewHeaderBlockID}},
+				Topics: [][]common.Hash{{helper.StakedID, helper.UnstakeInitID, helper.SignerChangeID,
+					helper.ShareMintedID, helper.ShareBurnedID, helper.NewHeaderBlockID}},
 			}
 
 			logs, err := client.FilterLogs(context.Background(), filterParams)
