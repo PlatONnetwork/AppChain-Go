@@ -101,6 +101,7 @@ func (stkc *StakingContract) Run(input []byte) ([]byte, error) {
 		//内置合约有2个方法：
 		//1. stakeStateSync(uint256,bytes[])
 		//2. blockNumber()
+		log.Info("innerStakingInput", "input", hexutil.Encode(input), "methodId", methodId)
 		return fn(input[4:])
 	}
 
@@ -141,7 +142,7 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 	if err := helper.UnpackLog(helper.StakingInfoAbi, event, helper.Staked, vLog); err != nil {
 		return nil, err
 	}
-	log.Debug("StakingOperation: staked event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+	log.Info("StakingOperation: staked event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
 		"signer", event.Signer.Hex(), "validatorId", event.ValidatorId, "nonce", event.Nonce,
 		"activationEpoch", event.ActivationEpoch, "amount", event.Amount, "totalStakedAmount", event.Total,
 		"signerPubkey", hex.EncodeToString(event.Pubkeys[:64]), "blsPubkey", hex.EncodeToString(event.Pubkeys[64:]))
@@ -210,7 +211,7 @@ func (stkc *StakingContract) handleUnstakeInit(vLog *types.Log) ([]byte, error) 
 	blockNumber := stkc.Evm.Context.BlockNumber
 	blockHash := stkc.Evm.Context.BlockHash
 	state := stkc.Evm.StateDB
-	log.Debug("StakingOperation: unstakeInit event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+	log.Info("StakingOperation: unstakeInit event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
 		"validatorId", event.ValidatorId, "validatorOwner", event.User, "nonce", event.Nonce, "deactivationEpoch", event.DeactivationEpoch,
 		"amount", event.Amount)
 	if txHash == common.ZeroHash {
@@ -248,7 +249,7 @@ func (stkc *StakingContract) handleShareMinted(vLog *types.Log) ([]byte, error) 
 	blockNumber := stkc.Evm.Context.BlockNumber
 	blockHash := stkc.Evm.Context.BlockHash
 	state := stkc.Evm.StateDB
-	log.Debug("StakingOperation: shareMinted event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+	log.Info("StakingOperation: shareMinted event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
 		"validatorId", event.ValidatorId, "validatorOwner", event.User, "amount", event.Amount, "tokens", event.Tokens)
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
@@ -279,7 +280,7 @@ func (stkc *StakingContract) handleShareShareBurned(vLog *types.Log) ([]byte, er
 	blockNumber := stkc.Evm.Context.BlockNumber
 	blockHash := stkc.Evm.Context.BlockHash
 	state := stkc.Evm.StateDB
-	log.Debug("StakingOperation: shareBurned event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+	log.Info("StakingOperation: shareBurned event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
 		"validatorId", event.ValidatorId, "validatorOwner", event.User, "amount", event.Amount, "tokens", event.Tokens)
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
@@ -339,12 +340,18 @@ func (stkc *StakingContract) stakeStateSync(input []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Info("stakeStateSync", "BlockNumber", args.BlockNumber)
 	stakeFuncMap := stkc.stakeInfoFunc()
 	for _, event := range args.Events {
 		var rootChainLog types.Log
 		if err := rootChainLog.DecodeRLP(rlp.NewStream(bytes.NewReader(event), 0)); err != nil {
 			return nil, err
 		}
+
+		json, _ := rootChainLog.MarshalJSON()
+		log.Info("stakeStateSync", "rootChainLog", string(json))
+
 		eventID := rootChainLog.Topics[0]
 		if fn, ok := stakeFuncMap[eventID]; ok {
 			if res, err := fn(&rootChainLog); err != nil {
