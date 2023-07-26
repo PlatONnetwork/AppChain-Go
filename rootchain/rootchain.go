@@ -40,10 +40,19 @@ func NewRootChain(blockChainCache StateReader, eventManager *EventManager) (*Roo
 }
 
 func (r RootChain) Start() error {
+	// If it is an authenticator node, this rpc address needs to be configured.
+	// Not required if it is a normal node.
+	if r.eventManager.RCConfig.PlatonRPCAddr == "" {
+		log.Warn("the rpc address for platon is empty, please check if it is required")
+		return nil
+	}
 	go func() {
 		if err := r.eventManager.Listen(); err != nil {
 			log.Error("Listening for event failures on RootChain", "error", err)
+			return
 		}
+		// Listening for irreversible blocks
+		go r.eventManager.resultLoop()
 	}()
 	return nil
 }
