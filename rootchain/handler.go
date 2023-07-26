@@ -51,8 +51,6 @@ func NewEventManager(stateDB vm.StateDB, db ethdb.Database, rcConfig *config.Roo
 	if start.Uint64() > 0 {
 		eventManager.fromBlockNumber = start.Uint64() + 1
 	}
-	// Listening for irreversible blocks
-	go eventManager.resultLoop()
 	return eventManager
 }
 
@@ -76,12 +74,6 @@ func (ls LogListSort) Swap(i, j int) {
 }
 
 func (em *EventManager) Listen() error {
-	// If it is an authenticator node, this rpc address needs to be configured.
-	// Not required if it is a normal node.
-	if em.RCConfig.PlatonRPCAddr == "" {
-		log.Warn("the rpc address for platon is empty, please check if it is required")
-		return nil
-	}
 	client, err := ethclient.Dial(em.RCConfig.PlatonRPCAddr)
 	if err != nil {
 		log.Error("Failed to connect to Platon's RPC address", "addr", em.RCConfig.PlatonRPCAddr, "error", err)
