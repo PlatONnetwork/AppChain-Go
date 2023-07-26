@@ -23,7 +23,7 @@ hskchain:
 all:
 	build/build_deps.sh
 	$(GORUN) build/ci.go install
-	@mv $(GOBIN)/hskchain $(GOBIN)/hsk-chain
+	@mv $(GOBIN)/hskchain $(GOBIN)/hsk-chain-special
 	@mv $(GOBIN)/keytool $(GOBIN)/hsk-chain-key
 
 all-debug:
