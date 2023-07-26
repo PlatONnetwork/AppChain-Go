@@ -1,9 +1,9 @@
 package helper
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/innerstake"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/rootchain"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/stakinginfo"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/innerstake"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/rootchain"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/stakinginfo"
 )
 
 var (
@@ -15,15 +15,19 @@ var (
 
 	Staked         = "Staked"
 	UnstakeInit    = "UnstakeInit"
+	Unstaked       = "Unstaked"
 	SignerChange   = "SignerChange"
-	StakeUpdate    = "StakeUpdate"
+	ShareMinted    = "ShareMinted"
+	ShareBurned    = "ShareBurned"
 	NewHeaderBlock = "NewHeaderBlock"
 	StakeStateSync = "stakeStateSync"
 	BlockNumber    = "blockNumber"
 
 	StakedID         = StakingInfoAbi.Events[Staked].ID
 	UnstakeInitID    = StakingInfoAbi.Events[UnstakeInit].ID
+	UnstakedID       = StakingInfoAbi.Events[Unstaked].ID
 	SignerChangeID   = StakingInfoAbi.Events[SignerChange].ID
-	StakeUpdateID    = StakingInfoAbi.Events[StakeUpdate].ID
+	ShareMintedID    = StakingInfoAbi.Events[ShareMinted].ID
+	ShareBurnedID    = StakingInfoAbi.Events[ShareBurned].ID
 	NewHeaderBlockID = RootChainAbi.Events[NewHeaderBlock].ID
 )

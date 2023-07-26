@@ -3,24 +3,23 @@ package processor
 import (
 	"context"
 	"encoding/hex"
+	appchain "github.com/PlatONnetwork/AppChain-Go"
+	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/AppChain-Go/ethclient"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"math/big"
 	"strings"
 
 	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
 	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/log"
 	"github.com/PlatONnetwork/AppChain-Go/manager"
-	ethereum "github.com/ethereum/go-ethereum"
-	ecom "github.com/ethereum/go-ethereum/common"
-	etypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 type RootchainConnector struct {
 	managerAccount *manager.ManagerAccount
 	platonClient   *ethclient.Client
-	contractAddr   ecom.Address
+	contractAddr   common.Address
 
 	chainId *big.Int
 }
@@ -30,7 +29,7 @@ func NewRootchainConnector(managerAccount *manager.ManagerAccount, platonAddr st
 	if err != nil {
 		return nil, err
 	}
-
+	client.SetNameSpace("platon")
 	chainId, err := client.ChainID(context.Background())
 	if err != nil {
 		return nil, err
@@ -39,7 +38,7 @@ func NewRootchainConnector(managerAccount *manager.ManagerAccount, platonAddr st
 	return &RootchainConnector{
 		managerAccount: managerAccount,
 		platonClient:   client,
-		contractAddr:   toEthAddress(contractAddr),
+		contractAddr:   contractAddr,
 		chainId:        chainId,
 	}, nil
 }
@@ -50,7 +49,7 @@ func (c *RootchainConnector) CurrentHeaderBlock(blockInterval uint64) (uint64, e
 		return 0, err
 	}
 
-	out, err := c.platonClient.CallContract(context.Background(), ethereum.CallMsg{
+	out, err := c.platonClient.CallContract(context.Background(), appchain.CallMsg{
 		To:   &c.contractAddr,
 		Data: data,
 	}, nil)
@@ -82,7 +81,7 @@ func (c *RootchainConnector) GetHeaderInfo(number, blockInterval uint64) (
 		return root, start, end, createdAt, proposer, err
 	}
 
-	out, err := c.platonClient.CallContract(context.Background(), ethereum.CallMsg{
+	out, err := c.platonClient.CallContract(context.Background(), appchain.CallMsg{
 		To:   &c.contractAddr,
 		Data: data,
 	}, nil)
@@ -124,7 +123,7 @@ func (c *RootchainConnector) GetLatestChildBlock() (uint64, error) {
 		return 0, err
 	}
 
-	out, err := c.platonClient.CallContract(context.Background(), ethereum.CallMsg{
+	out, err := c.platonClient.CallContract(context.Background(), appchain.CallMsg{
 		To:   &c.contractAddr,
 		Data: data,
 	}, nil)
@@ -157,7 +156,7 @@ func (c *RootchainConnector) SendCheckpoint(signedData []byte, signedValidators 
 		return err
 	}
 
-	nonce, err := c.platonClient.PendingNonceAt(context.Background(), toEthAddress(c.managerAccount.Address()))
+	nonce, err := c.platonClient.PendingNonceAt(context.Background(), c.managerAccount.Address())
 	if err != nil {
 		return err
 	}
@@ -167,8 +166,8 @@ func (c *RootchainConnector) SendCheckpoint(signedData []byte, signedValidators 
 		return err
 	}
 
-	msg := ethereum.CallMsg{
-		From:     toEthAddress(c.managerAccount.Address()),
+	msg := appchain.CallMsg{
+		From:     c.managerAccount.Address(),
 		To:       &c.contractAddr,
 		GasPrice: gasPrice,
 		Data:     data,
@@ -178,14 +177,10 @@ func (c *RootchainConnector) SendCheckpoint(signedData []byte, signedValidators 
 		return err
 	}
 
-	rawTx := etypes.NewTransaction(nonce, c.contractAddr, big.NewInt(0), gasLimit, gasPrice, data)
-	signedTx, err := c.managerAccount.SignEthTx(rawTx, c.chainId)
+	rawTx := types.NewTransaction(nonce, c.contractAddr, big.NewInt(0), gasLimit, gasPrice, data)
+	signedTx, err := c.managerAccount.Sign(rawTx, c.chainId)
 	if err != nil {
 		return err
 	}
 	return c.platonClient.SendTransaction(context.Background(), signedTx)
-}
-
-func toEthAddress(addr common.Address) ecom.Address {
-	return ecom.BytesToAddress(addr.Bytes())
 }

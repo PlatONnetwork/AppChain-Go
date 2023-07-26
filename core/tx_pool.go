@@ -654,7 +654,7 @@ func (pool *TxPool) Pending() (map[common.Address]types.Transactions, error) {
 // PendingLimited retrieves `pool.config.GlobalTxCount` processable transactions,
 // grouped by origin account and stored by nonce. The returned transaction set
 // is a copy and can be freely modified by calling code.
-func (pool *TxPool) PendingLimited() (map[common.Address]types.Transactions, error) {
+func (pool *TxPool) PendingLimited(filterAddress common.Address) (map[common.Address]types.Transactions, error) {
 	now := time.Now()
 	pool.mu.Lock()
 	defer pool.mu.Unlock()
@@ -662,7 +662,14 @@ func (pool *TxPool) PendingLimited() (map[common.Address]types.Transactions, err
 	txCount := 0
 	pending := make(map[common.Address]types.Transactions)
 	for addr, list := range pool.pending {
-		pending[addr] = list.Flatten()
+		returnList := list.Flatten()
+		filterList := make([]*types.Transaction, 0)
+		for _, tx := range returnList {
+			if *tx.To() != filterAddress {
+				filterList = append(filterList, tx)
+			}
+		}
+		pending[addr] = filterList
 		txCount += len(pending[addr])
 		if txCount >= int(pool.config.GlobalTxCount) {
 			break

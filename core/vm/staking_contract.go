@@ -20,12 +20,13 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/helper"
-	"github.com/PlatONnetwork/AppChain-Go/innerbindings/stakinginfo"
 	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/stakinginfo"
 	"math/big"
 
 	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
@@ -122,10 +123,11 @@ func (stkc *StakingContract) CheckGasPrice(gasPrice *big.Int, fcode uint16) erro
 }
 func (stkc *StakingContract) stakeInfoFunc() map[common.Hash]func(*types.Log) ([]byte, error) {
 	return map[common.Hash]func(*types.Log) ([]byte, error){
-		helper.StakingInfoAbi.Events[helper.Staked].ID:       stkc.handleStaked,
-		helper.StakingInfoAbi.Events[helper.UnstakeInit].ID:  stkc.handleUnstakeInit,
-		helper.StakingInfoAbi.Events[helper.SignerChange].ID: stkc.handleSignerChange,
-		helper.StakingInfoAbi.Events[helper.StakeUpdate].ID:  stkc.handleStakeUpdate,
+		helper.StakedID:       stkc.handleStaked,
+		helper.UnstakeInitID:  stkc.handleUnstakeInit,
+		helper.SignerChangeID: stkc.handleSignerChange,
+		helper.ShareMintedID:  stkc.handleShareMinted,
+		helper.ShareBurnedID:  stkc.handleShareShareBurned,
 	}
 }
 func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
@@ -133,7 +135,6 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 	txIndex := stkc.Evm.StateDB.TxIdx()
 	blockNumber := stkc.Evm.Context.BlockNumber
 	blockHash := stkc.Evm.Context.BlockHash
-	from := stkc.Contract.CallerAddress
 	state := stkc.Evm.StateDB
 
 	event := new(stakinginfo.StakinginfoStaked)
@@ -159,29 +160,22 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 	}
 
 	if canOld.IsNotEmpty() {
-		return txResultHandler(vm.StakingContractAddr, stkc.Evm, "createStaking",
-			"can is not nil",
-			TxCreateStaking, staking.ErrCanAlreadyExist)
-	}
-	if txHash == common.ZeroHash {
+		log.Error("candidate already exists", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
 		return nil, nil
 	}
-	/**
-	init candidate info
-	*/
 
+	// init candidate information
 	nodeId, err := discover.BytesID(event.Pubkeys[:64])
 	if err != nil {
-		return txResultHandler(vm.StakingContractAddr, stkc.Evm, "createStaking",
-			"invalid public key",
-			TxCreateStaking, staking.ErrNodeID2Addr)
+		log.Error("invalid public key", "blockNumber", blockNumber, "txHash", txHash.Hex(), "pk", hex.EncodeToString(event.Pubkeys[:64]))
+		return nil, nil
 	}
 	canBase := &staking.CandidateBase{
 		ValidatorId:     event.ValidatorId,
 		NodeId:          nodeId,
 		BlsPubKey:       blsPubKey,
 		StakingAddress:  event.Owner,
-		BenefitAddress:  from,
+		BenefitAddress:  event.Owner,
 		StakingBlockNum: blockNumber.Uint64(),
 		StakingTxIndex:  txIndex,
 		ProgramVersion:  originVersion,
@@ -219,6 +213,9 @@ func (stkc *StakingContract) handleUnstakeInit(vLog *types.Log) ([]byte, error) 
 	log.Debug("StakingOperation: unstakeInit event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
 		"validatorId", event.ValidatorId, "validatorOwner", event.User, "nonce", event.Nonce, "deactivationEpoch", event.DeactivationEpoch,
 		"amount", event.Amount)
+	if txHash == common.ZeroHash {
+		return nil, nil
+	}
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
 		log.Error("Failed to update stakeInfo by GetCandidateInfo", "txHash", txHash,
@@ -227,14 +224,8 @@ func (stkc *StakingContract) handleUnstakeInit(vLog *types.Log) ([]byte, error) 
 	}
 
 	if canOld.IsEmpty() {
-		return txResultHandler(vm.StakingContractAddr, stkc.Evm, "unstakeInit",
-			"can is not nil",
-			TxEditorCandidate, staking.ErrCanNoExist)
-	}
-	if canOld.IsInvalid() {
-		return txResultHandler(vm.StakingContractAddr, stkc.Evm, "withdrewStaking",
-			fmt.Sprintf("can status is: %d", canOld.Status),
-			TxWithdrewCandidate, staking.ErrCanStatusInvalid)
+		log.Error("candidate does not exist", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
+		return nil, nil
 	}
 	err = stkc.Plugin.UnStake(state, blockHash, blockNumber, event.ValidatorId, canOld)
 	return nil, err
@@ -248,18 +239,17 @@ func (stkc *StakingContract) handleSignerChange(vLog *types.Log) ([]byte, error)
 	return nil, nil
 }
 
-func (stkc *StakingContract) handleStakeUpdate(vLog *types.Log) ([]byte, error) {
-	event := new(stakinginfo.StakinginfoStakeUpdate)
-	if err := helper.UnpackLog(helper.StakingInfoAbi, event, helper.StakeUpdate, vLog); err != nil {
+func (stkc *StakingContract) handleShareMinted(vLog *types.Log) ([]byte, error) {
+	event := new(stakinginfo.StakinginfoShareMinted)
+	if err := helper.UnpackLog(helper.StakingInfoAbi, event, helper.ShareMinted, vLog); err != nil {
 		return nil, err
 	}
 	txHash := stkc.Evm.StateDB.TxHash()
 	blockNumber := stkc.Evm.Context.BlockNumber
 	blockHash := stkc.Evm.Context.BlockHash
 	state := stkc.Evm.StateDB
-	log.Debug("StakingOperation: stakeUpdate event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
-		"validatorId", event.ValidatorId, "newAmount", event.NewAmount, "nonce", event.Nonce)
-
+	log.Debug("StakingOperation: shareMinted event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+		"validatorId", event.ValidatorId, "validatorOwner", event.User, "amount", event.Amount, "tokens", event.Tokens)
 	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
 	if snapshotdb.NonDbNotFoundErr(err) {
 		log.Error("Failed to update stakeInfo by GetCandidateInfo", "txHash", txHash,
@@ -268,21 +258,73 @@ func (stkc *StakingContract) handleStakeUpdate(vLog *types.Log) ([]byte, error) 
 	}
 
 	if canOld.IsEmpty() {
-		return txResultHandler(vm.StakingContractAddr, stkc.Evm, "stakeUpdate",
-			"can is not nil",
-			TxEditorCandidate, staking.ErrCanNoExist)
+		log.Error("candidate does not exist", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
+		return nil, nil
 	}
 	if canOld.IsInvalid() {
-		return txResultHandler(vm.StakingContractAddr, stkc.Evm, "stakeUpdate",
-			fmt.Sprintf("can status is: %d", canOld.Status),
-			TxEditorCandidate, staking.ErrCanStatusInvalid)
+		log.Info("candidate in non-modifiable status", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
+		return nil, nil
 	}
-	err = stkc.Plugin.StakeUpdate(state, blockHash, blockNumber, event.ValidatorId, event.NewAmount, canOld)
+	canOld.DelegateTotal = new(big.Int).Add(canOld.DelegateTotal, event.Amount)
+	err = stkc.Plugin.StakeUpdateShares(state, blockHash, blockNumber, event.ValidatorId, new(big.Int).Add(canOld.Shares, event.Amount), canOld)
+	return nil, err
+}
+
+func (stkc *StakingContract) handleShareShareBurned(vLog *types.Log) ([]byte, error) {
+	event := new(stakinginfo.StakinginfoShareBurned)
+	if err := helper.UnpackLog(helper.StakingInfoAbi, event, helper.ShareBurned, vLog); err != nil {
+		return nil, err
+	}
+	txHash := stkc.Evm.StateDB.TxHash()
+	blockNumber := stkc.Evm.Context.BlockNumber
+	blockHash := stkc.Evm.Context.BlockHash
+	state := stkc.Evm.StateDB
+	log.Debug("StakingOperation: shareBurned event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+		"validatorId", event.ValidatorId, "validatorOwner", event.User, "amount", event.Amount, "tokens", event.Tokens)
+	canOld, err := stkc.Plugin.GetCandidateInfo(blockHash, event.ValidatorId)
+	if snapshotdb.NonDbNotFoundErr(err) {
+		log.Error("Failed to update stakeInfo by GetCandidateInfo", "txHash", txHash,
+			"blockNumber", blockNumber, "validatorId", event.ValidatorId, "err", err)
+		return nil, err
+	}
+
+	if canOld.IsEmpty() {
+		log.Error("candidate does not exist", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
+		return nil, nil
+	}
+	if canOld.IsInvalid() {
+		log.Info("candidate in non-modifiable status", "blockNumber", blockNumber, "txHash", txHash.Hex(), "validatorId", event.ValidatorId)
+		return nil, nil
+	}
+	canOld.DelegateTotal = new(big.Int).Sub(canOld.DelegateTotal, event.Amount)
+	err = stkc.Plugin.StakeUpdateShares(state, blockHash, blockNumber, event.ValidatorId, new(big.Int).Sub(canOld.Shares, event.Amount), canOld)
 	return nil, err
 }
 
 func (stkc *StakingContract) stakeStateSync(input []byte) ([]byte, error) {
-	// todo check tx sender is consensus node
+	txHash := stkc.Evm.StateDB.TxHash()
+	blockNumber := stkc.Evm.Context.BlockNumber
+	blockHash := stkc.Evm.Context.BlockHash
+	from := stkc.Contract.CallerAddress
+	// If the interface is called for estimate, it simply returns.
+	if txHash == common.ZeroHash {
+		return nil, nil
+	}
+	// Only consensus nodes have permission to call this interface
+	consensusList, err := stkc.Plugin.GetValidatorList(blockHash, blockNumber.Uint64(), plugin.CurrentRound, plugin.QueryStartNotIrr)
+	if err != nil {
+		return nil, err
+	}
+	isConsensusNode := false
+	for _, node := range consensusList {
+		if node.StakingAddress == from {
+			isConsensusNode = true
+		}
+	}
+	if !isConsensusNode {
+		log.Error("Non-consensus node call interface", "blockNumber", blockNumber, "from", from, "consensusListLen", len(consensusList))
+		return nil, errors.New("call without permission")
+	}
 
 	type InputArgs struct {
 		BlockNumber *big.Int
@@ -303,13 +345,15 @@ func (stkc *StakingContract) stakeStateSync(input []byte) ([]byte, error) {
 		if err := rootChainLog.DecodeRLP(rlp.NewStream(bytes.NewReader(event), 0)); err != nil {
 			return nil, err
 		}
-		if fn, ok := stakeFuncMap[rootChainLog.Topics[0]]; ok {
+		eventID := rootChainLog.Topics[0]
+		if fn, ok := stakeFuncMap[eventID]; ok {
 			if res, err := fn(&rootChainLog); err != nil {
-				log.Error("Failed to execute rootChainEvent", "eventId", rootChainLog.Topics[0].Hex(), "result", hex.EncodeToString(res), "error", err)
-				return res, err
+				log.Error("Failed to execute rootChainEvent", "blockNumber", blockNumber, "eventId", eventID.Hex(),
+					"result", hex.EncodeToString(res), "error", err)
+				return nil, err
 			}
 		} else {
-			//todo revert msg
+			log.Error("Unknown rootChainEvents", "blockNumber", blockNumber, "eventId", eventID.Hex())
 		}
 	}
 	// Record the latest block height processed.

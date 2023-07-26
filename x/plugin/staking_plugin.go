@@ -478,7 +478,7 @@ func (sk *StakingPlugin) CreateCandidate(state xcom.StateDB, blockHash common.Ha
 	return nil
 }
 
-func (sk *StakingPlugin) StakeUpdate(state xcom.StateDB, blockHash common.Hash, blockNumber *big.Int, validatorId *big.Int,
+func (sk *StakingPlugin) StakeUpdateShares(state xcom.StateDB, blockHash common.Hash, blockNumber *big.Int, validatorId *big.Int,
 	newAmount *big.Int, can *staking.Candidate) error {
 	// delete old power of can
 	if err := sk.db.DelCanPowerStore(blockHash, can); nil != err {

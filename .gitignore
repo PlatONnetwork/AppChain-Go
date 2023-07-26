@@ -56,7 +56,7 @@ coverage.txt
 *.exe
 *.test
 
-go.sum
+# go.sum
 
 life/resolver/builtins/build/
 
