@@ -346,14 +346,14 @@ func (sk *StakingPlugin) Confirmed(nodeId discover.NodeID, block *types.Block) e
 		monitor.MonitorInstance().CollectInitVerifiers(block.Hash(), block.NumberU64(), QueryStartNotIrr)
 	}
 	if xutil.IsEndOfEpoch(block.NumberU64()) {
-		//当eoch结束时，要把先前20个区块选出的下一轮共识节点，保存到本地db以备后续查询
-		monitor.MonitorInstance().CollectNextEpochValidators(block.Hash(), block.NumberU64(), QueryStartNotIrr)
-
 		//当是end of epoch时，保存201名单
 		monitor.MonitorInstance().CollectNextEpochVerifiers(block.Hash(), block.NumberU64(), QueryStartNotIrr)
 	}
 
 	if xutil.IsElection(block.NumberU64()) {
+		//当eoch结束时，要把先前20个区块选出的下一轮共识节点，保存到本地db以备后续查询
+		monitor.MonitorInstance().CollectNextEpochValidators(block.Hash(), block.NumberU64(), QueryStartNotIrr)
+
 		// 新的名单选出后，直接以[startBlock, endBlock]为区间的key，存储在snapshot db中。
 		// 不需要有切换验证人的动作，只需要根据块高去查询，即可以获取某个块高对应的验证人节点列表
 		next, err := sk.getNextValList(block.Hash(), block.NumberU64(), QueryStartNotIrr)
@@ -501,6 +501,33 @@ func (sk *StakingPlugin) StakeUpdate(state xcom.StateDB, blockHash common.Hash, 
 	if err := sk.db.SetCanMutableStore(blockHash, validatorId, can.CandidateMutable); nil != err {
 		log.Error("Failed to Delegate on stakingPlugin: Store CandidateMutable info is failed",
 			"blockNumber", blockNumber, "blockHash", blockHash.Hex(), "nodeId", can.NodeId.String(), "err", err)
+		return err
+	}
+	return nil
+}
+
+func (sk *StakingPlugin) UnStake(state xcom.StateDB, blockHash common.Hash, blockNumber *big.Int, validatorId *big.Int, can *staking.Candidate) error {
+	if err := sk.db.DelCanPowerStore(blockHash, can); nil != err {
+		log.Error("Failed to WithdrewStaking on stakingPlugin: Delete Candidate old power is failed",
+			"blockNumber", blockNumber.Uint64(), "blockHash", blockHash.Hex(), "nodeId", can.NodeId.String(), "err", err)
+		return err
+	}
+	epoch := xutil.CalculateEpoch(blockNumber.Uint64())
+	can.StakingEpoch = uint32(epoch)
+	can.CleanShares()
+	can.Status |= staking.Invalided | staking.Withdrew
+
+	if err := sk.db.SetCanMutableStore(blockHash, validatorId, can.CandidateMutable); nil != err {
+		log.Error("Failed to WithdrewStaking on stakingPlugin: Store CandidateMutable info is failed",
+			"blockNumber", blockNumber.Uint64(), "blockHash", blockHash.Hex(), "nodeId", can.NodeId.String(), "err", err)
+		return err
+	}
+
+	// sub the account staking Reference Count
+	if err := sk.db.SubAccountStakeRc(blockHash, can.StakingAddress); nil != err {
+		log.Error("Failed to WithdrewStaking on stakingPlugin: Store Staking Account Reference Count (sub) is failed",
+			"blockNumber", blockNumber.Uint64(), "blockHash", blockHash.Hex(), "nodeId", can.NodeId.String(),
+			"staking Account", can.StakingAddress.String(), "err", err)
 		return err
 	}
 	return nil
@@ -1596,6 +1623,22 @@ func (sk *StakingPlugin) GetVerifierCandidateInfo(blockHash common.Hash, blockNu
 	return queue, nil
 }
 
+func (sk *StakingPlugin) GetVerifierListFilterInitNode(blockHash common.Hash, blockNumber uint64, isCommit bool) (staking.ValidatorExQueue, error) {
+	nodeList, err := sk.GetVerifierList(blockHash, blockNumber, isCommit)
+	if err != nil {
+		return nil, err
+	}
+	returnList := make(staking.ValidatorExQueue, 0, len(nodeList))
+	if nodeList.IsNotEmpty() {
+		for i := 0; i < len(nodeList); i++ {
+			if nodeList[i].StakingBlockNum > 0 {
+				returnList = append(returnList, nodeList[i])
+			}
+		}
+	}
+	return returnList, nil
+}
+
 func (sk *StakingPlugin) GetVerifierList(blockHash common.Hash, blockNumber uint64, isCommit bool) (staking.ValidatorExQueue, error) {
 	verifierList, err := sk.getVerifierList(blockHash, blockNumber, isCommit)
 	if nil != err {
@@ -1640,13 +1683,14 @@ func (sk *StakingPlugin) GetVerifierList(blockHash common.Hash, blockNumber uint
 		//shares, _ := new(big.Int).SetString(v.StakingWeight[1], 10)
 
 		valEx := &staking.ValidatorEx{
-			ValidatorId:    can.ValidatorId,
-			NodeId:         can.NodeId,
-			BlsPubKey:      can.BlsPubKey,
-			StakingAddress: can.StakingAddress,
-			ProgramVersion: can.ProgramVersion,
-			Shares:         (*hexutil.Big)(v.Shares),
-			ValidatorTerm:  v.ValidatorTerm,
+			ValidatorId:     can.ValidatorId,
+			NodeId:          can.NodeId,
+			BlsPubKey:       can.BlsPubKey,
+			StakingAddress:  can.StakingAddress,
+			StakingBlockNum: can.StakingBlockNum,
+			ProgramVersion:  can.ProgramVersion,
+			Shares:          (*hexutil.Big)(v.Shares),
+			ValidatorTerm:   v.ValidatorTerm,
 		}
 		queue[i] = valEx
 	}
@@ -1790,13 +1834,14 @@ func (sk *StakingPlugin) GetValidatorList(blockHash common.Hash, blockNumber uin
 		}
 
 		valEx := &staking.ValidatorEx{
-			ValidatorId:    can.ValidatorId,
-			NodeId:         can.NodeId,
-			BlsPubKey:      can.BlsPubKey,
-			StakingAddress: can.StakingAddress,
-			ProgramVersion: can.ProgramVersion,
-			Shares:         (*hexutil.Big)(v.Shares),
-			ValidatorTerm:  v.ValidatorTerm,
+			ValidatorId:     can.ValidatorId,
+			NodeId:          can.NodeId,
+			BlsPubKey:       can.BlsPubKey,
+			StakingAddress:  can.StakingAddress,
+			StakingBlockNum: can.StakingBlockNum,
+			ProgramVersion:  can.ProgramVersion,
+			Shares:          (*hexutil.Big)(v.Shares),
+			ValidatorTerm:   v.ValidatorTerm,
 		}
 		queue[i] = valEx
 	}

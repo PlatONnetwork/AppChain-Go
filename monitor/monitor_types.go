@@ -58,8 +58,6 @@ type ProxyPattern struct {
 }
 
 type EpochView struct {
-	CurPackageReward  *big.Int `json:"curPackageReward,omitempty"`
-	CurStakingReward  *big.Int `json:"curStakingReward,omitempty"`
 	NextPackageReward *big.Int `json:"nextPackageReward"`
 	NextStakingReward *big.Int `json:"nextStakingReward"`
 	PackageReward     *big.Int `json:"packageReward"`

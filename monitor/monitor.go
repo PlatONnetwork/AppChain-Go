@@ -5,6 +5,7 @@ import (
 	"github.com/PlatONnetwork/AppChain-Go/core/state"
 	"github.com/PlatONnetwork/AppChain-Go/log"
 	"github.com/PlatONnetwork/AppChain-Go/x/staking"
+	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
 	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
 	"math/big"
 	"strconv"
@@ -310,18 +311,19 @@ func (m *Monitor) CollectInitValidators(blockHash common.Hash, blockNumber uint6
 		return
 	}
 
+	log.Info("CollectInitValidators:", "blockNumber", blockNumber, "size", len(curValidators.Arr))
+	for idx, item := range curValidators.Arr {
+		log.Info("CollectInitValidators:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
+	}
+
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, curValidators)
 	if nil != err {
-		log.Error("Failed to convertToValidatorExQueue", "blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
+		log.Error("Failed to convertToValidatorExQueue", "blockNumber", blockNumber, "blockHash", blockHash.Hex(), "err", err)
 		return
 	}
 	json := ToJson(validatorExQueue)
 
-	nextEpoch := xutil.CalculateEpoch(blockNumber) + 1
-	if blockNumber == 1 {
-		nextEpoch = 1
-	}
-	dbKey := ValidatorsOfEpochKey.String() + strconv.FormatUint(nextEpoch, 10)
+	dbKey := ValidatorsOfEpochKey.String() + strconv.FormatUint(0, 10)
 
 	m.monitordb.Put([]byte(dbKey), json)
 	log.Debug("success to CollectInitEpochValidators", "blockNumber", blockNumber, "blockHash", blockHash.String(), "dbKey", dbKey)
@@ -333,22 +335,22 @@ func (m *Monitor) CollectInitValidators(blockHash common.Hash, blockNumber uint6
 func (m *Monitor) CollectNextEpochValidators(blockHash common.Hash, blockNumber uint64, queryStartNotIrr bool) {
 	nextValidators, err := m.stakingPlugin.GetNextValList(blockHash, blockNumber, queryStartNotIrr)
 	if nil != err {
-		log.Error("Failed to CollectNextEpochValidators", "blockNumber", blockHash, "blockHash", blockNumber, "err", err)
+		log.Error("Failed to CollectNextEpochValidators", "blockNumber", blockNumber, "blockHash", blockHash.Hex(), "err", err)
 		return
+	}
+	log.Info("CollectNextEpochValidators:", "blockNumber", blockNumber, "size", len(nextValidators.Arr))
+	for idx, item := range nextValidators.Arr {
+		log.Info("CollectNextEpochValidators:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, nextValidators)
 	if nil != err {
-		log.Error("Failed to convertToValidatorExQueue", "blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
+		log.Error("Failed to convertToValidatorExQueue", "blockNumber", blockNumber, "blockHash", blockHash.Hex(), "err", err)
 		return
 	}
 	json := ToJson(validatorExQueue)
 
-	nextEpoch := xutil.CalculateEpoch(blockNumber) + 1
-	if blockNumber == 1 {
-		nextEpoch = 1
-	}
-	dbKey := ValidatorsOfEpochKey.String() + strconv.FormatUint(nextEpoch, 10)
+	dbKey := ValidatorsOfEpochKey.String() + strconv.FormatUint(blockNumber+xcom.ElectionDistance(), 10)
 
 	m.monitordb.Put([]byte(dbKey), json)
 	log.Debug("success to CollectNextEpochValidators", "blockNumber", blockNumber, "blockHash", blockHash.String(), "dbKey", dbKey)
@@ -363,6 +365,13 @@ func (m *Monitor) CollectInitVerifiers(blockHash common.Hash, blockNumber uint64
 			"blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
 		return
 	}
+
+	log.Info("CollectInitVerifiers:", "blockNumber", blockNumber, "size", len(verifiers.Arr))
+	for idx, item := range verifiers.Arr {
+		log.Info("CollectInitVerifiers:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
+	}
+
+	log.Debug("CollectInitVerifiers:", "size", len(verifiers.Arr), "data:", ToJson(verifiers))
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, verifiers)
 	if nil != err {
 		log.Error("failed to convertToValidatorExQueue", "blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
@@ -370,11 +379,7 @@ func (m *Monitor) CollectInitVerifiers(blockHash common.Hash, blockNumber uint64
 	}
 	json := ToJson(validatorExQueue)
 
-	nextEpoch := xutil.CalculateEpoch(blockNumber) + 1
-	if blockNumber == 1 {
-		nextEpoch = 1
-	}
-	dbKey := VerifiersOfEpochKey.String() + strconv.FormatUint(nextEpoch, 10)
+	dbKey := VerifiersOfEpochKey.String() + strconv.FormatUint(1, 10)
 
 	m.monitordb.Put([]byte(dbKey), json)
 	log.Debug("success to CollectInitVerifiers", "blockNumber", blockNumber, "blockHash", blockHash.String(), "dbKey", dbKey)
@@ -392,9 +397,14 @@ func (m *Monitor) CollectNextEpochVerifiers(blockHash common.Hash, blockNumber u
 			"blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
 		return
 	}
+	log.Debug("CollectNextEpochVerifiers:", "blockNumber", blockNumber, "size", len(verifiers.Arr))
+	for idx, item := range verifiers.Arr {
+		log.Info("CollectNextEpochVerifiers:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
+	}
+
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, verifiers)
 	if nil != err {
-		log.Error("failed to convertToValidatorExQueue", "blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
+		log.Error("failed to convertToValidatorExQueue", "blockNumber", blockNumber, "blockHash", blockHash.Hex(), "err", err)
 		return
 	}
 	json := ToJson(validatorExQueue)
@@ -420,12 +430,11 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 	validatorExQueue := make(staking.ValidatorExQueue, len(validatorList.Arr))
 	for k, v := range validatorList.Arr {
 		validatorExQueue[k] = &staking.ValidatorEx{
-			ValidatorTerm: v.ValidatorTerm,
-			NodeId:        v.NodeId,
-			//StakingBlockNum: v.StakingBlockNum,
-			ProgramVersion: v.ProgramVersion,
-			ValidatorId:    v.ValidatorId,
-			StakingAddress: v.StakingAddress,
+			ValidatorTerm:   v.ValidatorTerm,
+			NodeId:          v.NodeId,
+			StakingBlockNum: v.StakingBlockNum,
+			ProgramVersion:  v.ProgramVersion,
+			ValidatorId:     v.ValidatorId,
 		}
 		var notInCadidateList = true
 		// 给ValidatorEx补充详细信息

@@ -657,7 +657,7 @@ var (
 	}
 
 	RootChainConfig = cli.StringFlag{
-		Name:   "rootChainConfig",
+		Name:   "rootchain_config",
 		Usage:  "rootchain related configuration, PRC address, contract address, etc.",
 		EnvVar: "",
 		Value:  "",
@@ -1255,10 +1255,10 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 		cfg.VmTimeoutDuration = ctx.GlobalUint64(VmTimeoutDuration.Name)
 	}
 
+	rcConfig := config.RootChainContractConfig{}
 	// Read rootchain-related configuration
 	if ctx.GlobalIsSet(RootChainConfig.Name) {
 		configAddr := ctx.GlobalString(RootChainConfig.Name)
-		rcConfig := config.RootChainContractConfig{}
 		parseConfigJson := func(configPath string) error {
 			if configPath == "" {
 				return nil
@@ -1279,8 +1279,8 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 			return nil
 		}
 		parseConfigJson(configAddr)
-		cfg.RCConfig = &rcConfig
 	}
+	cfg.RCConfig = &rcConfig
 }
 
 func SetCbft(ctx *cli.Context, cfg *types.OptionsConfig, nodeCfg *node.Config) {

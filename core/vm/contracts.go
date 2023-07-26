@@ -131,6 +131,7 @@ var PlatONPrecompiledContracts = map[common.Address]PrecompiledContract{
 	vm.GovContractAddr:         &GovContract{},
 	vm.RewardManagerPoolAddr:   &rewardEmpty{},
 	vm.DelegateRewardPoolAddr:  &DelegateRewardContract{},
+	vm.CheckpointSigAggAddr: &CheckpointSigAggregatorContract{},
 }
 
 var PlatONPrecompiledContracts120 = map[common.Address]PrecompiledContract{

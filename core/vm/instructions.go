@@ -992,12 +992,12 @@ func makeSwap(size int64) executionFunc {
 }
 
 func inspectProxyPattern(evm *EVM, caller ContractRef, selfInfo, targetInfo *monitor.ContractInfo) bool {
-	log.Debug("inspectProxyPattern", "selfInfo.Type==3", selfInfo.Type == monitor.GENERAL, "targetInfo.Type==0", targetInfo.Type == monitor.ERC20)
+	log.Debug("inspectProxyPattern", "selfInfo.Type==3", selfInfo.Type == monitor.EVM, "targetInfo.Type==0", targetInfo.Type == monitor.ERC20)
 
 	log.Debug("set vmConfig.ProxyInspected = true", "vmConfig.NoRecursion", evm.vmConfig.NoRecursion)
 	evm.vmConfig.ProxyInspected = true
 
-	if selfInfo.Type == monitor.GENERAL {
+	if selfInfo.Type == monitor.EVM {
 		if targetInfo.Type == monitor.ERC20 { //the target bin seems as an ERC20
 			// get name/symbol/decimals /totalSupper
 			selfNameBytes, nameErr1 := evm.StaticCallNoCost(caller, selfInfo.Address, monitor.InputForName)

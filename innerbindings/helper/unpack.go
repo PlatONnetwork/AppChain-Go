@@ -10,6 +10,7 @@ import (
 	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
 	"github.com/PlatONnetwork/AppChain-Go/common"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	loglog "github.com/PlatONnetwork/AppChain-Go/log"
 )
 
 // Big batch of reflect types for topic reconstruction.
@@ -23,6 +24,7 @@ var (
 func UnpackLog(abiObject *abi.ABI, out interface{}, event string, log *types.Log) error {
 	if len(log.Data) > 0 {
 		if err := abiObject.UnpackIntoInterface(out, event, log.Data); err != nil {
+			loglog.Error("unpack into interface error", "err", err)
 			return err
 		}
 	}

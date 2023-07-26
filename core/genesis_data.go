@@ -78,7 +78,7 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 			ValidatorId:     new(big.Int).SetBytes(node.Node.ID.Bytes()),
 			NodeId:          node.Node.ID,
 			BlsPubKey:       keyHex,
-			StakingAddress:  xcom.CDFAccount(),
+			StakingAddress:  node.Account,
 			BenefitAddress:  vm.RewardManagerPoolAddr,
 			StakingTxIndex:  uint32(index),           // txIndex from zero to n
 			ProgramVersion:  g.Config.GenesisVersion, // genesis version

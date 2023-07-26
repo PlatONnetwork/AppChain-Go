@@ -307,6 +307,8 @@ func buildFlags(env build.Environment) (flags []string) {
 		ld = append(ld, "-extldflags", "-static")
 	}
 
+	ld = append(ld, "-extldflags", "-Wl,--allow-multiple-definition")
+
 	if len(ld) > 0 {
 		flags = append(flags, "-ldflags", strings.Join(ld, " "))
 	}

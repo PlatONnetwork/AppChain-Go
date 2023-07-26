@@ -403,7 +403,11 @@ func New(stack *node.Node, config *Config) (*Ethereum, error) {
 		filterAPI := filters.NewPublicFilterAPI(eth.APIBackend, false)
 		platonAPI := ethapi.NewPublicBlockChainAPI(eth.APIBackend)
 
-		rootchainConnector, err := processor.NewRootchainConnector(config.RCConfig.PlatonRPCAddr, config.RCConfig.RootChainAddress)
+		rootchainConnector, err := processor.NewRootchainConnector(
+			eth.managerAccount,
+			config.RCConfig.PlatonRPCAddr,
+			config.RCConfig.RootChainAddress,
+		)
 		if err != nil {
 			log.Error("Creating rootchain connector fail", "err", err)
 			return nil, errors.New("Failed to create rootchain connector")

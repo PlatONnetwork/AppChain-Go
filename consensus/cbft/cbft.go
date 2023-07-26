@@ -299,6 +299,10 @@ func (cbft *Cbft) Start(chain consensus.ChainReader, blockCacheWriter consensus.
 		cbft.log.Error("Load wal failed", "err", err)
 		return err
 	}
+
+	//after load wal update txpool local address
+	cbft.updateTxPool()
+
 	utils.SetFalse(&cbft.loading)
 
 	go cbft.receiveLoop()
@@ -308,6 +312,15 @@ func (cbft *Cbft) Start(chain consensus.ChainReader, blockCacheWriter consensus.
 	utils.SetTrue(&cbft.start)
 	cbft.log.Info("Cbft engine start")
 	return nil
+}
+
+func (cbft *Cbft) updateTxPool() {
+	for _, addr := range cbft.validatorPool.GetPreValidators() {
+		cbft.txPool.RemoveLocalAddr(addr)
+	}
+	for _, addr := range cbft.validatorPool.GetCurrentValidators() {
+		cbft.txPool.AddLocalAddr(addr)
+	}
 }
 
 // ReceiveMessage Entrance: The messages related to the consensus are entered from here.
@@ -682,7 +695,7 @@ func (cbft *Cbft) VerifyRootChainTx(parentBlock *types.Block, block *types.Block
 			stakeTx = txs[0]
 		}
 		header := block.Header()
-		if err := cbft.rootChainCheck.CheckStakeStateSyncExtra(parentBlock.Header(), header, stakeTx); err != nil {
+		if err := cbft.rootChainCheck.CheckStakeStateSyncExtra(parentBlock, header, stakeTx); err != nil {
 			cbft.log.Error("Verify header stake state extra failed", "number", header.Number, "hash", header.Hash, "err", err)
 			return fmt.Errorf("verify header stake state extra failed, number:%d, hash:%s", header.Number.Uint64(), header.Hash().String())
 		}
@@ -1857,7 +1870,7 @@ func (cbft *Cbft) BlsSign(msg []byte) ([]byte, error) {
 	return cbft.signFnByBls(msg)
 }
 
-func (cbft *Cbft) IsCurrentValidator() (*cbfttypes.ValidateNode, error){
+func (cbft *Cbft) IsCurrentValidator() (*cbfttypes.ValidateNode, error) {
 	return cbft.isCurrentValidator()
 }
 

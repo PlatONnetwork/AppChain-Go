@@ -385,6 +385,14 @@ func NewTxPool(config TxPoolConfig, chainconfig *params.ChainConfig, chain txPoo
 	return pool
 }
 
+func (pool *TxPool) AddLocalAddr(addr common.Address) {
+	pool.locals.add(addr)
+}
+
+func (pool *TxPool) RemoveLocalAddr(addr common.Address) {
+	pool.locals.remove(addr)
+}
+
 // loop is the transaction pool's main event loop, waiting for and reacting to
 // outside blockchain events as well as for various reporting and transaction
 // eviction events.
@@ -1785,6 +1793,12 @@ func (as *accountSet) containsTx(tx *types.Transaction) bool {
 // add inserts a new address into the set to track.
 func (as *accountSet) add(addr common.Address) {
 	as.accounts[addr] = struct{}{}
+	as.cache = nil
+}
+
+// add inserts a new address into the set to track.
+func (as *accountSet) remove(addr common.Address) {
+	delete(as.accounts, addr)
 	as.cache = nil
 }
 

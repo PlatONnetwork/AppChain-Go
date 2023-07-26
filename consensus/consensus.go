@@ -60,6 +60,8 @@ type ChainReader interface {
 type TxPoolReset interface {
 	ForkedReset(newHeader *types.Header, rollback []*types.Block)
 	Reset(newBlock *types.Block)
+	AddLocalAddr(addr common.Address)
+	RemoveLocalAddr(addr common.Address)
 }
 
 // BlockCacheWriter executions block, you need to pass in the parent

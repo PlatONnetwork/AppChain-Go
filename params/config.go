@@ -180,8 +180,9 @@ type ChainConfig struct {
 }
 
 type CbftNode struct {
-	Node      discover.Node `json:"node"`
-	BlsPubKey bls.PublicKey `json:"blsPubKey"`
+	Node      discover.Node  `json:"node"`
+	BlsPubKey bls.PublicKey  `json:"blsPubKey"`
+	Account   common.Address `json:"account"`
 }
 
 type initNode struct {

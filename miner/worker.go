@@ -795,16 +795,22 @@ func (w *worker) createStakeStateSyncTx(state *state.StateDB) (*types.Transactio
 	if err != nil {
 		return nil, nil, err
 	}
-	if len(logs) == 0 {
+	// means that no events are processed and the height of the event block listened to does not increase.
+	if end == nil {
 		return nil, types.EncodeStakeExtra(big.NewInt(0)), nil
 	}
-
+	// The block height for processing events is increased and the transaction has to be committed.
+	// Each time the node is started, the block height is used as the starting height to enable listening events.
 	data, err := helper.EncodeStakeStateSync(end, logs)
 	if err != nil {
 		return nil, nil, err
 	}
 	nonce := w.managerAccount.Nonce()
-	tx := types.NewTransaction(nonce, vm2.StakingContractAddr, nil, 1800000, big.NewInt(0), data)
+	estimateGas, err := core.IntrinsicGas(data, false, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	tx := types.NewTransaction(nonce, vm2.StakingContractAddr, nil, estimateGas, big.NewInt(0), data)
 	tx, err = w.managerAccount.Sign(tx, nil)
 	if err != nil {
 		return nil, nil, err
@@ -1025,7 +1031,7 @@ func (w *worker) commitNewWork(interrupt *int32, noempty bool, timestamp int64, 
 
 	log.Info("Cbft begin to consensus for new block", "number", header.Number, "nonce", hexutil.Encode(header.Nonce[:]), "gasLimit", header.GasLimit,
 		"parentHash", parent.Hash(), "parentNumber", parent.NumberU64(), "parentStateRoot", parent.Root(),
-		"timestamp", common.MillisToString(timestamp), "deadline", blockDeadline)
+		"timestamp", common.MillisToString(timestamp), "deadline", common.MillisToString(blockDeadline.UnixMilli()))
 	// Initialize the header extra in Prepare function of engine
 	if err := w.engine.Prepare(w.chain, header); err != nil {
 		log.Error("Failed to prepare header for mining", "err", err)

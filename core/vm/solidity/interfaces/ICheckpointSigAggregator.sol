@@ -4,7 +4,7 @@ pragma solidity ^0.8.12;
 
 interface ICheckpointSigAggregator {
     event CheckpointSigAggregated(
-        address indexed proposer,
+        address proposer,
         uint256 start,
         uint256 end,
         bytes32 root,
@@ -14,13 +14,12 @@ interface ICheckpointSigAggregator {
 
     struct Checkpoint {
         address proposer;
+        bytes32[] hashes;
         uint256 start;
         uint256 end;
-        bytes32 rootHash;
-        bytes32 accountHash;
-        uint256 chainId;
         uint256[] current;
         uint256[] rewards;
+        uint256 chainId;
         uint256[] slashing;
     }
 
@@ -39,4 +38,9 @@ interface ICheckpointSigAggregator {
         external
         view
         returns (PendingCheckpoint memory pcp);
+
+    function shouldPropose(
+        uint256 number,
+        uint256 validatorId
+    ) external view returns (bool);
 }

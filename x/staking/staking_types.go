@@ -879,7 +879,8 @@ type ValidatorEx struct {
 	// bls public key
 	BlsPubKey bls.PublicKeyHex `json:"-"`
 	// The account used to initiate the staking
-	StakingAddress common.Address `json:"stakingAddress,omitempty"`
+	StakingAddress  common.Address `json:"stakingAddress,omitempty"`
+	StakingBlockNum uint64         `json:"stakingBlockNum,omitempty"`
 	// The version of the node process
 	ProgramVersion uint32 `json:"programVersion,omitempty"`
 	// All vons of staking and delegated

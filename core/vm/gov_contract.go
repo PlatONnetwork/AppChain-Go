@@ -73,7 +73,7 @@ func (gc *GovContract) Run(input []byte) ([]byte, error) {
 func (gc *GovContract) FnSigns() map[uint16]interface{} {
 	return map[uint16]interface{}{
 		// Set
-		/*SubmitText:    gc.submitText,
+		SubmitText:    gc.submitText,
 		SubmitVersion: gc.submitVersion,
 		Vote:          gc.vote,
 		Declare:       gc.declareVersion,
@@ -87,7 +87,7 @@ func (gc *GovContract) FnSigns() map[uint16]interface{} {
 		GetActiveVersion:      gc.getActiveVersion,
 		GetGovernParamValue:   gc.getGovernParamValue,
 		GetAccuVerifiersCount: gc.getAccuVerifiersCount,
-		ListGovernParam:       gc.listGovernParam,*/
+		ListGovernParam:       gc.listGovernParam,
 	}
 }
 

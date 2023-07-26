@@ -20,15 +20,24 @@ type StateDB interface {
 type ContractType int
 
 const (
-	ERC20 ContractType = iota //EnumIndex = 0
-	ERC721
-	ERC1155
-	GENERAL
+	EVM     ContractType = iota + 1 //1, start with 1
+	WASM                            //2
+	_                               //3, skipped
+	ERC20                           //4
+	ERC721                          //5
+	ERC1155                         //6
 )
 
 // 定义 MonitorDbKey 类型的方法 String(), 返回字符串。
 func (t ContractType) String() string {
-	return [...]string{"ERC20", "ERC721", "ERC1155", "GENERAL"}[t]
+	return [...]string{
+		"EVM",
+		"WASM",
+		"UNKNOWN",
+		"ERC20",
+		"ERC721",
+		"ERC1155",
+	}[t]
 }
 
 var (
@@ -95,7 +104,7 @@ func NewContractInfo(address common.Address, code []byte) *ContractInfo {
 	instance := new(ContractInfo)
 	instance.Address = address
 	instance.Code = code
-	instance.Type = GENERAL
+	instance.Type = EVM
 	if len(code) > 0 {
 		binHex := hex.EncodeToString(code)
 		instance.Bin = binHex
@@ -112,7 +121,7 @@ func NewContractInfo(address common.Address, code []byte) *ContractInfo {
 }
 
 func (c *ContractInfo) matchProxyPattern() bool {
-	return c.Type == GENERAL &&
+	return c.Type == EVM &&
 		((strings.Index(c.Bin, adminSlotOfEip1967) != -1 && strings.Index(c.Bin, implSlotOfEip1967) != -1) ||
 			(strings.Index(c.Bin, adminSlotOfZeppelinos) != -1 && strings.Index(c.Bin, implSlotZeppelinos) != -1))
 }
@@ -127,7 +136,13 @@ func getType(binHex string) ContractType {
 			return ERC1155
 		}
 	}
-	return GENERAL
+	//参考：com.platon.browser.decoder.TxInputDecodeUtil#isWASM
+	//"0x0061736d"
+	if strings.Contains(binHex, "0061736d") {
+		return WASM
+	}
+
+	return EVM
 }
 
 func isERC20(binHex string) bool {

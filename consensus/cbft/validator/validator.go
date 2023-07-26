@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the PlatON-Go library. If not, see <http://www.gnu.org/licenses/>.
 
-
 package validator
 
 import (
@@ -481,6 +480,14 @@ func (vp *ValidatorPool) GetValidatorByAddr(epoch uint64, addr common.NodeAddres
 	defer vp.lock.RUnlock()
 
 	return vp.getValidatorByAddr(epoch, addr)
+}
+
+func (vp *ValidatorPool) GetPreValidators() []common.Address {
+	return vp.prevValidators.AllNodeAddress()
+}
+
+func (vp *ValidatorPool) GetCurrentValidators() []common.Address {
+	return vp.currentValidators.AllNodeAddress()
 }
 
 func (vp *ValidatorPool) getValidatorByAddr(epoch uint64, addr common.NodeAddress) (*cbfttypes.ValidateNode, error) {

@@ -120,7 +120,7 @@ type Validators struct {
 	Nodes            ValidateNodeMap `json:"validateNodes"`
 	ValidBlockNumber uint64          `json:"validateBlockNumber"`
 
-	mu sync.Mutex
+	mu          sync.Mutex
 	sortedNodes SortedValidatorNode
 }
 
@@ -231,6 +231,14 @@ func (vs *Validators) FindNodeByAddress(addr common.NodeAddress) (*ValidateNode,
 		}
 	}
 	return nil, errors.New("invalid address")
+}
+
+func (vs *Validators) AllNodeAddress() []common.Address {
+	var addrs []common.Address
+	for _, node := range vs.Nodes {
+		addrs = append(addrs, node.StakingAddress)
+	}
+	return addrs
 }
 
 func (vs *Validators) FindNodeByValidatorId(validatorId uint32) (*ValidateNode, error) {
