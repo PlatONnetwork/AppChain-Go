@@ -278,6 +278,7 @@ func New(stack *node.Node, config *Config) (*Ethereum, error) {
 	monitor.InitMonitor(stateDB)
 	monitor.MonitorInstance().SetStakingPlugin(xplugin.StakingInstance())
 	monitor.MonitorInstance().SetRestrictingPlugin(xplugin.RestrictingInstance())
+	monitor.MonitorInstance().ConnectRootChain(eth.config.RCConfig)
 
 	blockChainCache := core.NewBlockChainCache(eth.blockchain)
 

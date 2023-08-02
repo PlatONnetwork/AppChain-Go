@@ -3,7 +3,9 @@ package monitor
 import (
 	"github.com/PlatONnetwork/AppChain-Go/common"
 	"github.com/PlatONnetwork/AppChain-Go/core/state"
+	"github.com/PlatONnetwork/AppChain-Go/ethclient"
 	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/config"
 	"github.com/PlatONnetwork/AppChain-Go/x/staking"
 	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
 	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
@@ -15,7 +17,7 @@ import (
 type MonitorDbKey int
 
 const (
-	UnusualTransferKey MonitorDbKey = iota
+	UncommonTransferKey MonitorDbKey = iota
 	CreatedContractKey
 	SuicidedContractKey
 	ProxyPatternKey
@@ -25,12 +27,13 @@ const (
 	EpochInfoKey
 	SlashKey
 	ImplicitPPOSTxKey
+	RootChainTxKey
 )
 
 // 定义 MonitorDbKey 类型的方法 String(), 返回字符串。
 func (dbKey MonitorDbKey) String() string {
 	return [...]string{
-		"UnusualTransferKey",
+		"UncommonTransferKey",
 		"CreatedContractKey",
 		"SuicidedContractKey",
 		"ProxyPatternKey",
@@ -42,6 +45,7 @@ func (dbKey MonitorDbKey) String() string {
 		"InitNodeKey",
 		"SlashKey",
 		"ImplicitPPOSTxKey",
+		"RootChainTxKey",
 	}[dbKey]
 }
 
@@ -50,6 +54,8 @@ type Monitor struct {
 	monitordb         *monitorDB
 	stakingPlugin     Intf_stakingPlugin
 	restrictingPlugin Intf_restrictingPlugin
+	rootChainConfig   *config.RootChainContractConfig
+	rootChainClient   *ethclient.Client
 }
 
 var (
@@ -83,49 +89,49 @@ func (m *Monitor) SetRestrictingPlugin(pluginImpl Intf_restrictingPlugin) {
 // 收集非常规的转账交易
 // 1. 用户发起的合约调用，参数携带了value值，造成向合约地址转账
 // 2. 合约销毁时，合约上的原生代币，将转给合约的受益人（beneficiary，这个受益人，究竟是合约调用人？合约部署人？）
-func (m *Monitor) CollectUnusualTransferTx(blockNumber uint64, txHash common.Hash, from, to common.Address, amount *big.Int) {
-	log.Debug("CollectUnusualTransferTx", "blockNumber", blockNumber, "txHash", txHash.Hex(), "from", from.Bech32(), "to", to.Bech32(), "amount", amount)
+func (m *Monitor) CollectUncommonTransferTx(blockNumber uint64, txHash common.Hash, from, to common.Address, amount *big.Int) {
+	log.Debug("CollectUncommonTransferTx", "blockNumber", blockNumber, "txHash", txHash.Hex(), "from", from.Bech32(), "to", to.Bech32(), "amount", amount)
 
-	dbKey := UnusualTransferKey.String() + "_" + txHash.String()
+	dbKey := UncommonTransferKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
 	if nil != err && err != ErrNotFound {
-		log.Error("failed to load unusual transfers", "err", err)
+		log.Error("failed to load uncommon transfers", "err", err)
 		return
 	}
 
-	var unusualTransferTxList []*UnusualTransfer
-	ParseJson(data, &unusualTransferTxList)
+	var uncommonTransferTxList []*UncommonTransfer
+	ParseJson(data, &uncommonTransferTxList)
 
-	unusualTransferTx := new(UnusualTransfer)
-	unusualTransferTx.TxHash = txHash
-	unusualTransferTx.From = from
-	unusualTransferTx.To = to
-	unusualTransferTx.Amount = amount
+	uncommonTransferTx := new(UncommonTransfer)
+	uncommonTransferTx.TxHash = txHash
+	uncommonTransferTx.From = from
+	uncommonTransferTx.To = to
+	uncommonTransferTx.Amount = amount
 
-	unusualTransferTxList = append(unusualTransferTxList, unusualTransferTx)
+	uncommonTransferTxList = append(uncommonTransferTxList, uncommonTransferTx)
 
-	json := ToJson(unusualTransferTxList)
+	json := ToJson(uncommonTransferTxList)
 	if len(json) > 0 {
 		m.monitordb.Put([]byte(dbKey), json)
-		log.Debug("save unusual transfers success")
+		log.Debug("save uncommon transfers success")
 	}
 
 }
 
 // 查询非常规的转账交易
-func (m *Monitor) GetUnusualTransfer(blockNumber uint64, txHash common.Hash) []*UnusualTransfer {
-	log.Debug("GetUnusualTransfer", "blockNumber", blockNumber, "txHash", txHash.Hex())
+func (m *Monitor) GetUncommonTransfer(blockNumber uint64, txHash common.Hash) []*UncommonTransfer {
+	log.Debug("GetUncommonTransfer", "blockNumber", blockNumber, "txHash", txHash.Hex())
 
-	dbKey := UnusualTransferKey.String() + "_" + txHash.String()
+	dbKey := UncommonTransferKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
 	if nil != err {
-		log.Error("failed to load unusual transfers", "err", err)
+		log.Error("failed to load uncommon transfers", "err", err)
 		return nil
 	}
 
-	var unusualTransferTxList []*UnusualTransfer
-	ParseJson(data, &unusualTransferTxList)
-	return unusualTransferTxList
+	var uncommonTransferTxList []*UncommonTransfer
+	ParseJson(data, &uncommonTransferTxList)
+	return uncommonTransferTxList
 }
 
 // 收集某个交易产生的新合约信息

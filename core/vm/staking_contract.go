@@ -24,12 +24,12 @@ import (
 	"fmt"
 	"github.com/PlatONnetwork/AppChain-Go/core/types"
 	"github.com/PlatONnetwork/AppChain-Go/crypto"
+	"github.com/PlatONnetwork/AppChain-Go/monitor"
 	"github.com/PlatONnetwork/AppChain-Go/rlp"
 	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/stakinginfo"
-	"math/big"
-
 	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
+	"math/big"
 
 	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
 
@@ -131,6 +131,8 @@ func (stkc *StakingContract) stakeInfoFunc() map[common.Hash]func(*types.Log) ([
 		helper.ShareBurnedID:  stkc.handleShareShareBurned,
 	}
 }
+
+// 在特殊节点上，实际上，这个输入参数是通过rpc得到的platon的log
 func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 	txHash := stkc.Evm.StateDB.TxHash()
 	txIndex := stkc.Evm.StateDB.TxIdx()
@@ -143,6 +145,7 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 		return nil, err
 	}
 	log.Info("StakingOperation: staked event information", "blockNumber", blockNumber, "txHash", txHash.Hex(),
+		"rootChainBlockNumber", vLog.BlockNumber, "rootChainTxHash", vLog.TxHash,
 		"signer", event.Signer.Hex(), "validatorId", event.ValidatorId, "nonce", event.Nonce,
 		"activationEpoch", event.ActivationEpoch, "amount", event.Amount, "totalStakedAmount", event.Total,
 		"signerPubkey", hex.EncodeToString(event.Pubkeys[:64]), "blsPubkey", hex.EncodeToString(event.Pubkeys[64:]))
@@ -172,8 +175,8 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 		return nil, nil
 	}
 	canBase := &staking.CandidateBase{
-		ValidatorId:     event.ValidatorId,
-		NodeId:          nodeId,
+		ValidatorId:     event.ValidatorId, //主键
+		NodeId:          nodeId,            //nodeID是可变的，节点可以转移给其它人（钱包变了，node_id也变了，但是validatorId没有变化）
 		BlsPubKey:       blsPubKey,
 		StakingAddress:  event.Owner,
 		BenefitAddress:  event.Owner,
@@ -199,6 +202,12 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 	can.CandidateMutable = canMutable
 
 	err = stkc.Plugin.CreateCandidate(state, blockHash, blockNumber, event.ValidatorId, can)
+
+	// 收集质押数据
+	if err == nil {
+		monitor.MonitorInstance().CollectRootChainStakeTx(txHash, canBase.StakingAddress, canBase.ValidatorId, nodeId, amount, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
+	}
+
 	return nil, err
 }
 
@@ -229,6 +238,10 @@ func (stkc *StakingContract) handleUnstakeInit(vLog *types.Log) ([]byte, error) 
 		return nil, nil
 	}
 	err = stkc.Plugin.UnStake(state, blockHash, blockNumber, event.ValidatorId, canOld)
+	// 收集发起解质押交易
+	if err == nil {
+		monitor.MonitorInstance().CollectRootChainUnStakeTx(txHash, event.ValidatorId, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
+	}
 	return nil, err
 }
 
@@ -237,6 +250,8 @@ func (stkc *StakingContract) handleSignerChange(vLog *types.Log) ([]byte, error)
 	if err := helper.UnpackLog(helper.StakingInfoAbi, event, helper.SignerChange, vLog); err != nil {
 		return nil, err
 	}
+	// 收集修改节点交易
+
 	return nil, nil
 }
 
@@ -268,6 +283,11 @@ func (stkc *StakingContract) handleShareMinted(vLog *types.Log) ([]byte, error) 
 	}
 	canOld.DelegateTotal = new(big.Int).Add(canOld.DelegateTotal, event.Amount)
 	err = stkc.Plugin.StakeUpdateShares(state, blockHash, blockNumber, event.ValidatorId, new(big.Int).Add(canOld.Shares, event.Amount), canOld)
+
+	// 收集委托交易
+	if err == nil {
+		monitor.MonitorInstance().CollectRootChainDeletateTx(txHash, event.User, event.ValidatorId, event.Amount, canOld.DelegateTotal, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
+	}
 	return nil, err
 }
 
@@ -299,6 +319,11 @@ func (stkc *StakingContract) handleShareShareBurned(vLog *types.Log) ([]byte, er
 	}
 	canOld.DelegateTotal = new(big.Int).Sub(canOld.DelegateTotal, event.Amount)
 	err = stkc.Plugin.StakeUpdateShares(state, blockHash, blockNumber, event.ValidatorId, new(big.Int).Sub(canOld.Shares, event.Amount), canOld)
+
+	// 收集撤销委托交易
+	if err == nil {
+		monitor.MonitorInstance().CollectRootChainUnDeletateTx(txHash, event.User, event.ValidatorId, event.Amount, canOld.DelegateTotal, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
+	}
 	return nil, err
 }
 
@@ -328,9 +353,11 @@ func (stkc *StakingContract) stakeStateSync(input []byte) ([]byte, error) {
 	}
 
 	type InputArgs struct {
+		//截至块高，是指platon上的块高，应用链监听platon上一段区间的块高的事件，然后再处理。
 		BlockNumber *big.Int
 		Events      [][]byte
 	}
+
 	var args InputArgs
 	in, err := helper.InnerStakeAbi.Methods[helper.StakeStateSync].Inputs.Unpack(input)
 	if err != nil {
@@ -343,14 +370,33 @@ func (stkc *StakingContract) stakeStateSync(input []byte) ([]byte, error) {
 
 	log.Info("stakeStateSync", "BlockNumber", args.BlockNumber)
 	stakeFuncMap := stkc.stakeInfoFunc()
+
+	// 这个event是把platon的log, 在应用链把这个log作为调用内置合约的local tx的参数时，经过了EncodeRLP，其中只包含 address / topic / data，
+	// 而特殊节点，作为同步节点，只同步区块信息，交易信息，并重放交易，而不会监听platon上的事件，
+	// 所以，在解析这个local tx时，发生在platon的质押信息，丢失了txHash, blockNumber， txIndex等信息
+	// 特殊节点要想办法把这些信息补齐。方法是：
+	// 通过连接到platon的ethclient，按需获取一段区块内的相关事件，然后遍历这些事件，和此处rlp decode得到的log比较，相同时补齐相关信息
+	// 何为相同：address / topic / data都相同即任务相同
+	prevEndBlock := new(big.Int).SetBytes(stkc.blockNumber())
+	rootChainLogsMap := monitor.MonitorInstance().GetRootChainLogs(prevEndBlock.Add(prevEndBlock, big1), args.BlockNumber)
+
+	if len(args.Events) != len(rootChainLogsMap) {
+		//log.Error("the event quantity reside in transaction input is not equals to the event quantity retrieved by RPC")
+		return nil, errors.New("the event quantity reside in transaction input is not equals to the event quantity retrieved by RPC")
+	}
+
 	for _, event := range args.Events {
 		var rootChainLog types.Log
 		if err := rootChainLog.DecodeRLP(rlp.NewStream(bytes.NewReader(event), 0)); err != nil {
 			return nil, err
 		}
 
+		rootChainLogFromPPC := rootChainLogsMap[monitor.MonitorInstance().GetLogHash(rootChainLog)]
+		if &rootChainLogFromPPC != nil {
+			rootChainLog = rootChainLogFromPPC
+		}
 		json, _ := rootChainLog.MarshalJSON()
-		log.Info("stakeStateSync", "rootChainLog", string(json))
+		log.Debug("stakeStateSync", "rootChainLog", string(json))
 
 		eventID := rootChainLog.Topics[0]
 		if fn, ok := stakeFuncMap[eventID]; ok {
@@ -398,6 +444,10 @@ func (stkc *StakingContract) SetBlockNumber(number *big.Int) error {
 	stkc.Evm.StateDB.SetState(vm.StakingContractAddr, BlockNumberKey, number.Bytes())
 	return nil
 }
+
+// 标识上次处理stakeStateSyncz交易中的platon的事件的结束块高，
+// 那么这次处理的stakeStateSync中的platon的事件的其实块高就是blockNumber()+1
+
 func (stkc *StakingContract) blockNumber() []byte {
 	value := stkc.Evm.StateDB.GetState(vm.StakingContractAddr, BlockNumberKey)
 	return value

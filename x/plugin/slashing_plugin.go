@@ -165,7 +165,7 @@ func (sp *SlashingPlugin) BeginBlock(blockHash common.Hash, header *types.Header
 					log.Error("Failed to BeginBlock, call SlashCandidates is failed", "blockNumber", header.Number.Uint64(), "blockHash", blockHash.TerminalString(), "err", err)
 					return err
 				}
-				//stats: 收集被除法节点信息
+				//stats: 收集被处罚节点信息
 				monitor.MonitorInstance().CollectSlashInfo(header.Number.Uint64(), slashQueue)
 			}
 

@@ -134,12 +134,21 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 		}
 
 		// 把交易中产生的非常规原生代币转账交易返回（原始交易是合约调用，才会产生非常规转账）
-		unusualTransferList := MonitorInstance().GetUnusualTransfer(blockNumber, tx.Hash())
-		if unusualTransferList == nil {
-			fields["unusualTransfer"] = []*UnusualTransfer{}
+		uncommonTransferList := MonitorInstance().GetUncommonTransfer(blockNumber, tx.Hash())
+		if uncommonTransferList == nil {
+			fields["uncommonTransfers"] = []*UncommonTransfer{}
 		} else {
-			fields["unusualTransfer"] = unusualTransferList
+			fields["uncommonTransfers"] = uncommonTransferList
 		}
+
+		// 把交易中中解析的root chain的质押、委托等交易信息返回
+		rootChainTxList := MonitorInstance().GetRootChainTx(blockNumber, tx.Hash())
+		if rootChainTxList == nil {
+			fields["rootChainTxs"] = []*RootChainTx{}
+		} else {
+			fields["rootChainTxs"] = rootChainTxList
+		}
+
 		queue[idx] = fields
 	}
 	return queue, nil

@@ -12,12 +12,17 @@ var (
 	InnerStakeAbi, _  = innerstake.InnerstakeMetaData.GetAbi()
 	StakingInfoAbi, _ = stakinginfo.StakinginfoMetaData.GetAbi()
 	RootChainAbi, _   = rootchain.RootchainMetaData.GetAbi()
-
-	Staked         = "Staked"
-	UnstakeInit    = "UnstakeInit"
-	Unstaked       = "Unstaked"
-	SignerChange   = "SignerChange"
-	ShareMinted    = "ShareMinted"
+	//质押
+	Staked = "Staked"
+	//发起解质押
+	UnstakeInit = "UnstakeInit"
+	//解质押锁定期结束后，赎回质押
+	Unstaked = "Unstaked"
+	//修改节点ID
+	SignerChange = "SignerChange"
+	//委托
+	ShareMinted = "ShareMinted"
+	//撤销委托
 	ShareBurned    = "ShareBurned"
 	NewHeaderBlock = "NewHeaderBlock"
 	StakeStateSync = "stakeStateSync"
