@@ -900,8 +900,8 @@ func opSuicide(pc *uint64, interpreter *EVMInterpreter, callContext *callCtx) ([
 
 	//stats: 收集隐含交易
 	if balance.Sign() > 0 {
-		log.Info("collect unusual transfer in opSuicide()", "blockNumber", interpreter.evm.Context.BlockNumber.Uint64(), "txHash", interpreter.evm.StateDB.TxHash(), "caller", callContext.contract.Address().Bech32(), "to", common.Address(beneficiary.Bytes20()).Bech32(), "&value", &balance)
-		monitor.MonitorInstance().CollectUnusualTransferTx(interpreter.evm.Context.BlockNumber.Uint64(), interpreter.evm.StateDB.TxHash(), callContext.contract.Address(), common.Address(beneficiary.Bytes20()), balance)
+		log.Info("collect uncommon transfer in opSuicide()", "blockNumber", interpreter.evm.Context.BlockNumber.Uint64(), "txHash", interpreter.evm.StateDB.TxHash(), "caller", callContext.contract.Address().Bech32(), "to", common.Address(beneficiary.Bytes20()).Bech32(), "&value", &balance)
+		monitor.MonitorInstance().CollectUncommonTransferTx(interpreter.evm.Context.BlockNumber.Uint64(), interpreter.evm.StateDB.TxHash(), callContext.contract.Address(), common.Address(beneficiary.Bytes20()), balance)
 	}
 
 	return nil, nil
