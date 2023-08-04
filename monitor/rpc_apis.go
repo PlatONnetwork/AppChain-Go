@@ -178,7 +178,7 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, er
 		return "", err
 	}
 
-	return PrettyJsonString(data), nil
+	return string(data), nil
 
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, err
@@ -208,7 +208,7 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, e
 		}
 		return "", err
 	}
-	return PrettyJsonString(data), nil
+	return string(data), nil
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
 	}
@@ -284,7 +284,7 @@ func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (st
 		return "", err
 	}
 
-	return PrettyJsonString(data), nil
+	return string(data), nil
 
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
