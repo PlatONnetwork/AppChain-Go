@@ -377,7 +377,7 @@ func (m *Monitor) CollectInitVerifiers(blockHash common.Hash, blockNumber uint64
 		log.Info("CollectInitVerifiers:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
 	}
 
-	log.Debug("CollectInitVerifiers:", "size", len(verifiers.Arr), "data:", ToJson(verifiers))
+	log.Debug("CollectInitVerifiers:", "size", len(verifiers.Arr), "data:", ToJsonString(verifiers))
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, verifiers)
 	if nil != err {
 		log.Error("failed to convertToValidatorExQueue", "blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
@@ -454,7 +454,7 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 				validatorExQueue[k].Description = cv.Description
 				validatorExQueue[k].ExternalId = cv.ExternalId
 				validatorExQueue[k].NodeName = cv.NodeName*/
-				validatorExQueue[k].ValidatorId = new(big.Int).SetUint64(uint64(cv.ValidatorId))
+				//validatorExQueue[k].ValidatorId = new(big.Int).SetUint64(uint64(cv.ValidatorId))
 				notInCadidateList = false
 				break
 			}
@@ -485,7 +485,7 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 			}
 		}
 	}
-	log.Debug("convertToValidatorExQueue", "data", ToJson(validatorExQueue))
+	log.Debug("convertToValidatorExQueue", "data", ToJsonString(validatorExQueue))
 	return validatorExQueue, nil
 }
 
