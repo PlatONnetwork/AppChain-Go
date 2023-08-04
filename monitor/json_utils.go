@@ -19,11 +19,35 @@ func ToJson(obj interface{}) []byte {
 
 }
 
+func ToJsonString(obj interface{}) string {
+	if obj == nil {
+		return string([]byte{})
+	}
+	bs, err := json.Marshal(obj)
+	if err != nil {
+		log.Error("cannot marshal object", "err", err)
+		return string([]byte{})
+	} else {
+		return string(bs)
+	}
+
+}
+
 func ParseJson(bs []byte, objRefer interface{}) {
 	if len(bs) == 0 {
 		return
 	}
 	err := json.Unmarshal(bs, objRefer)
+	if err != nil {
+		log.Error("cannot unmarshal to object", "err", err)
+	}
+}
+
+func ParseJsonString(js string, objRefer interface{}) {
+	if len(js) == 0 {
+		return
+	}
+	err := json.Unmarshal([]byte(js), objRefer)
 	if err != nil {
 		log.Error("cannot unmarshal to object", "err", err)
 	}

@@ -319,7 +319,7 @@ func (m *Monitor) CollectInitValidators(blockHash common.Hash, blockNumber uint6
 
 	log.Info("CollectInitValidators:", "blockNumber", blockNumber, "size", len(curValidators.Arr))
 	for idx, item := range curValidators.Arr {
-		log.Info("CollectInitValidators:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectInitValidators:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, curValidators)
@@ -346,7 +346,7 @@ func (m *Monitor) CollectNextEpochValidators(blockHash common.Hash, blockNumber 
 	}
 	log.Info("CollectNextEpochValidators:", "blockNumber", blockNumber, "size", len(nextValidators.Arr))
 	for idx, item := range nextValidators.Arr {
-		log.Info("CollectNextEpochValidators:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectNextEpochValidators:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, nextValidators)
@@ -374,10 +374,10 @@ func (m *Monitor) CollectInitVerifiers(blockHash common.Hash, blockNumber uint64
 
 	log.Info("CollectInitVerifiers:", "blockNumber", blockNumber, "size", len(verifiers.Arr))
 	for idx, item := range verifiers.Arr {
-		log.Info("CollectInitVerifiers:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectInitVerifiers:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
 	}
 
-	log.Debug("CollectInitVerifiers:", "size", len(verifiers.Arr), "data:", ToJson(verifiers))
+	log.Debug("CollectInitVerifiers:", "size", len(verifiers.Arr), "data:", ToJsonString(verifiers))
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, verifiers)
 	if nil != err {
 		log.Error("failed to convertToValidatorExQueue", "blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
@@ -405,7 +405,7 @@ func (m *Monitor) CollectNextEpochVerifiers(blockHash common.Hash, blockNumber u
 	}
 	log.Debug("CollectNextEpochVerifiers:", "blockNumber", blockNumber, "size", len(verifiers.Arr))
 	for idx, item := range verifiers.Arr {
-		log.Info("CollectNextEpochVerifiers:", "idx", idx, "nodeId", item.NodeId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectNextEpochVerifiers:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, verifiers)
@@ -448,13 +448,13 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 			if cv.NodeId == v.NodeId {
 				/*validatorExQueue[k].DelegateRewardTotal = cv.DelegateRewardTotal
 				validatorExQueue[k].DelegateTotal = cv.DelegateTotal
-				validatorExQueue[k].BenefitAddress = cv.BenefitAddress
+				validatorExQueue[k].BenefitAddress = cv.BenefitAddress*/
 				validatorExQueue[k].StakingAddress = cv.StakingAddress
-				validatorExQueue[k].Website = cv.Website
+				/*validatorExQueue[k].Website = cv.Website
 				validatorExQueue[k].Description = cv.Description
 				validatorExQueue[k].ExternalId = cv.ExternalId
 				validatorExQueue[k].NodeName = cv.NodeName*/
-				//validatorExQueue[k].StakingAddress = cv.StakingAddress
+				//validatorExQueue[k].ValidatorId = new(big.Int).SetUint64(uint64(cv.ValidatorId))
 				notInCadidateList = false
 				break
 			}
@@ -485,6 +485,7 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 			}
 		}
 	}
+	log.Debug("convertToValidatorExQueue", "data", ToJsonString(validatorExQueue))
 	return validatorExQueue, nil
 }
 
