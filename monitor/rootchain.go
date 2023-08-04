@@ -189,8 +189,8 @@ func (m *Monitor) saveRootChainTx(rootChainTx *RootChainTx) {
 	}
 }
 
-func (m *Monitor) GetRootChainTx(blockNumber uint64, txHash common.Hash) []*RootChainTx {
-	log.Debug("GetRootChainTx", "blockNumber", blockNumber, "txHash", txHash.String())
+func (m *Monitor) GetRootChainTx(txHash common.Hash) []*RootChainTx {
+	log.Debug("GetRootChainTx", "txHash", txHash.String())
 
 	dbKey := RootChainTxKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))

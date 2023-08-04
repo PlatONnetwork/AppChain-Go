@@ -89,8 +89,8 @@ func (m *Monitor) SetRestrictingPlugin(pluginImpl Intf_restrictingPlugin) {
 // 收集非常规的转账交易
 // 1. 用户发起的合约调用，参数携带了value值，造成向合约地址转账
 // 2. 合约销毁时，合约上的原生代币，将转给合约的受益人（beneficiary，这个受益人，究竟是合约调用人？合约部署人？）
-func (m *Monitor) CollectUncommonTransferTx(blockNumber uint64, txHash common.Hash, from, to common.Address, amount *big.Int) {
-	log.Debug("CollectUncommonTransferTx", "blockNumber", blockNumber, "txHash", txHash.Hex(), "from", from.Bech32(), "to", to.Bech32(), "amount", amount)
+func (m *Monitor) CollectUncommonTransferTx(txHash common.Hash, from, to common.Address, amount *big.Int) {
+	log.Debug("CollectUncommonTransferTx", "txHash", txHash.Hex(), "from", from.Bech32(), "to", to.Bech32(), "amount", amount)
 
 	dbKey := UncommonTransferKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
@@ -119,8 +119,8 @@ func (m *Monitor) CollectUncommonTransferTx(blockNumber uint64, txHash common.Ha
 }
 
 // 查询非常规的转账交易
-func (m *Monitor) GetUncommonTransfer(blockNumber uint64, txHash common.Hash) []*UncommonTransfer {
-	log.Debug("GetUncommonTransfer", "blockNumber", blockNumber, "txHash", txHash.Hex())
+func (m *Monitor) GetUncommonTransfer(txHash common.Hash) []*UncommonTransfer {
+	log.Debug("GetUncommonTransfer", "txHash", txHash.Hex())
 
 	dbKey := UncommonTransferKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
@@ -202,8 +202,8 @@ func (m *Monitor) CollectSuicidedContract(txHash common.Hash, suicidedContractAd
 
 // 查询某个交易产生的自杀合约的信息
 // scan可以通过Rpc接口：GetExtReceipts，获取每个交易造成的自杀合约的信息
-func (m *Monitor) GetSuicidedContracts(blockNumber uint64, txHash common.Hash) []*ContractInfo {
-	log.Debug("GetSuicidedContract", "blockNumber", blockNumber, "txHash", txHash.Hex())
+func (m *Monitor) GetSuicidedContracts(txHash common.Hash) []*ContractInfo {
+	log.Debug("GetSuicidedContract", "txHash", txHash.Hex())
 
 	dbKey := SuicidedContractKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
@@ -278,8 +278,8 @@ func (m *Monitor) IsProxied(self, target common.Address) bool {
 
 // GetProxyPatterns 查询某个交易上发现的代理关系
 // scan可以通过Rpc接口：GetExtReceipts，获取每个交易发现的代理关系
-func (m *Monitor) GetProxyPatterns(blockNumber uint64, txHash common.Hash) []*ProxyPattern {
-	log.Debug("GetProxyPattern", "blockNumber", blockNumber, "txHash", txHash.Hex())
+func (m *Monitor) GetProxyPatterns(txHash common.Hash) []*ProxyPattern {
+	log.Debug("GetProxyPattern", "txHash", txHash.Hex())
 
 	dbKey := ProxyPatternKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
@@ -492,11 +492,11 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 }
 
 // 收集隐式的ppos交易数据
-func (m *Monitor) CollectImplicitPPOSTx(blockNumber uint64, txHash common.Hash, from, to common.Address, input, result []byte) {
-	dbKey := ImplicitPPOSTxKey.String() + "_" + strconv.FormatUint(blockNumber, 10)
+func (m *Monitor) CollectImplicitPPOSTx(txHash common.Hash, from, to common.Address, input, result []byte) {
+	dbKey := ImplicitPPOSTxKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
 	if nil != err && err != ErrNotFound {
-		log.Error("failed to load data from local db", "err", err)
+		log.Error("CollectImplicitPPOSTx failed", "err", err)
 		return
 	}
 
@@ -512,6 +512,28 @@ func (m *Monitor) CollectImplicitPPOSTx(blockNumber uint64, txHash common.Hash, 
 	if len(json) > 0 {
 		m.monitordb.Put([]byte(dbKey), json)
 	}
+}
+
+// 收集隐式的ppos交易数据
+func (m *Monitor) GetImplicitPPOSTx(txHash common.Hash) []*ImplicitPPOSTx {
+	log.Debug("GetImplicitPPOSTx", "txHash", txHash.String())
+
+	dbKey := ImplicitPPOSTxKey.String() + "_" + txHash.String()
+	data, err := m.monitordb.Get([]byte(dbKey))
+	if nil != err {
+		if err == ErrNotFound {
+			log.Debug("GetImplicitPPOSTx success: no data")
+		} else {
+			log.Error("GetImplicitPPOSTx failed", "err", err)
+		}
+		return nil
+	}
+
+	var implicitPPOSTxList []*ImplicitPPOSTx
+	ParseJson(data, &implicitPPOSTxList)
+
+	log.Debug("GetImplicitPPOSTx success", "txHash", txHash.String(), "json", string(data))
+	return implicitPPOSTxList
 }
 
 func (m *Monitor) CollectSlashInfo(electionBlockNumber uint64, slashQueue staking.SlashQueue) {

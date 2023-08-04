@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"bytes"
 	"github.com/PlatONnetwork/AppChain-Go/common/json"
 	"github.com/PlatONnetwork/AppChain-Go/log"
 )
@@ -30,7 +31,15 @@ func ToJsonString(obj interface{}) string {
 	} else {
 		return string(bs)
 	}
+}
 
+func PrettyJson(jsonBytes []byte) []byte {
+	var out bytes.Buffer
+	err := json.Indent(&out, jsonBytes, "", "\t")
+	if err != nil {
+		return jsonBytes
+	}
+	return out.Bytes()
 }
 
 func ParseJson(bs []byte, objRefer interface{}) {

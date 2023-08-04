@@ -375,7 +375,7 @@ func (evm *EVM) Call(invokedByContract bool, caller ContractRef, addr common.Add
 			//前面检查是否可以转账时，只要value.Sign() != 0 && !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value)
 			//那说明value也可能是负数
 			log.Info("collect uncommon transfer tx in Call()", "blockNumber", evm.Context.BlockNumber.Uint64(), "txHash", evm.StateDB.TxHash(), "caller", caller.Address().Bech32(), "to", to.Address().Bech32(), "amount", value, "&value", &value)
-			monitor.MonitorInstance().CollectUncommonTransferTx(evm.Context.BlockNumber.Uint64(), evm.StateDB.TxHash(), caller.Address(), to.Address(), value)
+			monitor.MonitorInstance().CollectUncommonTransferTx(evm.StateDB.TxHash(), caller.Address(), to.Address(), value)
 		}
 	}
 

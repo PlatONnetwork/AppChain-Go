@@ -118,7 +118,7 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 		}
 
 		// 把opSuicide操作码销毁的合约地址拿出来，并放入fields["contractSuicided"]
-		suicidedContractInfoList := MonitorInstance().GetSuicidedContracts(block.NumberU64(), tx.Hash())
+		suicidedContractInfoList := MonitorInstance().GetSuicidedContracts(tx.Hash())
 		if nil == suicidedContractInfoList {
 			fields["contractSuicided"] = []*ContractInfo{}
 		} else {
@@ -126,7 +126,7 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 		}
 
 		// 把本交易发现的代理关系拿出来，放入proxyContract
-		proxyPatternList := MonitorInstance().GetProxyPatterns(block.NumberU64(), tx.Hash())
+		proxyPatternList := MonitorInstance().GetProxyPatterns(tx.Hash())
 		if nil == proxyPatternList {
 			fields["proxyPatterns"] = []*ProxyPattern{}
 		} else {
@@ -134,15 +134,23 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 		}
 
 		// 把交易中产生的非常规原生代币转账交易返回（原始交易是合约调用，才会产生非常规转账）
-		uncommonTransferList := MonitorInstance().GetUncommonTransfer(blockNumber, tx.Hash())
+		uncommonTransferList := MonitorInstance().GetUncommonTransfer(tx.Hash())
 		if uncommonTransferList == nil {
 			fields["uncommonTransfers"] = []*UncommonTransfer{}
 		} else {
 			fields["uncommonTransfers"] = uncommonTransferList
 		}
 
+		// 把交易中产生的隐式PPOS调用
+		implicitPPOSTxList := MonitorInstance().GetImplicitPPOSTx(tx.Hash())
+		if implicitPPOSTxList == nil {
+			fields["implicitPPOSTxs"] = []*ImplicitPPOSTx{}
+		} else {
+			fields["implicitPPOSTxs"] = implicitPPOSTxList
+		}
+
 		// 把交易中中解析的root chain的质押、委托等交易信息返回
-		rootChainTxList := MonitorInstance().GetRootChainTx(blockNumber, tx.Hash())
+		rootChainTxList := MonitorInstance().GetRootChainTx(tx.Hash())
 		if rootChainTxList == nil {
 			fields["rootChainTxs"] = []*RootChainTx{}
 		} else {
@@ -155,7 +163,7 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 }
 
 // 获取区块所在epoch为key的verifiers，这个和scan-agent也是匹配的，scan-agent中，输入的就是上epoch的最后一个块
-func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, error) {
+func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) ([]byte, error) {
 	// epoch starts from 1
 	epoch := xutil.CalculateEpoch(blockNumber)
 	dbKey := VerifiersOfEpochKey.String() + strconv.FormatUint(epoch, 10)
@@ -165,12 +173,12 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, er
 	if nil != err {
 		log.Error("fail to GetVerifiersByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return "", nil
+			return nil, nil
 		}
-		return "", err
+		return nil, err
 	}
 
-	return string(data), nil
+	return PrettyJson(data), nil
 
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, err
@@ -182,7 +190,7 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, er
 	return &validatorExQueue, nil*/
 }
 
-func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, error) {
+func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) ([]byte, error) {
 	// epoch starts from 1
 	round := uint64(0)
 	if blockNumber != round {
@@ -196,11 +204,11 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, e
 	if nil != err {
 		log.Error("fail to GetValidatorsByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return "", nil
+			return nil, nil
 		}
-		return "", err
+		return nil, err
 	}
-	return string(data), nil
+	return PrettyJson(data), nil
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
 	}
@@ -265,7 +273,7 @@ func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView
 	return &view, nil
 }
 
-func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (*staking.SlashQueue, error) {
+func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) ([]byte, error) {
 	log.Debug("GetSlashInfoByBlockNumber", "blockNumber", electionBlockNumber)
 	dbKey := SlashKey.String() + "_" + strconv.FormatUint(electionBlockNumber, 10)
 	data, err := MonitorInstance().monitordb.Get([]byte(dbKey))
@@ -276,12 +284,14 @@ func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (*s
 		return nil, err
 	}
 
-	if len(data) == 0 { //len(nil)==0
+	return PrettyJson(data), nil
+
+	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
 	}
 	var slashQueue staking.SlashQueue
 	ParseJson(data, &slashQueue)
-	return &slashQueue, nil
+	return &slashQueue, nil*/
 }
 
 // GetNodeVersion 链上获取当前的所有质押节点版本
@@ -372,9 +382,10 @@ func (api *MonitorAPI) GetProposalParticipants(proposalID, blockHash common.Hash
 }
 
 // GetImplicitPPOSTxsByBlockNumber
-func (api *MonitorAPI) GetImplicitPPOSTxsByBlockNumber(blockNumber uint64) (*ImplicitPPOSTx, error) {
-	log.Debug("GetImplicitPPOSTxsByBlockNumber", "blockNumber", blockNumber)
-	dbKey := ImplicitPPOSTxKey.String() + "_" + strconv.FormatUint(blockNumber, 10)
+func (api *MonitorAPI) GetImplicitPPOSTxsByTxHash(txHash common.Hash) (*ImplicitPPOSTx, error) {
+	MonitorInstance().GetImplicitPPOSTx(txHash)
+	log.Debug("GetImplicitPPOSTxsByBlockNumber", "txHash", txHash.String())
+	dbKey := ImplicitPPOSTxKey.String() + "_" + txHash.String()
 	data, err := MonitorInstance().monitordb.Get([]byte(dbKey))
 	if nil != err {
 		log.Error("fail to GetImplicitPPOSTxsByBlockNumber", "err", err)
@@ -388,7 +399,7 @@ func (api *MonitorAPI) GetImplicitPPOSTxsByBlockNumber(blockNumber uint64) (*Imp
 		return nil, nil
 	}
 
-	log.Debug("GetImplicitPPOSTxsByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
+	log.Debug("GetImplicitPPOSTxsByBlockNumber result", "txHash", txHash.String(), "data:", string(data))
 
 	var implicitPPOSTx ImplicitPPOSTx
 	ParseJson(data, &implicitPPOSTx)

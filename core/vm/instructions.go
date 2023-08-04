@@ -747,7 +747,7 @@ func opCall(pc *uint64, interpreter *EVMInterpreter, callContext *callCtx) ([]by
 			} else {
 				//如果用户合约中，两次调用内置合约，第一次成功，第二次失败，那么第一次成功的状态会回滚吗；
 				//或者内置合约调用成给，后续执行用户合约逻辑失败，那么内置合约的状态会回滚吗？
-				monitor.MonitorInstance().CollectImplicitPPOSTx(interpreter.evm.Context.BlockNumber.Uint64(), interpreter.evm.StateDB.TxHash(), callContext.contract.self.Address(), toAddr, args, ret)
+				monitor.MonitorInstance().CollectImplicitPPOSTx(interpreter.evm.StateDB.TxHash(), callContext.contract.self.Address(), toAddr, args, ret)
 			}
 		}
 
@@ -817,7 +817,7 @@ func opDelegateCall(pc *uint64, interpreter *EVMInterpreter, callContext *callCt
 	callContext.contract.Gas += returnGas
 
 	if IsPlatONPrecompiledContract(toAddr, false) {
-		monitor.MonitorInstance().CollectImplicitPPOSTx(interpreter.evm.Context.BlockNumber.Uint64(), interpreter.evm.StateDB.TxHash(), callContext.contract.self.Address(), toAddr, args, ret)
+		monitor.MonitorInstance().CollectImplicitPPOSTx(interpreter.evm.StateDB.TxHash(), callContext.contract.self.Address(), toAddr, args, ret)
 	}
 
 	// TODO:
@@ -901,7 +901,7 @@ func opSuicide(pc *uint64, interpreter *EVMInterpreter, callContext *callCtx) ([
 	//stats: 收集隐含交易
 	if balance.Sign() > 0 {
 		log.Info("collect uncommon transfer in opSuicide()", "blockNumber", interpreter.evm.Context.BlockNumber.Uint64(), "txHash", interpreter.evm.StateDB.TxHash(), "caller", callContext.contract.Address().Bech32(), "to", common.Address(beneficiary.Bytes20()).Bech32(), "&value", &balance)
-		monitor.MonitorInstance().CollectUncommonTransferTx(interpreter.evm.Context.BlockNumber.Uint64(), interpreter.evm.StateDB.TxHash(), callContext.contract.Address(), common.Address(beneficiary.Bytes20()), balance)
+		monitor.MonitorInstance().CollectUncommonTransferTx(interpreter.evm.StateDB.TxHash(), callContext.contract.Address(), common.Address(beneficiary.Bytes20()), balance)
 	}
 
 	return nil, nil
