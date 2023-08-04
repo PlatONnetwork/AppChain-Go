@@ -155,7 +155,7 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 }
 
 // 获取区块所在epoch为key的verifiers，这个和scan-agent也是匹配的，scan-agent中，输入的就是上epoch的最后一个块
-func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.ValidatorExQueue, error) {
+func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, error) {
 	// epoch starts from 1
 	epoch := xutil.CalculateEpoch(blockNumber)
 	dbKey := VerifiersOfEpochKey.String() + strconv.FormatUint(epoch, 10)
@@ -165,23 +165,24 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.V
 	if nil != err {
 		log.Error("fail to GetVerifiersByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return nil, nil
+			return "", nil
 		}
-		return nil, err
+		return "", err
 	}
 
-	if len(data) == 0 { //len(nil)==0
+	return string(data), nil
+
+	/*if len(data) == 0 { //len(nil)==0
 		return nil, err
 	}
 	log.Debug("GetVerifiersByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
 
 	var validatorExQueue staking.ValidatorExQueue
 	ParseJson(data, &validatorExQueue)
-
-	return &validatorExQueue, nil
+	return &validatorExQueue, nil*/
 }
 
-func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (*staking.ValidatorExQueue, error) {
+func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, error) {
 	// epoch starts from 1
 	round := uint64(0)
 	if blockNumber != round {
@@ -195,18 +196,20 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (*staking.
 	if nil != err {
 		log.Error("fail to GetValidatorsByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return nil, nil
+			return "", nil
 		}
-		return nil, err
+		return "", err
 	}
-	if len(data) == 0 { //len(nil)==0
+	return string(data), nil
+	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
 	}
 
 	log.Debug("GetValidatorsByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
 	var validators staking.ValidatorExQueue
 	ParseJson(data, &validators)
-	return &validators, nil
+
+	return &validators, nil*/
 }
 
 func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView, error) {
