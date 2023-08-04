@@ -87,7 +87,7 @@ func TestValidatorEx(t *testing.T) {
 }
 
 func TestRootChainTx_Staking(t *testing.T) {
-	staking := Staking{common.Address{0x01}, (*big.Int)(common.Big1), discover.NodeID{0x02}, (*big.Int)(common.Big1)}
+	staking := Staking{common.Address{0x01}, uint64(1), discover.NodeID{0x02}, uint64(1443324423)}
 	rootChainTxParam := RootChainTxParam{uint64(1000), common.Hash{0x1}, 1}
 	rootChainTx := &RootChainTx{Stake, common.Hash{0x02}, staking, rootChainTxParam}
 

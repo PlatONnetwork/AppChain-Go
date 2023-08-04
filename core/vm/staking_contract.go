@@ -286,7 +286,7 @@ func (stkc *StakingContract) handleShareMinted(vLog *types.Log) ([]byte, error) 
 
 	// 收集委托交易
 	if err == nil {
-		monitor.MonitorInstance().CollectRootChainDeletateTx(txHash, event.User, event.ValidatorId, event.Amount, canOld.DelegateTotal, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
+		monitor.MonitorInstance().CollectRootChainDelegateTx(txHash, event.User, event.ValidatorId, event.Amount, canOld.DelegateTotal, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
 	}
 	return nil, err
 }
@@ -322,7 +322,7 @@ func (stkc *StakingContract) handleShareShareBurned(vLog *types.Log) ([]byte, er
 
 	// 收集撤销委托交易
 	if err == nil {
-		monitor.MonitorInstance().CollectRootChainUnDeletateTx(txHash, event.User, event.ValidatorId, event.Amount, canOld.DelegateTotal, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
+		monitor.MonitorInstance().CollectRootChainUnDelegateTx(txHash, event.User, event.ValidatorId, event.Amount, canOld.DelegateTotal, vLog.BlockNumber, vLog.TxHash, vLog.TxIndex)
 	}
 	return nil, err
 }
