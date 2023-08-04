@@ -85,3 +85,17 @@ func TestValidatorEx(t *testing.T) {
 
 	t.Logf("validatorEx.name:%s", view.StakingAddress.Hex())
 }
+
+func TestRootChainTx_Staking(t *testing.T) {
+	staking := Staking{common.Address{0x01}, (*big.Int)(common.Big1), discover.NodeID{0x02}, (*big.Int)(common.Big1)}
+	rootChainTxParam := RootChainTxParam{uint64(1000), common.Hash{0x1}, 1}
+	rootChainTx := &RootChainTx{Stake, common.Hash{0x02}, staking, rootChainTxParam}
+
+	jsonByte := ToJson(rootChainTx)
+	t.Logf("jsonByte1:%s", string(jsonByte))
+	var view RootChainTx
+	ParseJson(jsonByte, &view)
+
+	jsonByte2 := ToJson(view)
+	t.Logf("jsonByte2:%s", string(jsonByte2))
+}

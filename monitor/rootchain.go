@@ -78,6 +78,20 @@ const (
 	UnDelegate
 )
 
+/*type JsonBig big.Int
+func (b JsonBig) MarshalText() (string, error) {
+	return (*big.Int)(&b).String()
+
+}
+*/
+/*// UnmarshalJSON implements json.Unmarshaler.
+func (b *JsonBig) UnmarshalJSON(input [string) error {
+	if !isString(input) {
+		return errNonString(bigT)
+	}
+	return wrapTypeError(b.UnmarshalText(input[1:len(input)-1]), bigT)
+}
+*/
 // 定义 RootChainTxType 类型的方法 String(), 返回字符串。
 func (name RootChainTxType) String() string {
 	return [...]string{
@@ -89,66 +103,66 @@ func (name RootChainTxType) String() string {
 }
 
 type RootChainTx struct {
-	TxType  RootChainTxType
-	TxHash  common.Hash
-	TxParam interface{}
+	TxType  RootChainTxType `json:"txType"`
+	TxHash  common.Hash     `json:"txHash"`
+	TxParam interface{}     `json:"txParam"`
 	RootChainTxParam
 }
 
 type RootChainTxParam struct {
-	RootChainBlockNumber uint64
-	RootChainTxHash      common.Hash
-	RootChainTxIndex     uint
+	RootChainBlockNumber uint64      `json:"rootChainBlockNumber"`
+	RootChainTxHash      common.Hash `json:"rootChainTxHash"`
+	RootChainTxIndex     uint        `json:"rootChainTxIndex"`
 }
 
 type Staking struct {
-	StakingAddress common.Address
-	ValidatorId    *big.Int
-	NodeId         discover.NodeID
-	Amount         *big.Int
+	StakingAddress common.Address  `json:"stakingAddress"`
+	ValidatorId    *big.Int        `json:"validatorId"`
+	NodeId         discover.NodeID `json:"nodeId"`
+	Amount         *big.Int        `json:"amount"`
 }
 
 type UnStaking struct {
-	ValidatorId *big.Int
+	ValidatorId *big.Int `json:"validatorId,string"`
 }
 
 type Delegation struct {
-	User                             common.Address
-	ValidatorId                      *big.Int
-	Amount                           *big.Int
-	TotalDelegationAmountOfValidator *big.Int
+	User                             common.Address `json:"user"`
+	ValidatorId                      *big.Int       `json:"validatorId"`
+	Amount                           *big.Int       `json:"amount"`
+	TotalDelegationAmountOfValidator *big.Int       `json:"totalDelegationAmountOfValidator"`
 }
 
 type UnDelegation struct {
-	User                             common.Address
-	ValidatorId                      *big.Int
-	Amount                           *big.Int
-	TotalDelegationAmountOfValidator *big.Int
+	User                             common.Address `json:"user"`
+	ValidatorId                      *big.Int       `json:"validatorId"`
+	Amount                           *big.Int       `json:"amount"`
+	TotalDelegationAmountOfValidator *big.Int       `json:"totalDelegationAmountOfValidator"`
 }
 
 func (m *Monitor) CollectRootChainStakeTx(txHash common.Hash, stakingAddress common.Address, validatorId *big.Int, nodeId discover.NodeID, amount *big.Int, rootChainBlockNumber uint64, rootChainTxHash common.Hash, rootChainTxIndex uint) {
-	staking := Staking{stakingAddress, validatorId, nodeId, amount}
+	staking := Staking{stakingAddress, (*big.Int)(validatorId), nodeId, (*big.Int)(amount)}
 	rootChainTxParam := RootChainTxParam{rootChainBlockNumber, rootChainTxHash, rootChainTxIndex}
 	rootChainTx := &RootChainTx{Stake, txHash, staking, rootChainTxParam}
 	m.saveRootChainTx(rootChainTx)
 }
 
 func (m *Monitor) CollectRootChainUnStakeTx(txHash common.Hash, validatorId *big.Int, rootChainBlockNumber uint64, rootChainTxHash common.Hash, rootChainTxIndex uint) {
-	unstaking := UnStaking{validatorId}
+	unstaking := UnStaking{(*big.Int)(validatorId)}
 	rootChainTxParam := RootChainTxParam{rootChainBlockNumber, rootChainTxHash, rootChainTxIndex}
 	rootChainTx := &RootChainTx{UnStake, txHash, unstaking, rootChainTxParam}
 	m.saveRootChainTx(rootChainTx)
 }
 
 func (m *Monitor) CollectRootChainDeletateTx(txHash common.Hash, user common.Address, validatorId *big.Int, amount *big.Int, totalDelegationAmountOfValidator *big.Int, rootChainBlockNumber uint64, rootChainTxHash common.Hash, rootChainTxIndex uint) {
-	delegation := Delegation{user, validatorId, amount, totalDelegationAmountOfValidator}
+	delegation := Delegation{user, (*big.Int)(validatorId), (*big.Int)(amount), (*big.Int)(totalDelegationAmountOfValidator)}
 	rootChainTxParam := RootChainTxParam{rootChainBlockNumber, rootChainTxHash, rootChainTxIndex}
 	rootChainTx := &RootChainTx{Delegate, txHash, delegation, rootChainTxParam}
 	m.saveRootChainTx(rootChainTx)
 }
 
 func (m *Monitor) CollectRootChainUnDeletateTx(txHash common.Hash, user common.Address, validatorId *big.Int, amount *big.Int, totalDelegationAmountOfValidator *big.Int, rootChainBlockNumber uint64, rootChainTxHash common.Hash, rootChainTxIndex uint) {
-	undelegation := UnDelegation{user, validatorId, amount, totalDelegationAmountOfValidator}
+	undelegation := UnDelegation{user, (*big.Int)(validatorId), (*big.Int)(amount), (*big.Int)(totalDelegationAmountOfValidator)}
 	rootChainTxParam := RootChainTxParam{rootChainBlockNumber, rootChainTxHash, rootChainTxIndex}
 	rootChainTx := &RootChainTx{UnDelegate, txHash, undelegation, rootChainTxParam}
 	m.saveRootChainTx(rootChainTx)
