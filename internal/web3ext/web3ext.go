@@ -618,7 +618,7 @@ web3._extend({
 			name: 'getReceiptExtsByBlockNumber',
 			call: 'monitor_getReceiptExtsByBlockNumber',
 			params: 1,
-			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter]
+			inputFormatter: [web3._extend.formatters.inputDefaultBlockNumberFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'removePeer',
@@ -630,25 +630,25 @@ web3._extend({
 			name: 'getVerifiersByBlockNumber',
 			call: 'monitor_getVerifiersByBlockNumber',
 			params: 1,
-			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter]
+			inputFormatter: [web3._extend.formatters.inputDefaultBlockNumberFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'getValidatorsByBlockNumber',
 			call: 'monitor_getValidatorsByBlockNumber',
 			params: 1,
-			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter]
+			inputFormatter: [web3._extend.formatters.inputDefaultBlockNumberFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'getEpochInfoByBlockNumber',
 			call: 'monitor_getEpochInfoByBlockNumber',
 			params: 1,
-			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter]
+			inputFormatter: [web3._extend.formatters.inputDefaultBlockNumberFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'getSlashInfoByBlockNumber',
 			call: 'monitor_getSlashInfoByBlockNumber',
 			params: 1,
-			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter]
+			inputFormatter: [web3._extend.formatters.inputDefaultBlockNumberFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'getNodeVersion',
@@ -670,7 +670,7 @@ web3._extend({
 			name: 'getImplicitPPOSTxsByBlockNumber',
 			call: 'monitor_getImplicitPPOSTxsByBlockNumber',
 			params: 1,
-			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter]
+			inputFormatter: [web3._extend.formatters.inputDefaultBlockNumberFormatter]
 		}),		
 	],
 	properties: [
