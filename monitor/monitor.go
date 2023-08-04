@@ -319,7 +319,7 @@ func (m *Monitor) CollectInitValidators(blockHash common.Hash, blockNumber uint6
 
 	log.Info("CollectInitValidators:", "blockNumber", blockNumber, "size", len(curValidators.Arr))
 	for idx, item := range curValidators.Arr {
-		log.Info("CollectInitValidators:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectInitValidators:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId.Uint64(), "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, curValidators)
@@ -346,7 +346,7 @@ func (m *Monitor) CollectNextEpochValidators(blockHash common.Hash, blockNumber 
 	}
 	log.Info("CollectNextEpochValidators:", "blockNumber", blockNumber, "size", len(nextValidators.Arr))
 	for idx, item := range nextValidators.Arr {
-		log.Info("CollectNextEpochValidators:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectNextEpochValidators:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId.Uint64(), "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, nextValidators)
@@ -374,7 +374,7 @@ func (m *Monitor) CollectInitVerifiers(blockHash common.Hash, blockNumber uint64
 
 	log.Info("CollectInitVerifiers:", "blockNumber", blockNumber, "size", len(verifiers.Arr))
 	for idx, item := range verifiers.Arr {
-		log.Info("CollectInitVerifiers:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectInitVerifiers:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId.Uint64(), "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	log.Debug("CollectInitVerifiers:", "size", len(verifiers.Arr), "data:", ToJsonString(verifiers))
@@ -405,7 +405,7 @@ func (m *Monitor) CollectNextEpochVerifiers(blockHash common.Hash, blockNumber u
 	}
 	log.Debug("CollectNextEpochVerifiers:", "blockNumber", blockNumber, "size", len(verifiers.Arr))
 	for idx, item := range verifiers.Arr {
-		log.Info("CollectNextEpochVerifiers:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId, "stakingBlockNum", item.StakingBlockNum)
+		log.Info("CollectNextEpochVerifiers:", "idx", idx, "nodeId", item.NodeId, "validatorId", item.ValidatorId.Uint64(), "stakingBlockNum", item.StakingBlockNum)
 	}
 
 	validatorExQueue, err := m.convertToValidatorExQueue(blockHash, blockNumber, verifiers)
@@ -440,7 +440,7 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 			NodeId:          v.NodeId,
 			StakingBlockNum: v.StakingBlockNum,
 			ProgramVersion:  v.ProgramVersion,
-			ValidatorId:     v.ValidatorId,
+			ValidatorId:     new(big.Int).SetUint64(v.ValidatorId.Uint64()),
 		}
 		var notInCadidateList = true
 		// 给ValidatorEx补充详细信息
@@ -461,14 +461,16 @@ func (m *Monitor) convertToValidatorExQueue(blockHash common.Hash, blockNumber u
 		}
 		if notInCadidateList {
 			// 不在currentCandidate的verifier，需要额外补充详细信息
-			//nodeIdAddr, err := xutil.NodeId2Addr(v.NodeId)
-			nodeIdAddr := v.ValidatorId
+			/*nodeIdAddr, err := xutil.NodeId2Addr(v.NodeId)
+
 			if nil != err {
 				log.Error("Failed to NodeId2Addr: parse current nodeId is failed", "err", err)
-			}
-			can, err := m.stakingPlugin.GetCandidateInfo(blockHash, nodeIdAddr)
+			}*/
+
+			validatorId := v.ValidatorId
+			can, err := m.stakingPlugin.GetCandidateInfo(blockHash, validatorId)
 			if err != nil || can == nil {
-				log.Error("Failed to Query Current Round candidate info on stakingPlugin Confirmed When Settletmetn block",
+				log.Error("Failed to Query Current Round candidate info on stakingPlugin Confirmed When Settlement block",
 					"blockHash", blockHash.Hex(), "blockNumber", blockNumber, "err", err)
 				log.Debug("Failed get can :", can)
 			} else {
