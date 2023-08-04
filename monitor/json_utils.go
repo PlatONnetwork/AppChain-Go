@@ -33,13 +33,13 @@ func ToJsonString(obj interface{}) string {
 	}
 }
 
-func PrettyJson(jsonBytes []byte) []byte {
+func PrettyJsonString(jsonBytes []byte) string {
 	var out bytes.Buffer
 	err := json.Indent(&out, jsonBytes, "", "\t")
 	if err != nil {
-		return jsonBytes
+		return string(jsonBytes)
 	}
-	return out.Bytes()
+	return out.String()
 }
 
 func ParseJson(bs []byte, objRefer interface{}) {

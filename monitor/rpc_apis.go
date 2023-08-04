@@ -163,7 +163,7 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 }
 
 // 获取区块所在epoch为key的verifiers，这个和scan-agent也是匹配的，scan-agent中，输入的就是上epoch的最后一个块
-func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) ([]byte, error) {
+func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, error) {
 	// epoch starts from 1
 	epoch := xutil.CalculateEpoch(blockNumber)
 	dbKey := VerifiersOfEpochKey.String() + strconv.FormatUint(epoch, 10)
@@ -173,12 +173,12 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) ([]byte, er
 	if nil != err {
 		log.Error("fail to GetVerifiersByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return nil, nil
+			return "", nil
 		}
-		return nil, err
+		return "", err
 	}
 
-	return PrettyJson(data), nil
+	return PrettyJsonString(data), nil
 
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, err
@@ -190,7 +190,7 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) ([]byte, er
 	return &validatorExQueue, nil*/
 }
 
-func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) ([]byte, error) {
+func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, error) {
 	// epoch starts from 1
 	round := uint64(0)
 	if blockNumber != round {
@@ -204,11 +204,11 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) ([]byte, e
 	if nil != err {
 		log.Error("fail to GetValidatorsByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return nil, nil
+			return "", nil
 		}
-		return nil, err
+		return "", err
 	}
-	return PrettyJson(data), nil
+	return PrettyJsonString(data), nil
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
 	}
@@ -273,18 +273,18 @@ func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView
 	return &view, nil
 }
 
-func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) ([]byte, error) {
+func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (string, error) {
 	log.Debug("GetSlashInfoByBlockNumber", "blockNumber", electionBlockNumber)
 	dbKey := SlashKey.String() + "_" + strconv.FormatUint(electionBlockNumber, 10)
 	data, err := MonitorInstance().monitordb.Get([]byte(dbKey))
 	if nil != err {
 		if err == ErrNotFound {
-			return nil, nil
+			return "", nil
 		}
-		return nil, err
+		return "", err
 	}
 
-	return PrettyJson(data), nil
+	return PrettyJsonString(data), nil
 
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
