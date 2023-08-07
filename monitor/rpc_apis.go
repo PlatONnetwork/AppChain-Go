@@ -178,10 +178,6 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.V
 		return nil, err
 	}
 
-	/*log.Debug("GetVerifiersByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
-
-	return string(data), nil*/
-
 	if len(data) == 0 { //len(nil)==0
 		return nil, err
 	}
@@ -192,7 +188,7 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.V
 	return &validatorExQueue, nil
 }
 
-func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, error) {
+func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (*staking.ValidatorExQueue, error) {
 	// epoch starts from 1
 	round := uint64(0)
 	if blockNumber != round {
@@ -206,13 +202,12 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, e
 	if nil != err {
 		log.Error("fail to GetValidatorsByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return "", nil
+			return nil, nil
 		}
-		return "", err
+		return nil, err
 	}
-	log.Debug("GetValidatorsByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
-	return string(data), nil
-	/*if len(data) == 0 { //len(nil)==0
+
+	if len(data) == 0 { //len(nil)==0
 		return nil, nil
 	}
 
@@ -220,7 +215,7 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, e
 	var validators staking.ValidatorExQueue
 	ParseJson(data, &validators)
 
-	return &validators, nil*/
+	return &validators, nil
 }
 
 func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView, error) {
@@ -276,26 +271,23 @@ func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView
 	return &view, nil
 }
 
-func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (string, error) {
+func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (*staking.SlashQueue, error) {
 	log.Debug("GetSlashInfoByBlockNumber", "blockNumber", electionBlockNumber)
 	dbKey := SlashKey.String() + "_" + strconv.FormatUint(electionBlockNumber, 10)
 	data, err := MonitorInstance().monitordb.Get([]byte(dbKey))
 	if nil != err {
 		if err == ErrNotFound {
-			return "", nil
+			return nil, nil
 		}
-		return "", err
+		return nil, err
 	}
 
-	log.Debug("GetSlashInfoByBlockNumber result", "blockNumber", electionBlockNumber, "data:", string(data))
-	return string(data), nil
-
-	/*if len(data) == 0 { //len(nil)==0
+	if len(data) == 0 { //len(nil)==0
 		return nil, nil
 	}
 	var slashQueue staking.SlashQueue
 	ParseJson(data, &slashQueue)
-	return &slashQueue, nil*/
+	return &slashQueue, nil
 }
 
 // GetNodeVersion 链上获取当前的所有质押节点版本
