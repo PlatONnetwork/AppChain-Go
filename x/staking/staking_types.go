@@ -879,16 +879,16 @@ type ValidatorEx struct {
 	// bls public key
 	BlsPubKey bls.PublicKeyHex `json:"-"`
 	// The account used to initiate the staking
-	StakingAddress  common.Address `json:"stakingAddress,omitempty"`
-	StakingBlockNum uint64         `json:"stakingBlockNum,omitempty"`
+	StakingAddress  common.Address `json:"stakingAddress"`
+	StakingBlockNum uint64         `json:"stakingBlockNum"`
 	// The version of the node process
-	ProgramVersion uint32 `json:"programVersion,omitempty"`
+	ProgramVersion uint32 `json:"programVersion"`
 	// All vons of staking and delegated
 	//Shares *big.Int
 	Shares *hexutil.Big `json:"-"`
 	// this is the term of validator in consensus round
 	// [0, N]
-	ValidatorTerm uint32 `json:"validatorTerm,omitempty"`
+	ValidatorTerm uint32 `json:"validatorTerm"`
 }
 
 func (vex *ValidatorEx) String() string {

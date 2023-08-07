@@ -178,6 +178,8 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, er
 		return "", err
 	}
 
+	log.Debug("GetVerifiersByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
+
 	return string(data), nil
 
 	/*if len(data) == 0 { //len(nil)==0
@@ -208,6 +210,7 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, e
 		}
 		return "", err
 	}
+	log.Debug("GetValidatorsByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
 	return string(data), nil
 	/*if len(data) == 0 { //len(nil)==0
 		return nil, nil
@@ -284,6 +287,7 @@ func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (st
 		return "", err
 	}
 
+	log.Debug("GetSlashInfoByBlockNumber result", "blockNumber", electionBlockNumber, "data:", string(data))
 	return string(data), nil
 
 	/*if len(data) == 0 { //len(nil)==0
