@@ -163,7 +163,7 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 }
 
 // 获取区块所在epoch为key的verifiers，这个和scan-agent也是匹配的，scan-agent中，输入的就是上epoch的最后一个块
-func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, error) {
+func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.ValidatorExQueue, error) {
 	// epoch starts from 1
 	epoch := xutil.CalculateEpoch(blockNumber)
 	dbKey := VerifiersOfEpochKey.String() + strconv.FormatUint(epoch, 10)
@@ -173,23 +173,23 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (string, er
 	if nil != err {
 		log.Error("fail to GetVerifiersByBlockNumber", "blockNumber", blockNumber, "err", err)
 		if err == ErrNotFound {
-			return "", nil
+			return nil, nil
 		}
-		return "", err
+		return nil, err
 	}
 
-	log.Debug("GetVerifiersByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
+	/*log.Debug("GetVerifiersByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
 
-	return string(data), nil
+	return string(data), nil*/
 
-	/*if len(data) == 0 { //len(nil)==0
+	if len(data) == 0 { //len(nil)==0
 		return nil, err
 	}
 	log.Debug("GetVerifiersByBlockNumber result", "blockNumber", blockNumber, "data:", string(data))
 
 	var validatorExQueue staking.ValidatorExQueue
 	ParseJson(data, &validatorExQueue)
-	return &validatorExQueue, nil*/
+	return &validatorExQueue, nil
 }
 
 func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (string, error) {
