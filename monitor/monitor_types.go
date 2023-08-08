@@ -35,6 +35,7 @@ type PPOSTx struct {
 	Result []byte
 }
 
+// one raw tx may includs multi-ppos txs
 type ImplicitPPOSTx struct {
 	//key=原始交易hash
 	//value=PPOSTx
