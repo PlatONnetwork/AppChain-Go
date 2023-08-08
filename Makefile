@@ -16,15 +16,15 @@ GORUN = env GO111MODULE=on GOPATH=$(GPATH) go run
 hskchain:
 	build/build_deps.sh
 	$(GORUN) build/ci.go install ./cmd/hskchain
-	@mv $(GOBIN)/hskchain $(GOBIN)/hsk-chain
+	@mv $(GOBIN)/hskchain $(GOBIN)/shskchain
 	@echo "Done building."
 	@echo "Run \"$(GOBIN)/hsk-chain\" to launch HashKey-Chain."
 
 all:
 	build/build_deps.sh
 	$(GORUN) build/ci.go install
-	@mv $(GOBIN)/hskchain $(GOBIN)/hsk-chain-special
-	@mv $(GOBIN)/keytool $(GOBIN)/hsk-chain-key
+	@mv $(GOBIN)/hskchain $(GOBIN)/shskchain
+	@mv $(GOBIN)/keytool $(GOBIN)/hskchain-key
 
 all-debug:
 	build/build_deps.sh
