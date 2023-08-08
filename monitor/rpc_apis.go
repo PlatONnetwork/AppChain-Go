@@ -163,6 +163,7 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 }
 
 // 获取区块所在epoch为key的verifiers，这个和scan-agent也是匹配的，scan-agent中，输入的就是上epoch的最后一个块
+// GetVerifiersByBlockNumber returns the verifiers of the epoch which last block is BlockNuumber
 func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.ValidatorExQueue, error) {
 	// epoch starts from 1
 	epoch := xutil.CalculateEpoch(blockNumber)
@@ -377,27 +378,11 @@ func (api *MonitorAPI) GetProposalParticipants(proposalID, blockHash common.Hash
 	return proposalParticipants, nil
 }
 
-// GetImplicitPPOSTxsByBlockNumber
-func (api *MonitorAPI) GetImplicitPPOSTxsByTxHash(txHash common.Hash) (*ImplicitPPOSTx, error) {
-	MonitorInstance().GetImplicitPPOSTx(txHash)
-	log.Debug("GetImplicitPPOSTxsByBlockNumber", "txHash", txHash.String())
-	dbKey := ImplicitPPOSTxKey.String() + "_" + txHash.String()
-	data, err := MonitorInstance().monitordb.Get([]byte(dbKey))
-	if nil != err {
-		log.Error("fail to GetImplicitPPOSTxsByBlockNumber", "err", err)
-		if err == ErrNotFound {
-			return nil, nil
-		}
-		return nil, err
-	}
+// GetImplicitPPOSTxsByTxHash
+func (api *MonitorAPI) GetImplicitPPOSTxsByTxHash(txHash common.Hash) ([]*ImplicitPPOSTx, error) {
+	return MonitorInstance().GetImplicitPPOSTx(txHash), nil
+}
 
-	if len(data) == 0 { //len(nil)==0
-		return nil, nil
-	}
-
-	log.Debug("GetImplicitPPOSTxsByBlockNumber result", "txHash", txHash.String(), "data:", string(data))
-
-	var implicitPPOSTx ImplicitPPOSTx
-	ParseJson(data, &implicitPPOSTx)
-	return &implicitPPOSTx, nil
+func (api *MonitorAPI) GetRootChainTxsByTxHash(txHash common.Hash) ([]*RootChainTx, error) {
+	return MonitorInstance().GetRootChainTx(txHash), nil
 }

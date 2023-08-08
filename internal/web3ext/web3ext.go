@@ -661,8 +661,14 @@ web3._extend({
 			inputFormatter: [null,null]
 		}),
 		new web3._extend.Method({
-			name: 'getImplicitPPOSTxsByBlockNumber',
-			call: 'monitor_getImplicitPPOSTxsByBlockNumber',
+			name: 'getImplicitPPOSTxsByTxHash',
+			call: 'monitor_getImplicitPPOSTxsByTxHash',
+			params: 1,
+			inputFormatter: [null]
+		}),		
+		new web3._extend.Method({
+			name: 'getRootChainTxsByTxHash',
+			call: 'monitor_getRootChainTxsByTxHash',
 			params: 1,
 			inputFormatter: [null]
 		}),		
