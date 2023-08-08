@@ -170,7 +170,7 @@ func (m *Monitor) CollectRootChainUnDelegateTx(txHash common.Hash, user common.A
 }
 
 func (m *Monitor) saveRootChainTx(rootChainTx *RootChainTx) {
-	log.Debug("saveRootChainTx", "rootChainTx", ToJson(rootChainTx))
+	log.Debug("saveRootChainTx", "rootChainTx", ToJsonString(rootChainTx))
 	dbKey := RootChainTxKey.String() + "_" + rootChainTx.TxHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
 	if nil != err && err != ErrNotFound {
