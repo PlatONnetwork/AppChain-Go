@@ -67,7 +67,7 @@ func buildTestStakingData(epochStart, epochEnd uint64) (staking.ValidatorQueue, 
 			CandidateMutable: &staking.CandidateMutable{},
 		}
 		// Store Candidate Base info
-		canBaseKey := staking.CanBaseKeyByAddr(addr)
+		canBaseKey := staking.CanBaseKeyByAddr(addr.Big())
 		if val, err := rlp.EncodeToBytes(canTmp.CandidateBase); nil != err {
 			return nil, err
 		} else {
@@ -78,7 +78,7 @@ func buildTestStakingData(epochStart, epochEnd uint64) (staking.ValidatorQueue, 
 		}
 
 		// Store Candidate Mutable info
-		canMutableKey := staking.CanMutableKeyByAddr(addr)
+		canMutableKey := staking.CanMutableKeyByAddr(addr.Big())
 		if val, err := rlp.EncodeToBytes(canTmp.CandidateMutable); nil != err {
 			return nil, err
 		} else {
@@ -568,10 +568,10 @@ func TestAllocatePackageBlock(t *testing.T) {
 		if err := stkDB.SetEpochValList(hash, index[0].Start, index[0].End, queue); err != nil {
 			return err
 		}
-		if err := stkDB.SetCanBaseStore(hash, queue[0].NodeAddress, can.CandidateBase); err != nil {
+		if err := stkDB.SetCanBaseStore(hash, queue[0].NodeAddress.Big(), can.CandidateBase); err != nil {
 			return err
 		}
-		if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress, can.CandidateMutable); err != nil {
+		if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress.Big(), can.CandidateMutable); err != nil {
 			return err
 		}
 		if err := stkDB.SetDelegateStore(hash, delegateRewardAdd, can.CandidateBase.NodeId, can.CandidateBase.StakingBlockNum, &delegate, gov.Gte130VersionState(chain.StateDB)); err != nil {
@@ -610,7 +610,7 @@ func TestAllocatePackageBlock(t *testing.T) {
 		if err := chain.AddBlockWithSnapDB(true, func(hash common.Hash, header *types.Header, sdb snapshotdb.DB) error {
 			if xutil.IsBeginOfEpoch(header.Number.Uint64()) {
 				can.CandidateMutable.CleanCurrentEpochDelegateReward()
-				if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress, can.CandidateMutable); err != nil {
+				if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress.Big(), can.CandidateMutable); err != nil {
 					return err
 				}
 			}
@@ -640,7 +640,7 @@ func TestAllocatePackageBlock(t *testing.T) {
 	if err := chain.AddBlockWithSnapDB(true, func(hash common.Hash, header *types.Header, sdb snapshotdb.DB) error {
 		if xutil.IsBeginOfEpoch(header.Number.Uint64()) {
 			can.CandidateMutable.CleanCurrentEpochDelegateReward()
-			if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress, can.CandidateMutable); err != nil {
+			if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress.Big(), can.CandidateMutable); err != nil {
 				return err
 			}
 		}
@@ -657,7 +657,7 @@ func TestAllocatePackageBlock(t *testing.T) {
 		if err := chain.AddBlockWithSnapDB(true, func(hash common.Hash, header *types.Header, sdb snapshotdb.DB) error {
 			if xutil.IsBeginOfEpoch(header.Number.Uint64()) {
 				can.CandidateMutable.CleanCurrentEpochDelegateReward()
-				if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress, can.CandidateMutable); err != nil {
+				if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress.Big(), can.CandidateMutable); err != nil {
 					return err
 				}
 			}
@@ -745,10 +745,10 @@ func TestRewardMgrPlugin_GetDelegateReward(t *testing.T) {
 		if err := stkDB.SetEpochValList(hash, index[0].Start, index[0].End, queue); err != nil {
 			return err
 		}
-		if err := stkDB.SetCanBaseStore(hash, queue[0].NodeAddress, can.CandidateBase); err != nil {
+		if err := stkDB.SetCanBaseStore(hash, queue[0].NodeAddress.Big(), can.CandidateBase); err != nil {
 			return err
 		}
-		if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress, can.CandidateMutable); err != nil {
+		if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress.Big(), can.CandidateMutable); err != nil {
 			return err
 		}
 		if err := stkDB.SetDelegateStore(hash, delegateRewardAdd, can.CandidateBase.NodeId, can.CandidateBase.StakingBlockNum, &delegate, gov.Gte130VersionState(chain.StateDB)); err != nil {
@@ -773,7 +773,7 @@ func TestRewardMgrPlugin_GetDelegateReward(t *testing.T) {
 		if err := chain.AddBlockWithSnapDB(true, func(hash common.Hash, header *types.Header, sdb snapshotdb.DB) error {
 			if xutil.IsBeginOfEpoch(header.Number.Uint64()) {
 				can.CandidateMutable.CleanCurrentEpochDelegateReward()
-				if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress, can.CandidateMutable); err != nil {
+				if err := stkDB.SetCanMutableStore(hash, queue[0].NodeAddress.Big(), can.CandidateMutable); err != nil {
 					return err
 				}
 			}

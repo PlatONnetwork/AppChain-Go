@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the PlatON-Go library. If not, see <http://www.gnu.org/licenses/>.
 
-
 package plugin
 
 import (
@@ -200,13 +199,13 @@ func buildStakingData(blockNumber uint64, blockHash common.Hash, pri *ecdsa.Priv
 		},
 	}
 
-	stakingDB.SetCanPowerStore(blockHash, addrA, c1)
-	stakingDB.SetCanPowerStore(blockHash, addrB, c2)
-	stakingDB.SetCanPowerStore(blockHash, addrC, c3)
+	stakingDB.SetCanPowerStore(blockHash, addrA.Big(), c1)
+	stakingDB.SetCanPowerStore(blockHash, addrB.Big(), c2)
+	stakingDB.SetCanPowerStore(blockHash, addrC.Big(), c3)
 
-	stakingDB.SetCandidateStore(blockHash, addrA, c1)
-	stakingDB.SetCandidateStore(blockHash, addrB, c2)
-	stakingDB.SetCandidateStore(blockHash, addrC, c3)
+	stakingDB.SetCandidateStore(blockHash, addrA.Big(), c1)
+	stakingDB.SetCandidateStore(blockHash, addrB.Big(), c2)
+	stakingDB.SetCandidateStore(blockHash, addrC.Big(), c3)
 
 	log.Info("addr_A", hex.EncodeToString(addrA.Bytes()), "addr_B", hex.EncodeToString(addrB.Bytes()), "addr_C", hex.EncodeToString(addrC.Bytes()))
 
@@ -532,7 +531,8 @@ func TestSlashingPlugin_Slash(t *testing.T) {
 	if err := snapshotdb.Instance().NewBlock(blockNumber, commitHash, common.ZeroHash); nil != err {
 		t.Fatal(err)
 	}
-	if err := StakingInstance().CreateCandidate(stateDB, common.ZeroHash, blockNumber, can.Shares, 0, common.NodeAddress(stakingAddr), can); nil != err {
+	nodeAddr := common.NodeAddress(stakingAddr)
+	if err := StakingInstance().CreateCandidate(stateDB, common.ZeroHash, blockNumber, nodeAddr.Big(), can); nil != err {
 		t.Fatal(err)
 	}
 	normalEvidence, err := si.DecodeEvidence(1, normalData)
@@ -705,12 +705,12 @@ func TestSlashingPlugin_ZeroProduceProcess(t *testing.T) {
 	stateDB.AddBalance(can.StakingAddress, new(big.Int).SetUint64(1000000000000000000))
 	if val, err := rlp.EncodeToBytes(can); nil != err {
 		t.Fatal(err)
-	} else if err := snapshotdb.Instance().PutBaseDB(staking.CanBaseKeyByAddr(canAddr), val); nil != err {
+	} else if err := snapshotdb.Instance().PutBaseDB(staking.CanBaseKeyByAddr(canAddr.Big()), val); nil != err {
 		t.Fatal(err)
 	}
 	if val, err := rlp.EncodeToBytes(can.CandidateMutable); nil != err {
 		t.Fatal(err)
-	} else if err := snapshotdb.Instance().PutBaseDB(staking.CanMutableKeyByAddr(canAddr), val); nil != err {
+	} else if err := snapshotdb.Instance().PutBaseDB(staking.CanMutableKeyByAddr(canAddr.Big()), val); nil != err {
 		t.Fatal(err)
 	}
 

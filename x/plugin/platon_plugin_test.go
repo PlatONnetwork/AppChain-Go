@@ -416,8 +416,8 @@ func build_staking_data_more(block uint64) {
 
 		canAddr, _ := xutil.NodeId2Addr(canTmp.NodeId)
 
-		stakingDB.SetCanPowerStore(hash, canAddr, canTmp)
-		stakingDB.SetCandidateStore(hash, canAddr, canTmp)
+		stakingDB.SetCanPowerStore(hash, canAddr.Big(), canTmp)
+		stakingDB.SetCandidateStore(hash, canAddr.Big(), canTmp)
 
 		v := &staking.Validator{
 			NodeAddress:     canAddr,
@@ -570,12 +570,12 @@ func build_staking_data(genesisHash common.Hash) {
 
 		canAddr, _ := xutil.NodeId2Addr(canTmp.NodeId)
 
-		err := stakingDB.SetCanPowerStore(blockHash, canAddr, canTmp)
+		err := stakingDB.SetCanPowerStore(blockHash, canAddr.Big(), canTmp)
 		if nil != err {
 			fmt.Printf("Failed to SetCanPowerStore: %v", err)
 			return
 		}
-		err = stakingDB.SetCandidateStore(blockHash, canAddr, canTmp)
+		err = stakingDB.SetCandidateStore(blockHash, canAddr.Big(), canTmp)
 		if nil != err {
 			fmt.Printf("Failed to SetCandidateStore: %v", err)
 			return

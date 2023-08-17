@@ -63,7 +63,7 @@ func TestRootChainTx(t *testing.T) {
 
 	monitor.CollectRootChainUnStakeTx(txHash, validatorId, rootChainBlockNumber, rootChainTxHash, rootChainTxIndex)
 
-	rootChainTxList := monitor.GetRootChainTx(uint64(12), txHash)
+	rootChainTxList := monitor.GetRootChainTx(txHash)
 
 	txListBytes := ToJson(rootChainTxList)
 	t.Logf("txlistBytes:%s", string(txListBytes))
