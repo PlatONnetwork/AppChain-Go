@@ -87,7 +87,11 @@ func (stkc *StakingContract) RequiredGas(input []byte) uint64 {
 }
 
 // 执行内置合约的入口，input前4位是方法Id，后面是对应方法的输入参数
+// 内置合约有2个方法：
+// 1. stakeStateSync(uint256,bytes[])
+// 2. blockNumber()
 // 方法id，是根据方法签名，用Keccak256算法得到的hash，取前四位作为input的一部分，hash算法参考：monitor/contract.go:36
+// todo: 要和hashkey scan-agent com.platon.browser.elasticsearch.dto.Transaction.TypeEnum#ROOT_CHAIN_STATE_SYNC中定义的一致
 func (stkc *StakingContract) Run(input []byte) ([]byte, error) {
 	if checkInputEmpty(input) {
 		return nil, nil
@@ -98,9 +102,6 @@ func (stkc *StakingContract) Run(input []byte) ([]byte, error) {
 	methodId := binary.BigEndian.Uint32(input[:4])
 	if fn, ok := solFunc[methodId]; ok {
 		//执行新的内置合约方法（因为新的内置合约方法，和platon的内置合约方法的input构成不一致）
-		//内置合约有2个方法：
-		//1. stakeStateSync(uint256,bytes[])
-		//2. blockNumber()
 		log.Info("innerStakingInput", "input", hexutil.Encode(input), "methodId", methodId)
 		return fn(input[4:])
 	}
