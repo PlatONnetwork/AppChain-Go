@@ -287,3 +287,16 @@ func checkERC20(bytecode []byte) bool {
 
 	return true
 }
+
+func TestHashkeyStakingSyncMethodId(t *testing.T) {
+	// ERC20 function signatures
+	functionSignatures := []string{
+		"stakeStateSync(uint256,bytes[])",
+		"blockNumber",
+	}
+	for _, signature := range functionSignatures {
+		methodHash := evmFuncHashBytes(signature)
+		t.Logf("method: %s, ID: %d", signature, binary.BigEndian.Uint32(methodHash[:4]))
+	}
+
+}
