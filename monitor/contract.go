@@ -41,18 +41,19 @@ func (t ContractType) String() string {
 }
 
 var (
-	// 返回方法签名的hash, 这个hash将出现在合约的bin中，为了方便比较，返回hash的string(不含0x前缀)
+	// 返回方法签名的hash, 这个hash将出现在合约的bin中
 	evmFuncHashBytes = func(funcName string) []byte {
 		prefix := sha3.NewLegacyKeccak256()
 		prefix.Write([]byte(funcName))
 		return prefix.Sum(nil)[:4]
 	}
 
+	// 为了方便比较，返回hash的string(不含0x前缀)
 	evmFuncHash = func(funcName string) string {
 		prefix := sha3.NewLegacyKeccak256()
 		prefix.Write([]byte(funcName))
 		bin := hexutil.Encode(prefix.Sum(nil)[:4])
-		binHex := bin[2:]
+		binHex := bin[2:] //为了方便比较，返回hash的string(不含0x前缀)
 		found00 := false
 		for {
 			binHex, found00 = strings.CutPrefix(binHex, "00")

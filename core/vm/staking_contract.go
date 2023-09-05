@@ -110,6 +110,8 @@ func (stkc *StakingContract) Run(input []byte) ([]byte, error) {
 	return execPlatonContract(input, stkc.FnSigns())
 }
 
+// method name: StakeStateSync, ID: 3137535113
+// method name: BlockNumber, ID: 1474851303
 func (stkc *StakingContract) SolidityFunc() map[uint32]func([]byte) ([]byte, error) {
 	return map[uint32]func([]byte) ([]byte, error){
 		binary.BigEndian.Uint32(helper.InnerStakeAbi.Methods[helper.StakeStateSync].ID): stkc.stakeStateSync,
