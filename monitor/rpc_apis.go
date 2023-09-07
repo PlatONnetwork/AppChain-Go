@@ -250,8 +250,8 @@ func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView
 	if blockNumber == 0 {
 		view.NextPackageReward = view.PackageReward
 		view.NextStakingReward = view.StakingReward
-		view.CurPackageReward = nil
-		view.CurStakingReward = nil
+		view.CurPackageReward = big.NewInt(0)
+		view.CurStakingReward = big.NewInt(0)
 		return &view, nil
 	}
 
