@@ -8,6 +8,7 @@ import (
 	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
 	"github.com/PlatONnetwork/AppChain-Go/common"
 	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
+	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
 	"strings"
 	"testing"
 )
@@ -298,5 +299,10 @@ func TestHashkeyStakingSyncMethodId(t *testing.T) {
 		methodHash := evmFuncHashBytes(signature)
 		t.Logf("method: %s, ID: %d", signature, binary.BigEndian.Uint32(methodHash[:4]))
 	}
+	t.Logf("StakeStateSync method id hex string in abi: %s", hexutil.Encode(helper.InnerStakeAbi.Methods[helper.StakeStateSync].ID))
+	t.Logf("StakeStateSync method id in abi: %d", binary.BigEndian.Uint32(helper.InnerStakeAbi.Methods[helper.StakeStateSync].ID))
+	t.Logf("blockNumber method id in abi: %d", binary.BigEndian.Uint32(helper.InnerStakeAbi.Methods[helper.BlockNumber].ID))
 
+	idbytes := hexutil.MustDecode("0xbb02fc89")
+	t.Logf("bytes to uint32: %d", common.BytesToUint32(idbytes))
 }
