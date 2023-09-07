@@ -17,7 +17,7 @@ import (
 type MonitorDbKey int
 
 const (
-	UncommonTransferKey MonitorDbKey = iota
+	EmbedTransferKey MonitorDbKey = iota
 	CreatedContractKey
 	SuicidedContractKey
 	ProxyPatternKey
@@ -33,7 +33,7 @@ const (
 // 定义 MonitorDbKey 类型的方法 String(), 返回字符串。
 func (dbKey MonitorDbKey) String() string {
 	return [...]string{
-		"UncommonTransferKey",
+		"EmbedTransferKey",
 		"CreatedContractKey",
 		"SuicidedContractKey",
 		"ProxyPatternKey",
@@ -89,49 +89,49 @@ func (m *Monitor) SetRestrictingPlugin(pluginImpl Intf_restrictingPlugin) {
 // 收集非常规的转账交易
 // 1. 用户发起的合约调用，参数携带了value值，造成向合约地址转账
 // 2. 合约销毁时，合约上的原生代币，将转给合约的受益人（beneficiary，这个受益人，究竟是合约调用人？合约部署人？）
-func (m *Monitor) CollectUncommonTransferTx(txHash common.Hash, from, to common.Address, amount *big.Int) {
-	log.Debug("CollectUncommonTransferTx", "txHash", txHash.Hex(), "from", from.Bech32(), "to", to.Bech32(), "amount", amount)
+func (m *Monitor) CollectEmbedTransferTx(txHash common.Hash, from, to common.Address, amount *big.Int) {
+	log.Debug("CollectEmbedTransferTx", "txHash", txHash.Hex(), "from", from.Bech32(), "to", to.Bech32(), "amount", amount)
 
-	dbKey := UncommonTransferKey.String() + "_" + txHash.String()
+	dbKey := EmbedTransferKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
 	if nil != err && err != ErrNotFound {
 		log.Error("failed to load uncommon transfers", "err", err)
 		return
 	}
 
-	var uncommonTransferTxList []*UncommonTransfer
-	ParseJson(data, &uncommonTransferTxList)
+	var embedTransferList []*EmbedTransfer
+	ParseJson(data, &embedTransferList)
 
-	uncommonTransferTx := new(UncommonTransfer)
-	uncommonTransferTx.TxHash = txHash
-	uncommonTransferTx.From = from
-	uncommonTransferTx.To = to
-	uncommonTransferTx.Amount = amount
+	embedTransferTx := new(EmbedTransfer)
+	embedTransferTx.TxHash = txHash
+	embedTransferTx.From = from
+	embedTransferTx.To = to
+	embedTransferTx.Amount = amount
 
-	uncommonTransferTxList = append(uncommonTransferTxList, uncommonTransferTx)
+	embedTransferList = append(embedTransferList, embedTransferTx)
 
-	json := ToJson(uncommonTransferTxList)
+	json := ToJson(embedTransferList)
 	if len(json) > 0 {
 		m.monitordb.Put([]byte(dbKey), json)
-		log.Debug("save uncommon transfers success")
+		log.Debug("save embed transfers success")
 	}
 
 }
 
 // 查询非常规的转账交易
-func (m *Monitor) GetUncommonTransfer(txHash common.Hash) []*UncommonTransfer {
-	log.Debug("GetUncommonTransfer", "txHash", txHash.Hex())
+func (m *Monitor) GetEmbedTransfer(txHash common.Hash) []*EmbedTransfer {
+	log.Debug("GetEmbedTransfer", "txHash", txHash.Hex())
 
-	dbKey := UncommonTransferKey.String() + "_" + txHash.String()
+	dbKey := EmbedTransferKey.String() + "_" + txHash.String()
 	data, err := m.monitordb.Get([]byte(dbKey))
 	if nil != err {
-		log.Error("failed to load uncommon transfers", "err", err)
+		log.Error("failed to load embed transfers", "err", err)
 		return nil
 	}
 
-	var uncommonTransferTxList []*UncommonTransfer
-	ParseJson(data, &uncommonTransferTxList)
-	return uncommonTransferTxList
+	var embedTransferList []*EmbedTransfer
+	ParseJson(data, &embedTransferList)
+	return embedTransferList
 }
 
 // 收集某个交易产生的新合约信息
@@ -295,18 +295,18 @@ func (m *Monitor) GetProxyPatterns(txHash common.Hash) []*ProxyPattern {
 }
 
 // epoch切换时，收集下一个epoch的相关信息
-func (m *Monitor) CollectionNextEpochInfo(epoch uint64, newBlockReward, epochTotalStakingReward *big.Int, chainAge uint32, yearStartBlockNumber uint64, remainEpochThisYear uint32, avgPackTime uint64) {
+func (m *Monitor) CollectionNextEpochInfo(nextEpoch uint64, newBlockReward, epochTotalStakingReward *big.Int, chainAge uint32, yearStartBlockNumber uint64, remainEpochThisYear uint32, avgPackTime uint64) {
 	view := EpochView{
-		PackageReward:     newBlockReward,
-		StakingReward:     epochTotalStakingReward,
-		ChainAge:          chainAge + 1, // ChainAge starts from 1
+		PackageReward:     newBlockReward,          //出块奖励
+		StakingReward:     epochTotalStakingReward, //总的质押奖励
+		ChainAge:          chainAge + 1,            // ChainAge starts from 1
 		YearStartBlockNum: yearStartBlockNumber,
 		YearEndBlockNum:   yearStartBlockNumber + uint64(remainEpochThisYear)*xutil.CalcBlocksEachEpoch(),
 		RemainEpoch:       remainEpochThisYear,
 		AvgPackTime:       avgPackTime,
 	}
 	json := ToJson(view)
-	dbKey := EpochInfoKey.String() + "_" + strconv.FormatUint(epoch, 10)
+	dbKey := EpochInfoKey.String() + "_" + strconv.FormatUint(nextEpoch, 10)
 	m.monitordb.Put([]byte(dbKey), json)
 	log.Debug("CollectionNextEpochInfo", "data", string(json))
 }

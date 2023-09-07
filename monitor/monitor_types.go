@@ -46,7 +46,7 @@ type ImplicitPPOSTx struct {
 // 而还有一些不寻常的交易会引起账户余额变化，比如：
 // 1. 调用合约时，带上了value，evm执行时，会首先进行from/to的账户余额变动
 // 2. 合约销毁时，引起账户余额变化
-type UncommonTransfer struct {
+type EmbedTransfer struct {
 	TxHash common.Hash    `json:"txHash,-"`
 	From   common.Address `json:"from,omitempty"`
 	To     common.Address `json:"to,omitempty"`
@@ -61,6 +61,8 @@ type ProxyPattern struct {
 type EpochView struct {
 	NextPackageReward *big.Int `json:"nextPackageReward"`
 	NextStakingReward *big.Int `json:"nextStakingReward"`
+	CurPackageReward  *big.Int `json:"curPackageReward"`
+	CurStakingReward  *big.Int `json:"curStakingReward"`
 	PackageReward     *big.Int `json:"packageReward"`
 	StakingReward     *big.Int `json:"stakingReward"`
 	ChainAge          uint32   `json:"chainAge"` //starts from 1

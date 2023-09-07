@@ -134,11 +134,11 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 		}
 
 		// 把交易中产生的非常规原生代币转账交易返回（原始交易是合约调用，才会产生非常规转账）
-		uncommonTransferList := MonitorInstance().GetUncommonTransfer(tx.Hash())
-		if uncommonTransferList == nil {
-			fields["uncommonTransfers"] = []*UncommonTransfer{}
+		embedTransferList := MonitorInstance().GetEmbedTransfer(tx.Hash())
+		if embedTransferList == nil {
+			fields["embedTransfers"] = []*EmbedTransfer{}
 		} else {
-			fields["uncommonTransfers"] = uncommonTransferList
+			fields["embedTransfers"] = embedTransferList
 		}
 
 		// 把交易中产生的隐式PPOS调用
@@ -219,6 +219,7 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (*staking.
 	return &validators, nil
 }
 
+// 输入的blockNumber是epoch的结束块高，或者是0块高
 func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView, error) {
 	log.Debug("GetEpochInfoByBlockNumber", "blockNumber", blockNumber)
 	var epoch = uint64(1)
@@ -246,6 +247,16 @@ func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView
 		return nil, nil
 	}
 
+	if blockNumber == 0 {
+		view.NextPackageReward = view.PackageReward
+		view.NextStakingReward = view.StakingReward
+		view.CurPackageReward = nil
+		view.CurStakingReward = nil
+		return &view, nil
+	}
+
+	view.CurPackageReward = view.PackageReward
+	view.CurStakingReward = view.StakingReward
 	view.NextPackageReward = common.Big0
 	view.NextStakingReward = common.Big0
 

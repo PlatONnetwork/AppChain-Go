@@ -802,13 +802,19 @@ func (rmp *RewardMgrPlugin) CalcEpochReward(blockHash common.Hash, head *types.H
 		"epochTotalReward", epochTotalReward, "newBlockRewardRate", xcom.NewBlockRewardRate(), "epochTotalNewBlockReward", epochTotalNewBlockReward,
 		"epochTotalStakingReward", epochTotalStakingReward, "epochBlocks", epochBlocks, "newBlockReward", newBlockReward)
 
+	var nextEpoch uint64
+	if head.Number.Uint64() == common.Big1.Uint64() {
+		nextEpoch = 1
+	} else {
+		nextEpoch = xutil.CalculateEpoch(head.Number.Uint64()) + 1
+	}
 	monitor.MonitorInstance().CollectionNextEpochInfo(
-		xutil.CalculateEpoch(head.Number.Uint64()),
+		nextEpoch,
 		newBlockReward,
 		epochTotalStakingReward,
-		yearNumber,
-		yearStartBlockNumber,
-		uint32(remainEpoch),
+		yearNumber,           // 可以另外按key=chainAge来存储
+		yearStartBlockNumber, // 可以另外按key=chainAge来存储
+		uint32(remainEpoch),  // 可以另外按key=chainAge来存储
 		avgPackTime,
 	)
 
