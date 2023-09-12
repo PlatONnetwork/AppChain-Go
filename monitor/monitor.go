@@ -86,9 +86,12 @@ func (m *Monitor) SetRestrictingPlugin(pluginImpl Intf_restrictingPlugin) {
 	monitor.restrictingPlugin = pluginImpl
 }
 
-// 收集非常规的转账交易
-// 1. 用户发起的合约调用，参数携带了value值，造成向合约地址转账
-// 2. 合约销毁时，合约上的原生代币，将转给合约的受益人（beneficiary，这个受益人，究竟是合约调用人？合约部署人？）
+/*
+*
+收集合约内置的转账交易（不包括初始交易是带value的合约调用）
+1. 合约内部的lat转账
+2. 合约销毁时，合约上的原生代币，将转给合约的受益人（beneficiary，这个受益人，究竟是合约调用人？合约部署人？）
+*/
 func (m *Monitor) CollectEmbedTransferTx(txHash common.Hash, from, to common.Address, amount *big.Int) {
 	log.Debug("CollectEmbedTransferTx", "txHash", txHash.Hex(), "from", from.Bech32(), "to", to.Bech32(), "amount", amount)
 
