@@ -53,7 +53,11 @@ func NewMonitorAPIs(b Backend) []rpc.API {
 }
 
 // GetReceiptExtsByBlockNumber returns the transaction receipt for the given block number.
-func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[string]interface{}, error) {
+func (api *MonitorAPI) GetReceiptExtsByBlockNumber(number rpc.BlockNumber) ([]map[string]interface{}, error) {
+	blockNumber := uint64(number)
+	if number == rpc.LatestBlockNumber {
+		blockNumber = api.b.CurrentBlock().NumberU64()
+	}
 	log.Debug("GetReceiptExtsByBlockNumber", "blockNumber", blockNumber)
 	blockNr := rpc.BlockNumber(blockNumber)
 	block, err := api.b.BlockByNumber(nil, blockNr)
@@ -164,7 +168,12 @@ func (api *MonitorAPI) GetReceiptExtsByBlockNumber(blockNumber uint64) ([]map[st
 
 // 获取区块所在epoch为key的verifiers，这个和scan-agent也是匹配的，scan-agent中，输入的就是上epoch的最后一个块
 // GetVerifiersByBlockNumber returns the verifiers of the epoch which last block is BlockNuumber
-func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.ValidatorExQueue, error) {
+func (api *MonitorAPI) GetVerifiersByBlockNumber(number rpc.BlockNumber) (*staking.ValidatorExQueue, error) {
+	blockNumber := uint64(number)
+	if number == rpc.LatestBlockNumber {
+		blockNumber = api.b.CurrentBlock().NumberU64()
+	}
+
 	// epoch starts from 1
 	epoch := xutil.CalculateEpoch(blockNumber)
 	dbKey := VerifiersOfEpochKey.String() + strconv.FormatUint(epoch, 10)
@@ -189,7 +198,12 @@ func (api *MonitorAPI) GetVerifiersByBlockNumber(blockNumber uint64) (*staking.V
 	return &validatorExQueue, nil
 }
 
-func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (*staking.ValidatorExQueue, error) {
+func (api *MonitorAPI) GetValidatorsByBlockNumber(number rpc.BlockNumber) (*staking.ValidatorExQueue, error) {
+	blockNumber := uint64(number)
+	if number == rpc.LatestBlockNumber {
+		blockNumber = api.b.CurrentBlock().NumberU64()
+	}
+
 	// epoch starts from 1
 	round := uint64(0)
 	if blockNumber != round {
@@ -220,7 +234,12 @@ func (api *MonitorAPI) GetValidatorsByBlockNumber(blockNumber uint64) (*staking.
 }
 
 // 输入的blockNumber是epoch的结束块高，或者是0块高
-func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView, error) {
+func (api *MonitorAPI) GetEpochInfoByBlockNumber(number rpc.BlockNumber) (*EpochView, error) {
+	blockNumber := uint64(number)
+	if number == rpc.LatestBlockNumber {
+		blockNumber = api.b.CurrentBlock().NumberU64()
+	}
+
 	log.Debug("GetEpochInfoByBlockNumber", "blockNumber", blockNumber)
 	var epoch = uint64(1)
 	if blockNumber > 0 {
@@ -283,9 +302,14 @@ func (api *MonitorAPI) GetEpochInfoByBlockNumber(blockNumber uint64) (*EpochView
 	return &view, nil
 }
 
-func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber uint64) (*staking.SlashQueue, error) {
+func (api *MonitorAPI) GetSlashInfoByBlockNumber(electionBlockNumber rpc.BlockNumber) (*staking.SlashQueue, error) {
+	blockNumber := uint64(electionBlockNumber)
+	if electionBlockNumber == rpc.LatestBlockNumber {
+		blockNumber = api.b.CurrentBlock().NumberU64()
+	}
+
 	log.Debug("GetSlashInfoByBlockNumber", "blockNumber", electionBlockNumber)
-	dbKey := SlashKey.String() + "_" + strconv.FormatUint(electionBlockNumber, 10)
+	dbKey := SlashKey.String() + "_" + strconv.FormatUint(blockNumber, 10)
 	data, err := MonitorInstance().monitordb.Get([]byte(dbKey))
 	if nil != err {
 		if err == ErrNotFound {
@@ -308,10 +332,11 @@ func (api *MonitorAPI) GetNodeVersion() (staking.ValidatorExQueue, error) {
 }
 
 // GetAccountView 链上获取帐号的当前信息，包括：余额，锁仓，委托等
-func (api *MonitorAPI) GetAccountView(accounts []common.Address) []*AccountView {
-	log.Debug("GetAccountView", "accounts", ToJson(accounts))
+func (api *MonitorAPI) GetAccountView(accounts []common.Address, number rpc.BlockNumber) []*AccountView {
+	log.Info("GetAccountView", "accounts", ToJson(accounts), "number", number.Int64())
+
 	response := make([]*AccountView, len(accounts))
-	header, _ := api.b.HeaderByNumber(context.Background(), rpc.LatestBlockNumber) // latest header should always be available
+	header, _ := api.b.HeaderByNumber(context.Background(), number) // latest header should always be available
 
 	for idx, address := range accounts {
 		accountView, err := getAccountView(address, monitor.statedb, header.Hash(), header.Number.Uint64())

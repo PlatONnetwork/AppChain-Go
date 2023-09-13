@@ -93,7 +93,7 @@ type DelegationLockedItem struct {
 	// 锁定截止周期
 	ExpiredEpoch uint32 `json:"expiredEpoch,omitempty"`
 	// 处于锁定期的委托金，资金来源是用户账户余额
-	FreeBalance *big.Int `json:"FreeBalance,omitempty"`
+	FreeBalance *big.Int `json:"freeBalance,omitempty"`
 	//处于锁定期的委托金，资金来源是锁仓计划
 	RestrictingPlanAmount *big.Int `json:"restrictingPlanAmount,omitempty"`
 }
