@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 	"math/big"
 )
 

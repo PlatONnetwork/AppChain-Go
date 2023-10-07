@@ -19,15 +19,15 @@ package vm
 import (
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/vm"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
-	"github.com/PlatONnetwork/AppChain-Go/params"
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
-	"github.com/PlatONnetwork/AppChain-Go/x/plugin"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
 )
 
 const (

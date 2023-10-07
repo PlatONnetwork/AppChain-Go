@@ -21,13 +21,13 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/rawdb"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/memorydb"
+	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/memorydb"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
-	"github.com/PlatONnetwork/AppChain-Go/trie"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/trie"
 )
 
 // testAccount is the data associated with an account used by the state tests.

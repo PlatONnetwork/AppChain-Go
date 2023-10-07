@@ -23,12 +23,12 @@ import (
 	"reflect"
 	"sync/atomic"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/utils"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	ctypes "github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/utils"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 // Maximum cap on the size of a cbft protocol message

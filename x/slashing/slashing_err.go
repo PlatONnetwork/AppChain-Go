@@ -17,7 +17,7 @@
 
 package slashing
 
-import "github.com/PlatONnetwork/AppChain-Go/common"
+import "github.com/PlatONnetwork/PlatON-Go/common"
 
 var (
 	ErrDuplicateSignVerify = common.NewBizError(303000, "Double-signning verification failed")

@@ -26,16 +26,16 @@ import (
 	"reflect"
 	"unicode"
 
-	"github.com/PlatONnetwork/AppChain-Go/internal/ethapi"
+	"github.com/PlatONnetwork/PlatON-Go/internal/ethapi"
 
 	cli "gopkg.in/urfave/cli.v1"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/cmd/utils"
-	"github.com/PlatONnetwork/AppChain-Go/eth"
-	"github.com/PlatONnetwork/AppChain-Go/node"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/cmd/utils"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/node"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 	"github.com/naoina/toml"
 )
 

@@ -29,9 +29,9 @@ import (
 
 	mapset "github.com/deckarep/golang-set"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/accounts"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 // Minimum amount of time between cache reloads. This limit applies if the platform does

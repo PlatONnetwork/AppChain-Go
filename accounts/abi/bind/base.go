@@ -24,12 +24,12 @@ import (
 	"strings"
 	"sync"
 
-	platon "github.com/PlatONnetwork/AppChain-Go"
-	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/event"
+	platon "github.com/PlatONnetwork/PlatON-Go"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/event"
 )
 
 // SignerFn is a signer function callback when a contract requires a method to

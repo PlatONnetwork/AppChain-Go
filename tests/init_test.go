@@ -30,7 +30,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 // Command line flags to configure the interpreters.

@@ -18,7 +18,7 @@ package dbtest
 
 import (
 	"bytes"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
 	"reflect"
 	"sort"
 	"testing"

@@ -6,9 +6,9 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
 )
 
 var (

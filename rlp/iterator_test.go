@@ -19,7 +19,7 @@ package rlp
 import (
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
 )
 
 // TestIterator tests some basic things about the ListIterator. A more

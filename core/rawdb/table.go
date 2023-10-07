@@ -17,7 +17,7 @@
 package rawdb
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
 )
 
 // table is a wrapper around a database that prefixes each key access with a pre-

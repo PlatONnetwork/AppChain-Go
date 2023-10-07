@@ -20,9 +20,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/memorydb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/memorydb"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 // makeTestTrie create a sample test trie to test node-wise reconstruction.

@@ -29,20 +29,20 @@ import (
 	"testing/quick"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/byteutil"
-	"github.com/PlatONnetwork/AppChain-Go/core/rawdb"
+	"github.com/PlatONnetwork/PlatON-Go/common/byteutil"
+	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/leveldb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/leveldb"
 
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/memorydb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/memorydb"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/davecgh/go-spew/spew"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 func init() {

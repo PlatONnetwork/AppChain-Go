@@ -16,7 +16,7 @@
 
 package bind
 
-import "github.com/PlatONnetwork/AppChain-Go/accounts/abi"
+import "github.com/PlatONnetwork/PlatON-Go/accounts/abi"
 
 // tmplData is the data structure required to fill the binding template.
 type tmplData struct {
@@ -92,12 +92,12 @@ import (
 	"strings"
     "errors"
 
-	hskchain "github.com/PlatONnetwork/AppChain-Go"
-	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
-	"github.com/PlatONnetwork/AppChain-Go/accounts/abi/bind"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/event"
+	hskchain "github.com/PlatONnetwork/PlatON-Go"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi/bind"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/event"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

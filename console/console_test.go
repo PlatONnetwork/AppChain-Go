@@ -20,25 +20,25 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/console/prompt"
+	"github.com/PlatONnetwork/PlatON-Go/console/prompt"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/core"
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 
-	"github.com/PlatONnetwork/AppChain-Go/eth"
-	"github.com/PlatONnetwork/AppChain-Go/internal/jsre"
-	"github.com/PlatONnetwork/AppChain-Go/node"
-	_ "github.com/PlatONnetwork/AppChain-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/internal/jsre"
+	"github.com/PlatONnetwork/PlatON-Go/node"
+	_ "github.com/PlatONnetwork/PlatON-Go/x/xcom"
 )
 
 const (

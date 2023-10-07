@@ -27,16 +27,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/restricting"
+	"github.com/PlatONnetwork/PlatON-Go/x/restricting"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/slashing"
+	"github.com/PlatONnetwork/PlatON-Go/x/slashing"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/staking"
+	"github.com/PlatONnetwork/PlatON-Go/x/staking"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 var (

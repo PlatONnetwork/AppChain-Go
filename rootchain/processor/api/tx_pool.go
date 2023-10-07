@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 )
 
 type TxPoolAPI interface {
