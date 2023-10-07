@@ -25,7 +25,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/metrics"
+	"github.com/PlatONnetwork/PlatON-Go/metrics"
 )
 
 func init() {

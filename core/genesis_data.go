@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/params"
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
-	"github.com/PlatONnetwork/AppChain-Go/x/plugin"
+	"github.com/PlatONnetwork/PlatON-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/vm"
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
-	"github.com/PlatONnetwork/AppChain-Go/x/staking"
-	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/x/staking"
+	"github.com/PlatONnetwork/PlatON-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 )
 
 func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genesis, stateDB *state.StateDB) (common.Hash, error) {

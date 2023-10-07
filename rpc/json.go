@@ -28,9 +28,9 @@ import (
 	"sync"
 	"time"
 
-	json2 "github.com/PlatONnetwork/AppChain-Go/common/json"
+	json2 "github.com/PlatONnetwork/PlatON-Go/common/json"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 const (

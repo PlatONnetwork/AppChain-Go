@@ -19,8 +19,8 @@ package rlp
 import (
 	"bytes"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 func decodeEncode(input []byte, val interface{}, i int) {

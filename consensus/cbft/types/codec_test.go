@@ -22,8 +22,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/utils"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/utils"
 )
 
 func TestCodec(t *testing.T) {

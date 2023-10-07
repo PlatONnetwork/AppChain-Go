@@ -23,11 +23,11 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
-	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/utils"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
+	ctypes "github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/utils"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/suite"
 )

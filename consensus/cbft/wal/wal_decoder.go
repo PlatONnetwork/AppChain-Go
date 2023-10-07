@@ -20,9 +20,9 @@ package wal
 import (
 	"fmt"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
 
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 // struct SendPrepareBlock for rlp decode

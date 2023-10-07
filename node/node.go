@@ -27,18 +27,18 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/rawdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
 
 	"github.com/prometheus/tsdb/fileutil"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
-	"github.com/PlatONnetwork/AppChain-Go/event"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/p2p"
-	"github.com/PlatONnetwork/AppChain-Go/rpc"
+	"github.com/PlatONnetwork/PlatON-Go/accounts"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/p2p"
+	"github.com/PlatONnetwork/PlatON-Go/rpc"
 )
 
 // Node is a container on which services can be registered.

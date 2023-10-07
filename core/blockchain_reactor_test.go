@@ -21,12 +21,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core/cbfttypes"
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/event"
-	"github.com/PlatONnetwork/AppChain-Go/trie"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core/cbfttypes"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/trie"
 )
 
 func TestBlockChainReactorClose(t *testing.T) {

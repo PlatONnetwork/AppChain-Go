@@ -17,9 +17,9 @@
 package runtime
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/core"
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/vm"
+	"github.com/PlatONnetwork/PlatON-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm"
 )
 
 func NewEnv(cfg *Config) *vm.EVM {

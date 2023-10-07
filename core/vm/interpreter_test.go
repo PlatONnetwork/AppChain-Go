@@ -5,10 +5,10 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/mock"
+	"github.com/PlatONnetwork/PlatON-Go/common/mock"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 type account struct{}

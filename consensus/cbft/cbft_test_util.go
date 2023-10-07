@@ -21,14 +21,14 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/network"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
-	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/utils"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/network"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
+	ctypes "github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/utils"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 const (

@@ -23,10 +23,10 @@ import (
 
 	"golang.org/x/crypto/sha3"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 // testHasher is the helper tool for transaction/receipt list hashing.

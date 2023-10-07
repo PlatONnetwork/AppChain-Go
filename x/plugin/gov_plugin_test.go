@@ -22,30 +22,30 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/PlatONnetwork/AppChain-Go/node"
+	"github.com/PlatONnetwork/PlatON-Go/node"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/mock"
-	//	"github.com/PlatONnetwork/AppChain-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/common/mock"
+	//	"github.com/PlatONnetwork/PlatON-Go/core/state"
 
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/x/xcom"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	//	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	//	"github.com/PlatONnetwork/AppChain-Go/core/vm"
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	//	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	//	"github.com/PlatONnetwork/PlatON-Go/core/vm"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
 
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 )
 
 var (

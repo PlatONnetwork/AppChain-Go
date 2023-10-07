@@ -28,7 +28,7 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-const pathOfPackageRLP = "github.com/PlatONnetwork/AppChain-Go/rlp"
+const pathOfPackageRLP = "github.com/PlatONnetwork/PlatON-Go/rlp"
 
 func main() {
 	var (

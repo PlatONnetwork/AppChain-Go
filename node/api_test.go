@@ -27,7 +27,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/PlatONnetwork/AppChain-Go/rpc"
+	"github.com/PlatONnetwork/PlatON-Go/rpc"
 )
 
 // This test uses the admin_startRPC and admin_startWS APIs,

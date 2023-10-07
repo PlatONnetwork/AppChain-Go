@@ -21,7 +21,7 @@ package metrics
 import (
 	"github.com/shirou/gopsutil/cpu"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 // ReadCPUStats retrieves the current CPU stats.

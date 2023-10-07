@@ -19,10 +19,10 @@ package tracers
 import (
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/common/math"
-	"github.com/PlatONnetwork/AppChain-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/common/math"
+	"github.com/PlatONnetwork/PlatON-Go/core"
 )
 
 // To generate a new callTracer test, copy paste the makeTest method below into

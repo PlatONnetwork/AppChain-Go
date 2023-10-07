@@ -17,8 +17,8 @@
 package leveldb
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/dbtest"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/dbtest"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/storage"
 	"testing"

@@ -20,9 +20,9 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/math"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/math"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 const (

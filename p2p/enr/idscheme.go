@@ -22,9 +22,9 @@ import (
 	"golang.org/x/crypto/sha3"
 	"sync"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/math"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/common/math"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 // Registry of known identity schemes.

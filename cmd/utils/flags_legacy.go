@@ -22,8 +22,8 @@ import (
 
 	"gopkg.in/urfave/cli.v1"
 
-	"github.com/PlatONnetwork/AppChain-Go/eth"
-	"github.com/PlatONnetwork/AppChain-Go/node"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/node"
 )
 
 var ShowDeprecated = cli.Command{

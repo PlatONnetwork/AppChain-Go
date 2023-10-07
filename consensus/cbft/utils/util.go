@@ -25,7 +25,7 @@ import (
 	"sort"
 	"sync/atomic"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 // RandomOffset returns a random offset between 0 and n

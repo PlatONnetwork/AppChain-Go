@@ -4,13 +4,13 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/mock"
-	"github.com/PlatONnetwork/AppChain-Go/common/vm"
-	"github.com/PlatONnetwork/AppChain-Go/core/vm/solidity"
-	"github.com/PlatONnetwork/AppChain-Go/core/vm/solidity/checkpoint"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/mock"
+	"github.com/PlatONnetwork/PlatON-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm/solidity"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm/solidity/checkpoint"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 	"github.com/stretchr/testify/assert"
 )
 

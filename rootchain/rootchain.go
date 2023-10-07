@@ -5,12 +5,13 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	vm2 "github.com/PlatONnetwork/AppChain-Go/common/vm"
-	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/core/vm"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/helper"
+	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/helper"
+
+	vm2 "github.com/PlatONnetwork/PlatON-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 	"math/big"
 )
 

@@ -25,12 +25,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
 
-	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/node"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	ctypes "github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/node"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 const (

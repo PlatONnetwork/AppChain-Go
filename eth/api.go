@@ -26,16 +26,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/core"
-	"github.com/PlatONnetwork/AppChain-Go/core/rawdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/internal/ethapi"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
-	"github.com/PlatONnetwork/AppChain-Go/rpc"
-	"github.com/PlatONnetwork/AppChain-Go/trie"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/internal/ethapi"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/rpc"
+	"github.com/PlatONnetwork/PlatON-Go/trie"
 )
 
 // PrivateMinerAPI provides private RPC methods to control the miner.

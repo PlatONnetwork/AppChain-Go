@@ -17,7 +17,7 @@
 package keystore
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/accounts/keystore"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/keystore"
 	"os"
 )
 

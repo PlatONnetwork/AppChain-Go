@@ -24,8 +24,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/p2p"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/p2p"
 )
 
 // Tests that datadirs can be successfully created, be them manually configured

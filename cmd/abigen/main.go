@@ -25,16 +25,16 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts/abi"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
 
 	"gopkg.in/urfave/cli.v1"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts/abi/bind"
-	"github.com/PlatONnetwork/AppChain-Go/cmd/utils"
-	"github.com/PlatONnetwork/AppChain-Go/common/compiler"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/internal/flags"
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/abi/bind"
+	"github.com/PlatONnetwork/PlatON-Go/cmd/utils"
+	"github.com/PlatONnetwork/PlatON-Go/common/compiler"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/internal/flags"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 var (

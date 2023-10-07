@@ -23,14 +23,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/state"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/state"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/network"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
-	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/utils"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/network"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
+	ctypes "github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/utils"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 )
 
 var syncPrepareVotesInterval = 3 * time.Second

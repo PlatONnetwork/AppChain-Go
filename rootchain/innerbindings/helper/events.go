@@ -1,9 +1,9 @@
 package helper
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/innerstake"
-	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/rootchain"
-	"github.com/PlatONnetwork/AppChain-Go/rootchain/innerbindings/stakinginfo"
+	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/innerstake"
+	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/rootchain"
+	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/stakinginfo"
 )
 
 var (

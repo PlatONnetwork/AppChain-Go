@@ -8,8 +8,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 // Match only 128 hex char length proof

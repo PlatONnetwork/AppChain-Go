@@ -22,11 +22,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/PlatONnetwork/AppChain-Go/internal/ethapi"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/signer/core"
-	"github.com/PlatONnetwork/AppChain-Go/signer/rules/deps"
-	"github.com/PlatONnetwork/AppChain-Go/signer/storage"
+	"github.com/PlatONnetwork/PlatON-Go/internal/ethapi"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/signer/core"
+	"github.com/PlatONnetwork/PlatON-Go/signer/rules/deps"
+	"github.com/PlatONnetwork/PlatON-Go/signer/storage"
 	"github.com/dop251/goja"
 )
 

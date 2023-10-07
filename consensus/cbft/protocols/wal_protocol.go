@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 
-	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
+	ctypes "github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
 )
 
 const (

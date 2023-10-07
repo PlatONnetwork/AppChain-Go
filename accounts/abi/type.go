@@ -24,7 +24,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 // Type enumerator

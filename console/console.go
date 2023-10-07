@@ -28,14 +28,14 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/PlatONnetwork/AppChain-Go/console/prompt"
-	"github.com/PlatONnetwork/AppChain-Go/internal/jsre/deps"
+	"github.com/PlatONnetwork/PlatON-Go/console/prompt"
+	"github.com/PlatONnetwork/PlatON-Go/internal/jsre/deps"
 
 	"github.com/dop251/goja"
 
-	"github.com/PlatONnetwork/AppChain-Go/internal/jsre"
-	"github.com/PlatONnetwork/AppChain-Go/internal/web3ext"
-	"github.com/PlatONnetwork/AppChain-Go/rpc"
+	"github.com/PlatONnetwork/PlatON-Go/internal/jsre"
+	"github.com/PlatONnetwork/PlatON-Go/internal/web3ext"
+	"github.com/PlatONnetwork/PlatON-Go/rpc"
 	"github.com/mattn/go-colorable"
 	"github.com/peterh/liner"
 )

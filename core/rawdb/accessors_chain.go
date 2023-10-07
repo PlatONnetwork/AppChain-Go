@@ -21,16 +21,16 @@ import (
 	"encoding/binary"
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
 
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 // ReadCanonicalHash retrieves the hash assigned to a canonical block number.

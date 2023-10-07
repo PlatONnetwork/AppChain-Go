@@ -18,23 +18,23 @@ package vm
 
 import (
 	"context"
-	"github.com/PlatONnetwork/AppChain-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/common/vm"
 	"math/big"
 	"sync/atomic"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
 
 	"github.com/holiman/uint256"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/plugin"
+	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 // emptyCodeHash is used by create to ensure deployment is disallowed to already

@@ -22,16 +22,16 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/evidence"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/evidence"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
-	"github.com/PlatONnetwork/AppChain-Go/x/plugin"
-	"github.com/PlatONnetwork/AppChain-Go/x/staking"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
+	"github.com/PlatONnetwork/PlatON-Go/x/staking"
 )
 
 func TestSlashingContract_ReportMutiSign(t *testing.T) {

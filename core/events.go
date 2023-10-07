@@ -17,9 +17,9 @@
 package core
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core/cbfttypes"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core/cbfttypes"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 )
 
 // NewTxsEvent is posted when a batch of transactions enter the transaction pool.

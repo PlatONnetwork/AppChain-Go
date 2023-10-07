@@ -17,7 +17,7 @@
 package state
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 type accessList struct {

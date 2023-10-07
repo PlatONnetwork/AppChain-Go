@@ -19,7 +19,7 @@ package event_test
 import (
 	"fmt"
 
-	"github.com/PlatONnetwork/AppChain-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/event"
 )
 
 func ExampleNewSubscription() {

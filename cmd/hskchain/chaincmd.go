@@ -19,30 +19,30 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/console/prompt"
+	"github.com/PlatONnetwork/PlatON-Go/console/prompt"
 	"io"
 	"path/filepath"
 
-	"github.com/PlatONnetwork/AppChain-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/rawdb"
-	"github.com/PlatONnetwork/AppChain-Go/trie"
+	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
+	"github.com/PlatONnetwork/PlatON-Go/trie"
 
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
 	"gopkg.in/urfave/cli.v1"
 
-	"github.com/PlatONnetwork/AppChain-Go/cmd/utils"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/core"
-	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/eth/downloader"
-	"github.com/PlatONnetwork/AppChain-Go/event"
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/cmd/utils"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/eth/downloader"
+	"github.com/PlatONnetwork/PlatON-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 var (

@@ -24,8 +24,8 @@ import (
 
 	"gopkg.in/urfave/cli.v1"
 
-	"github.com/PlatONnetwork/AppChain-Go/cmd/utils"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/cmd/utils"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
 )
 
 // getPassphrase obtains a passphrase given by the user.  It first checks the

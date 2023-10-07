@@ -19,11 +19,11 @@ package state
 import (
 	"bytes"
 
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
-	"github.com/PlatONnetwork/AppChain-Go/trie"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/trie"
 )
 
 // NewStateSync create a new state trie download scheduler.

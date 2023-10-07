@@ -25,16 +25,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/memorydb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/memorydb"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus"
-	"github.com/PlatONnetwork/AppChain-Go/core/rawdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/consensus"
+	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
 )
 
 var (

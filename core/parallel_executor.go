@@ -7,17 +7,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
 
 	"github.com/panjf2000/ants/v2"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/core/vm"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 const (

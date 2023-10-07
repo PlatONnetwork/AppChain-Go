@@ -23,11 +23,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/leveldb"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/memorydb"
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/leveldb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/memorydb"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 	"github.com/olekukonko/tablewriter"
 )
 

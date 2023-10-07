@@ -24,12 +24,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/consensus"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/evidence"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/consensus"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/evidence"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 	"github.com/stretchr/testify/suite"
 )
 

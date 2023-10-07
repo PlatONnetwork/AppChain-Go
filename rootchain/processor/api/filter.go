@@ -3,8 +3,8 @@ package api
 import (
 	"context"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/eth/filters"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/eth/filters"
 )
 
 type FilterAPI interface {

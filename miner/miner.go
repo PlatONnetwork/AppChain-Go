@@ -18,21 +18,21 @@
 package miner
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/manager"
-	"github.com/PlatONnetwork/AppChain-Go/rootchain"
+	"github.com/PlatONnetwork/PlatON-Go/manager"
+	"github.com/PlatONnetwork/PlatON-Go/rootchain"
 	"math/big"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus"
-	"github.com/PlatONnetwork/AppChain-Go/core"
-	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/eth/downloader"
-	"github.com/PlatONnetwork/AppChain-Go/event"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/consensus"
+	"github.com/PlatONnetwork/PlatON-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/eth/downloader"
+	"github.com/PlatONnetwork/PlatON-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 // Backend wraps all methods required for mining.

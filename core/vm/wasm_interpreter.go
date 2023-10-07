@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 var (

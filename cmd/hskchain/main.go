@@ -19,7 +19,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/console/prompt"
+	"github.com/PlatONnetwork/PlatON-Go/console/prompt"
 	"math"
 	"os"
 	"runtime"
@@ -32,17 +32,17 @@ import (
 	"github.com/panjf2000/ants/v2"
 	"gopkg.in/urfave/cli.v1"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts"
-	"github.com/PlatONnetwork/AppChain-Go/accounts/keystore"
-	"github.com/PlatONnetwork/AppChain-Go/cmd/utils"
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
-	"github.com/PlatONnetwork/AppChain-Go/eth"
-	"github.com/PlatONnetwork/AppChain-Go/ethclient"
-	"github.com/PlatONnetwork/AppChain-Go/internal/debug"
-	"github.com/PlatONnetwork/AppChain-Go/internal/ethapi"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/metrics"
-	"github.com/PlatONnetwork/AppChain-Go/node"
+	"github.com/PlatONnetwork/PlatON-Go/accounts"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/keystore"
+	"github.com/PlatONnetwork/PlatON-Go/cmd/utils"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/ethclient"
+	"github.com/PlatONnetwork/PlatON-Go/internal/debug"
+	"github.com/PlatONnetwork/PlatON-Go/internal/ethapi"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/metrics"
+	"github.com/PlatONnetwork/PlatON-Go/node"
 
 	gopsutil "github.com/shirou/gopsutil/mem"
 )

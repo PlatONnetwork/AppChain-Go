@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 func TestRecover(t *testing.T) {

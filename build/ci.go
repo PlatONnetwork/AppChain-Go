@@ -56,9 +56,9 @@ import (
 	"strings"
 	"time"
 
-	signifyPkg "github.com/PlatONnetwork/AppChain-Go/crypto/signify"
-	"github.com/PlatONnetwork/AppChain-Go/internal/build"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	signifyPkg "github.com/PlatONnetwork/PlatON-Go/crypto/signify"
+	"github.com/PlatONnetwork/PlatON-Go/internal/build"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 )
 
 var (
@@ -228,7 +228,7 @@ func doInstall(cmdline []string) {
 		index := 0
 		packages2 := []string{}
 		for index < len(packages) {
-			if packages[index] == "github.com/PlatONnetwork/AppChain-Go/cmd/hskchain" || packages[index] == "./cmd/hskchain" {
+			if packages[index] == "github.com/PlatONnetwork/PlatON-Go/cmd/hskchain" || packages[index] == "./cmd/hskchain" {
 				gohskchaininstall := goTool("install", buildFlags(env)...)
 				gohskchaininstall.Args = append(gohskchaininstall.Args, "-v")
 				if *mpc == "on" {
@@ -885,7 +885,7 @@ func doAndroidArchive(cmdline []string) {
 	// Build the Android archive and Maven resources
 	build.MustRun(goTool("get", "golang.org/x/mobile/cmd/gomobile", "golang.org/x/mobile/cmd/gobind"))
 	build.MustRun(gomobileTool("init", "--ndk", os.Getenv("ANDROID_NDK")))
-	build.MustRun(gomobileTool("bind", "-ldflags", "-s -w", "--target", "android", "--javapkg", "org.ethereum", "-v", "github.com/PlatONnetwork/AppChain-Go/mobile"))
+	build.MustRun(gomobileTool("bind", "-ldflags", "-s -w", "--target", "android", "--javapkg", "org.ethereum", "-v", "github.com/PlatONnetwork/PlatON-Go/mobile"))
 
 	if *local {
 		// If we're building locally, copy bundle to build dir and skip Maven
@@ -1013,7 +1013,7 @@ func doXCodeFramework(cmdline []string) {
 	// Build the iOS XCode framework
 	build.MustRun(goTool("get", "golang.org/x/mobile/cmd/gomobile", "golang.org/x/mobile/cmd/gobind"))
 	build.MustRun(gomobileTool("init"))
-	bind := gomobileTool("bind", "-ldflags", "-s -w", "--target", "ios", "-v", "github.com/PlatONnetwork/AppChain-Go/mobile")
+	bind := gomobileTool("bind", "-ldflags", "-s -w", "--target", "ios", "-v", "github.com/PlatONnetwork/PlatON-Go/mobile")
 
 	if *local {
 		// If we're building locally, use the build folder and stop afterwards
