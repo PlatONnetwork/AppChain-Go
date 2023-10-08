@@ -37,7 +37,7 @@ var (
 	ErrSubscriptionQueueOverflow = errors.New("subscription queue overflow")
 	errClientReconnected         = errors.New("client reconnected")
 	errDead                      = errors.New("connection lost")
-	NameSpace                    = "hskchain"
+	NameSpace                    = "appchain"
 )
 
 const (

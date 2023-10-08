@@ -193,7 +193,7 @@ func (c *Console) initExtensions() error {
 	if err != nil {
 		return fmt.Errorf("api modules: %v", err)
 	}
-	aliases := map[string]struct{}{"hskchain": {}, "personal": {}}
+	aliases := map[string]struct{}{"appchain": {}, "personal": {}}
 	for api := range apis {
 		if api == "web3" {
 			continue
@@ -279,7 +279,7 @@ func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, str
 		return "", nil, ""
 	}
 	// Chunck data to relevant part for autocompletion
-	// E.g. in case of nested lines hskchain.getBalance(hskchain.coinb<tab><tab>
+	// E.g. in case of nested lines appchain.getBalance(appchain.coinb<tab><tab>
 	start := pos - 1
 	for ; start > 0; start-- {
 		// Skip all methods and namespaces (i.e. including the dot)
@@ -298,15 +298,15 @@ func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, str
 	return line[:start], c.jsre.CompleteKeywords(line[start:pos]), line[pos:]
 }
 
-// Welcome show summary of current HashKey-Chain instance and some metadata about the
+// Welcome show summary of current AppChain instance and some metadata about the
 // console's available modules.
 func (c *Console) Welcome() {
-	message := "Welcome to the HashKey-Chain JavaScript console!\n\n"
+	message := "Welcome to the PlatON-AppChain JavaScript console!\n\n"
 
-	// Print some generic HashKey-Chain metadata
+	// Print some generic AppChain metadata
 	if res, err := c.jsre.Run(`
 		var message = "instance: " + web3.version.node + "\n";
-		message += "at block: " + hskchain.blockNumber + " (" + new Date(1000 * hskchain.getBlock(hskchain.blockNumber).timestamp) + ")\n";
+		message += "at block: " + appchain.blockNumber + " (" + new Date(1000 * appchain.getBlock(appchain.blockNumber).timestamp) + ")\n";
 		try {
 			message += " datadir: " + admin.datadir + "\n";
 		} catch (err) {}

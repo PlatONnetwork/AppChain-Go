@@ -203,7 +203,7 @@ func (rmp *RewardMgrPlugin) increaseIssuance(thisYear, lastYear uint32, state xc
 		log.Debug("Call EndBlock on reward_plugin: increase issuance to developer", "thisYear", thisYear, "developBalance", lessBalance)
 		rmp.addCommunityDeveloperFoundation(state, lessBalance, LessThanFoundationYearDeveloperRate)
 	} else {
-		log.Debug("Call EndBlock on reward_plugin: increase issuance to developer and hskchain", "thisYear", thisYear, "develop and hskchain Balance", lessBalance)
+		log.Debug("Call EndBlock on reward_plugin: increase issuance to developer and appchain", "thisYear", thisYear, "develop and appchain Balance", lessBalance)
 		rmp.addCommunityDeveloperFoundation(state, lessBalance, AfterFoundationYearDeveloperRewardRate)
 		rmp.addPlatONFoundation(state, lessBalance, AfterFoundationYearFoundRewardRate)
 	}

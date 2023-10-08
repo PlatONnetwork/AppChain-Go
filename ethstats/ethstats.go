@@ -441,9 +441,9 @@ func (s *Service) login(conn *connWrapper) error {
 	infos := s.server.NodeInfo()
 
 	var network, protocol string
-	if info := infos.Protocols["hskchain"]; info != nil {
+	if info := infos.Protocols["appchain"]; info != nil {
 		network = fmt.Sprintf("%d", info.(*eth.NodeInfo).Network)
-		protocol = fmt.Sprintf("hskchain/%d", eth.ProtocolVersions[0])
+		protocol = fmt.Sprintf("appchain/%d", eth.ProtocolVersions[0])
 	} else {
 		return errors.New("not les")
 	}

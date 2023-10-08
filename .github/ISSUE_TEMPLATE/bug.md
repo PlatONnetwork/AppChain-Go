@@ -1,6 +1,6 @@
 ---
 name: Report a bug
-about: Something with hashkey-chain is not working as expected
+about: Something with appchain is not working as expected
 title: ''
 labels: 'bug'
 assignees: ''
@@ -8,7 +8,7 @@ assignees: ''
 
 #### System information
 
-HashKey-Chain version: `hsk-chain version`
+AppChain version: `appchain version`
 OS & Version: Windows/Linux/OSX
 Commit hash : (if `develop`)
 

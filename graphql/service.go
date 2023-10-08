@@ -102,14 +102,14 @@ func newHandler(stack *node.Node, backend ethapi.Backend, cors, vhosts []string)
 	handler := node.NewHTTPHandlerStack(h, cors, vhosts)
 
 	stack.RegisterHandler("GraphQL UI", "/graphql/ui", GraphiQL{})
-	stack.RegisterHandler("GraphQL UI", "/hskchain/graphql/ui", GraphiQL{}) // for PlatON
+	stack.RegisterHandler("GraphQL UI", "/appchain/graphql/ui", GraphiQL{}) // for PlatON
 
 	stack.RegisterHandler("GraphQL", "/graphql", handler)
 	stack.RegisterHandler("GraphQL", "/graphql/", handler)
 
 	// for PlatON
-	stack.RegisterHandler("GraphQL", "/hskchain/graphql", handler)
-	stack.RegisterHandler("GraphQL", "/hskchain/graphql/", handler)
+	stack.RegisterHandler("GraphQL", "/appchain/graphql", handler)
+	stack.RegisterHandler("GraphQL", "/appchain/graphql/", handler)
 
 	return nil
 }

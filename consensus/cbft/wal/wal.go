@@ -217,7 +217,7 @@ func (wal *baseWal) LoadChainState(recovery recoveryChainStateFn) error {
 	// open wal database
 	data, err := wal.metaDB.Get(chainStateKey)
 	if err != nil {
-		log.Warn("Failed to get chainState from db, may be the first time to run hskchain")
+		log.Warn("Failed to get chainState from db, may be the first time to run appchain")
 		return nil
 	}
 	var cs protocols.ChainState
@@ -284,7 +284,7 @@ func (wal *baseWal) Load(recovery recoveryConsensusMsgFn) error {
 	// open wal database
 	data, err := wal.metaDB.Get(viewChangeKey)
 	if err != nil {
-		log.Warn("Failed to get viewChange meta from db, may be the first time to run hskchain")
+		log.Warn("Failed to get viewChange meta from db, may be the first time to run appchain")
 		return nil
 	}
 	var vc ViewChangeMessage

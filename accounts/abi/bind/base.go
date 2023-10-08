@@ -1,18 +1,18 @@
-// Copyright 2015 The hashkey-chain Authors
-// This file is part of the hashkey-chain library.
+// Copyright 2015 The AppChain-Go Authors
+// This file is part of the AppChain-Go library.
 //
-// The hashkey-chain library is free software: you can redistribute it and/or modify
+// The AppChain-Go library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The hashkey-chain library is distributed in the hope that it will be useful,
+// The AppChain-Go library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the hashkey-chain library. If not, see <http://www.gnu.org/licenses/>.
+// along with the AppChain-Go library. If not, see <http://www.gnu.org/licenses/>.
 
 package bind
 
@@ -45,9 +45,9 @@ type CallOpts struct {
 }
 
 // TransactOpts is the collection of authorization data required to create a
-// valid hskchain transaction.
+// valid appchain transaction.
 type TransactOpts struct {
-	From   common.Address // hskchain account to send the transaction from
+	From   common.Address // appchain account to send the transaction from
 	Nonce  *big.Int       // Nonce to use for the transaction execution (nil = use pending state)
 	Signer SignerFn       // Method to use for signing the transaction (mandatory)
 
@@ -100,11 +100,11 @@ func (m *MetaData) GetAbi() (*abi.ABI, error) {
 }
 
 // BoundContract is the base wrapper object that reflects a contract on the
-// hskchain network. It contains a collection of methods that are used by the
+// appchain network. It contains a collection of methods that are used by the
 // higher level contract bindings to operate.
 type BoundContract struct {
-	address    common.Address     // Deployment address of the contract on the hskchain blockchain
-	abi        abi.ABI            // Reflect based ABI to access the correct hskchain methods
+	address    common.Address     // Deployment address of the contract on the appchain blockchain
+	abi        abi.ABI            // Reflect based ABI to access the correct appchain methods
 	caller     ContractCaller     // Read interface to interact with the blockchain
 	transactor ContractTransactor // Write interface to interact with the blockchain
 	filterer   ContractFilterer   // Event filtering to interact with the blockchain
@@ -122,7 +122,7 @@ func NewBoundContract(address common.Address, abi abi.ABI, caller ContractCaller
 	}
 }
 
-// DeployContract deploys a contract onto the hskchain blockchain and binds the
+// DeployContract deploys a contract onto the appchain blockchain and binds the
 // deployment address with a Go wrapper.
 func DeployContract(opts *TransactOpts, abi abi.ABI, bytecode []byte, backend ContractBackend, params ...interface{}) (common.Address, *types.Transaction, *BoundContract, error) {
 	// Otherwise try to deploy the contract

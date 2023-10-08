@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"strings"
 
-	hskchain "github.com/PlatONnetwork/PlatON-Go"
+	appchain "github.com/PlatONnetwork/PlatON-Go"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/abi/bind"
 	"github.com/PlatONnetwork/PlatON-Go/common"
@@ -21,7 +21,7 @@ var (
 	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
-	_ = hskchain.NotFound
+	_ = appchain.NotFound
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
@@ -55,29 +55,29 @@ var CheckpointMetaData = &bind.MetaData{
 // Deprecated: Use CheckpointMetaData.ABI instead.
 var CheckpointABI = CheckpointMetaData.ABI
 
-// Checkpoint is an auto generated Go binding around an hskchain contract.
+// Checkpoint is an auto generated Go binding around an appchain contract.
 type Checkpoint struct {
 	CheckpointCaller     // Read-only binding to the contract
 	CheckpointTransactor // Write-only binding to the contract
 	CheckpointFilterer   // Log filterer for contract events
 }
 
-// CheckpointCaller is an auto generated read-only Go binding around an hskchain contract.
+// CheckpointCaller is an auto generated read-only Go binding around an appchain contract.
 type CheckpointCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// CheckpointTransactor is an auto generated write-only Go binding around an hskchain contract.
+// CheckpointTransactor is an auto generated write-only Go binding around an appchain contract.
 type CheckpointTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// CheckpointFilterer is an auto generated log filtering Go binding around an hskchain contract events.
+// CheckpointFilterer is an auto generated log filtering Go binding around an appchain contract events.
 type CheckpointFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// CheckpointSession is an auto generated Go binding around an hskchain contract,
+// CheckpointSession is an auto generated Go binding around an appchain contract,
 // with pre-set call and transact options.
 type CheckpointSession struct {
 	Contract     *Checkpoint       // Generic contract binding to set the session for
@@ -85,31 +85,31 @@ type CheckpointSession struct {
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// CheckpointCallerSession is an auto generated read-only Go binding around an hskchain contract,
+// CheckpointCallerSession is an auto generated read-only Go binding around an appchain contract,
 // with pre-set call options.
 type CheckpointCallerSession struct {
 	Contract *CheckpointCaller // Generic contract caller binding to set the session for
 	CallOpts bind.CallOpts     // Call options to use throughout this session
 }
 
-// CheckpointTransactorSession is an auto generated write-only Go binding around an hskchain contract,
+// CheckpointTransactorSession is an auto generated write-only Go binding around an appchain contract,
 // with pre-set transact options.
 type CheckpointTransactorSession struct {
 	Contract     *CheckpointTransactor // Generic contract transactor binding to set the session for
 	TransactOpts bind.TransactOpts     // Transaction auth options to use throughout this session
 }
 
-// CheckpointRaw is an auto generated low-level Go binding around an hskchain contract.
+// CheckpointRaw is an auto generated low-level Go binding around an appchain contract.
 type CheckpointRaw struct {
 	Contract *Checkpoint // Generic contract binding to access the raw methods on
 }
 
-// CheckpointCallerRaw is an auto generated low-level read-only Go binding around an hskchain contract.
+// CheckpointCallerRaw is an auto generated low-level read-only Go binding around an appchain contract.
 type CheckpointCallerRaw struct {
 	Contract *CheckpointCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// CheckpointTransactorRaw is an auto generated low-level write-only Go binding around an hskchain contract.
+// CheckpointTransactorRaw is an auto generated low-level write-only Go binding around an appchain contract.
 type CheckpointTransactorRaw struct {
 	Contract *CheckpointTransactor // Generic write-only contract binding to access the raw methods on
 }
@@ -288,7 +288,7 @@ type CheckpointCheckpointSigAggregatedIterator struct {
 	event    string              // Event name to use for unpacking event data
 
 	logs chan types.Log        // Log channel receiving the found contract events
-	sub  hskchain.Subscription // Subscription for errors, completion and termination
+	sub  appchain.Subscription // Subscription for errors, completion and termination
 	done bool                  // Whether the subscription completed delivering logs
 	fail error                 // Occurred error to stop iteration
 }

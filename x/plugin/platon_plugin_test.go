@@ -221,7 +221,7 @@ var (
 	}
 
 	nodeNameArr = []string{
-		"HashKey-Chain",
+		"AppChain",
 		"Gavin",
 		"Emma",
 		"Kally",

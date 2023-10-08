@@ -5,8 +5,8 @@ if [ ! -f "build/build_bls.sh" ]; then
     exit 2
 fi
 
-HSKCHAIN_ROOT=`pwd`
-BLS_ROOT=$HSKCHAIN_ROOT/crypto/bls
+appchain_ROOT=`pwd`
+BLS_ROOT=$appchain_ROOT/crypto/bls
 
 if [ "`ls $BLS_ROOT/bls_win`" = "" ]; then
     # pull bls

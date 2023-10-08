@@ -887,7 +887,7 @@ func (cbft *Cbft) APIs(chain consensus.ChainReader) []rpc.API {
 			Public:    true,
 		},
 		{
-			Namespace: "hskchain",
+			Namespace: "appchain",
 			Version:   "1.0",
 			Service:   NewPublicPlatonConsensusAPI(cbft),
 			Public:    true,

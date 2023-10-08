@@ -270,7 +270,7 @@ func compareStateObjects(so0, so1 *stateObject, t *testing.T) {
 }
 
 func TestEmptyByte(t *testing.T) {
-	frdir, err := ioutil.TempDir("", "hskchain")
+	frdir, err := ioutil.TempDir("", "appchain")
 	if err != nil {
 		t.Fatalf("failed to create temp freezer dir: %v", err)
 	}
@@ -333,9 +333,9 @@ func TestEmptyByte(t *testing.T) {
 }
 
 func TestForEachStorage(t *testing.T) {
-	tmpDir, _ := ioutil.TempDir("", "hskchain")
+	tmpDir, _ := ioutil.TempDir("", "appchain")
 	defer os.Remove(tmpDir)
-	db, err := rawdb.NewLevelDBDatabaseWithFreezer(tmpDir, 0, 0, "freezer", "hskchain")
+	db, err := rawdb.NewLevelDBDatabaseWithFreezer(tmpDir, 0, 0, "freezer", "appchain")
 	if err != nil {
 		t.Fatalf("Failed to reopen persistent database: %v", err)
 	}
@@ -368,9 +368,9 @@ func TestForEachStorage(t *testing.T) {
 
 func TestMigrateStorage(t *testing.T) {
 
-	tmpDir, _ := ioutil.TempDir("", "hskchain")
+	tmpDir, _ := ioutil.TempDir("", "appchain")
 	defer os.Remove(tmpDir)
-	db, err := rawdb.NewLevelDBDatabaseWithFreezer(tmpDir, 0, 0, "freezer", "hskchain")
+	db, err := rawdb.NewLevelDBDatabaseWithFreezer(tmpDir, 0, 0, "freezer", "appchain")
 	if err != nil {
 		t.Fatalf("Failed to reopen persistent database: %v", err)
 	}

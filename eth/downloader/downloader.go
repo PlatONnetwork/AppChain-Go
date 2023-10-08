@@ -696,7 +696,7 @@ func (d *Downloader) fetchPPOSInfo(p *peerConnection) (latest *types.Header, piv
 }
 
 // setFastSyncStatus set status to snapshot db when fast sync begin
-// if  the user close hskchain when sync not finish,set status fail
+// if  the user close appchain when sync not finish,set status fail
 // if the sync is complete,will del the key
 func (d *Downloader) setFastSyncStatus(status uint16) error {
 	key := []byte(KeyFastSyncStatus)

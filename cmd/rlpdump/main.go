@@ -40,8 +40,8 @@ import (
 )
 
 var (
-	errCode = flag.String("errCode", "", "dump given hskchain ppos tx receipt errCode description")
-	inner   = flag.String("inner", "", "dump given hskchain inner contract data with `hskchain.Call`")
+	errCode = flag.String("errCode", "", "dump given appchain ppos tx receipt errCode description")
+	inner   = flag.String("inner", "", "dump given appchain inner contract data with `appchain.Call`")
 	hexMode = flag.String("hex", "", "dump given hex data")
 	noASCII = flag.Bool("noascii", false, "don't print ASCII strings readably")
 	single  = flag.Bool("single", false, "print only the first element, discard the rest")
@@ -60,7 +60,7 @@ If the filename is omitted, data is read from stdin.`)
 func main() {
 	flag.Parse()
 
-	// parse hskchain ppos tx receipt errCode
+	// parse appchain ppos tx receipt errCode
 
 	if *errCode != "" {
 		data, err := hex.DecodeString(strings.TrimPrefix(*errCode, "0x"))
@@ -203,7 +203,7 @@ func main() {
 		return
 	}
 
-	// parse hskchain inner contract data
+	// parse appchain inner contract data
 	if *inner != "" {
 		rlpByte, err := hexutil.Decode(*inner)
 		if nil != err {

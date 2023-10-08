@@ -85,9 +85,9 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 			StakingBlockNum: uint64(0),
 			Description: staking.Description{
 				ExternalId: "",
-				NodeName:   "hskchain.node." + fmt.Sprint(index+1),
-				Website:    "www.hskchain.network",
-				Details:    "The HashKey-Chain Node",
+				NodeName:   "appchain.node." + fmt.Sprint(index+1),
+				Website:    "www.appchain.network",
+				Details:    "The PlatON-AppChain Node",
 			},
 		}
 

@@ -50,7 +50,7 @@ Note that exporting your key in unencrypted format is NOT supported.
 
 Keys are stored under <DATADIR>/keystore.
 It is safe to transfer the entire directory or the individual keys therein
-between HashKey-Chain nodes by simply copying.
+between AppChain-Go nodes by simply copying.
 
 Make sure you backup your keys regularly.`,
 		Subcommands: []cli.Command{
@@ -77,7 +77,7 @@ Print a short summary of all accounts`,
 					utils.AddressHRPFlag,
 				},
 				Description: `
-    hsk-chain account new
+    appchain account new
 
 Creates a new account and prints the address.
 
@@ -102,7 +102,7 @@ password to file or expose in any other way.
 					utils.LightKDFFlag,
 				},
 				Description: `
-    hsk-chain account update <address>
+    appchain account update <address>
 
 Update an existing account.
 
@@ -114,7 +114,7 @@ format to the newest format or change the password for an account.
 
 For non-interactive use the password can be specified with the --password flag:
 
-    hsk-chain account update [options] <address>
+    appchain account update [options] <address>
 
 Since only one password can be given, only format update can be performed,
 changing your password is only possible interactively.
@@ -132,7 +132,7 @@ changing your password is only possible interactively.
 				},
 				ArgsUsage: "<keyFile>",
 				Description: `
-    hsk-chain account import <keyfile>
+    appchain account import <keyfile>
 
 Imports an unencrypted private key from <keyfile> and creates a new account.
 Prints the address.
@@ -145,10 +145,10 @@ You must remember this password to unlock your account in the future.
 
 For non-interactive use the password can be specified with the -password flag:
 
-    hsk-chain account import [options] <keyfile>
+    appchain account import [options] <keyfile>
 
 Note:
-As you can directly copy your encrypted accounts to another HashKey-Chain instance,
+As you can directly copy your encrypted accounts to another AppChain-Go instance,
 this import mechanism is not needed when you transfer an account between
 nodes.
 `,

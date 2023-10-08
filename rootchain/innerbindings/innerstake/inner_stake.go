@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"strings"
 
-	hskchain "github.com/PlatONnetwork/PlatON-Go"
+	appchain "github.com/PlatONnetwork/PlatON-Go"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/abi/bind"
 	"github.com/PlatONnetwork/PlatON-Go/common"
@@ -21,7 +21,7 @@ var (
 	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
-	_ = hskchain.NotFound
+	_ = appchain.NotFound
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
@@ -42,7 +42,7 @@ var InnerstakeABI = InnerstakeMetaData.ABI
 // Deprecated: Use InnerstakeMetaData.Bin instead.
 var InnerstakeBin = InnerstakeMetaData.Bin
 
-// DeployInnerstake deploys a new hskchain contract, binding an instance of Innerstake to it.
+// DeployInnerstake deploys a new appchain contract, binding an instance of Innerstake to it.
 func DeployInnerstake(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Innerstake, error) {
 	parsed, err := InnerstakeMetaData.GetAbi()
 	if err != nil {
@@ -59,29 +59,29 @@ func DeployInnerstake(auth *bind.TransactOpts, backend bind.ContractBackend) (co
 	return address, tx, &Innerstake{InnerstakeCaller: InnerstakeCaller{contract: contract}, InnerstakeTransactor: InnerstakeTransactor{contract: contract}, InnerstakeFilterer: InnerstakeFilterer{contract: contract}}, nil
 }
 
-// Innerstake is an auto generated Go binding around an hskchain contract.
+// Innerstake is an auto generated Go binding around an appchain contract.
 type Innerstake struct {
 	InnerstakeCaller     // Read-only binding to the contract
 	InnerstakeTransactor // Write-only binding to the contract
 	InnerstakeFilterer   // Log filterer for contract events
 }
 
-// InnerstakeCaller is an auto generated read-only Go binding around an hskchain contract.
+// InnerstakeCaller is an auto generated read-only Go binding around an appchain contract.
 type InnerstakeCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// InnerstakeTransactor is an auto generated write-only Go binding around an hskchain contract.
+// InnerstakeTransactor is an auto generated write-only Go binding around an appchain contract.
 type InnerstakeTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// InnerstakeFilterer is an auto generated log filtering Go binding around an hskchain contract events.
+// InnerstakeFilterer is an auto generated log filtering Go binding around an appchain contract events.
 type InnerstakeFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// InnerstakeSession is an auto generated Go binding around an hskchain contract,
+// InnerstakeSession is an auto generated Go binding around an appchain contract,
 // with pre-set call and transact options.
 type InnerstakeSession struct {
 	Contract     *Innerstake       // Generic contract binding to set the session for
@@ -89,31 +89,31 @@ type InnerstakeSession struct {
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// InnerstakeCallerSession is an auto generated read-only Go binding around an hskchain contract,
+// InnerstakeCallerSession is an auto generated read-only Go binding around an appchain contract,
 // with pre-set call options.
 type InnerstakeCallerSession struct {
 	Contract *InnerstakeCaller // Generic contract caller binding to set the session for
 	CallOpts bind.CallOpts     // Call options to use throughout this session
 }
 
-// InnerstakeTransactorSession is an auto generated write-only Go binding around an hskchain contract,
+// InnerstakeTransactorSession is an auto generated write-only Go binding around an appchain contract,
 // with pre-set transact options.
 type InnerstakeTransactorSession struct {
 	Contract     *InnerstakeTransactor // Generic contract transactor binding to set the session for
 	TransactOpts bind.TransactOpts     // Transaction auth options to use throughout this session
 }
 
-// InnerstakeRaw is an auto generated low-level Go binding around an hskchain contract.
+// InnerstakeRaw is an auto generated low-level Go binding around an appchain contract.
 type InnerstakeRaw struct {
 	Contract *Innerstake // Generic contract binding to access the raw methods on
 }
 
-// InnerstakeCallerRaw is an auto generated low-level read-only Go binding around an hskchain contract.
+// InnerstakeCallerRaw is an auto generated low-level read-only Go binding around an appchain contract.
 type InnerstakeCallerRaw struct {
 	Contract *InnerstakeCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// InnerstakeTransactorRaw is an auto generated low-level write-only Go binding around an hskchain contract.
+// InnerstakeTransactorRaw is an auto generated low-level write-only Go binding around an appchain contract.
 type InnerstakeTransactorRaw struct {
 	Contract *InnerstakeTransactor // Generic write-only contract binding to access the raw methods on
 }
@@ -251,7 +251,7 @@ type InnerstakeStakeStateSyncIterator struct {
 	event    string              // Event name to use for unpacking event data
 
 	logs chan types.Log        // Log channel receiving the found contract events
-	sub  hskchain.Subscription // Subscription for errors, completion and termination
+	sub  appchain.Subscription // Subscription for errors, completion and termination
 	done bool                  // Whether the subscription completed delivering logs
 	fail error                 // Occurred error to stop iteration
 }

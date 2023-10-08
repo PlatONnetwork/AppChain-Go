@@ -40,9 +40,9 @@ const (
 	unsubscribeMethodSuffix  = "_unsubscribe"
 	notificationMethodSuffix = "_subscription"
 	ethMethodPrefix          = "eth_"
-	platonMethodPrefix       = "hskchain_"
+	platonMethodPrefix       = "appchain_"
 	ethMethod                = "eth"
-	platonMethod             = "hskchain"
+	platonMethod             = "appchain"
 
 	defaultWriteTimeout = 10 * time.Second // used if context has no deadline
 )

@@ -1296,7 +1296,7 @@ var testCase = []*Case{
 		},
 	},
 
-	// hskchain clone error
+	// appchain clone error
 	{
 		ctx: &VMContext{
 			gasTable: params.GasTableConstantinople,

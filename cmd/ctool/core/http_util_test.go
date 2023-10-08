@@ -23,7 +23,7 @@ import (
 
 func TestSend(t *testing.T) {
 
-	//hskchain, datadir := prepare(t)
+	//appchain, datadir := prepare(t)
 	//
 	//params := make([]TxParams, 1)
 	//params[0] = TxParams{
@@ -39,5 +39,5 @@ func TestSend(t *testing.T) {
 	//assert.Nil(t, err, fmt.Sprintf("failed to send, err: %v", err))
 	//assert.NotEqual(t, res, "", "the response is empty")
 	//
-	//clean(hskchain, datadir)
+	//clean(appchain, datadir)
 }

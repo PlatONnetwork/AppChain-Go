@@ -1333,7 +1333,7 @@ func (w *worker) makeExtraData() []byte {
 	extra, _ := rlp.EncodeToBytes([]interface{}{
 		//uint(params.VersionMajor<<16 | params.VersionMinor<<8 | params.VersionPatch),
 		gov.GetCurrentActiveVersion(w.current.state),
-		"hskchain",
+		"appchain",
 		runtime.Version(),
 		runtime.GOOS,
 	})

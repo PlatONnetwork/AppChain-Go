@@ -103,7 +103,7 @@ var (
 )
 
 func init() {
-	app = flags.NewApp(gitCommit, gitDate, "hskchain abi helper tool")
+	app = flags.NewApp(gitCommit, gitDate, "appchain abi helper tool")
 	app.Flags = []cli.Flag{
 		abiFlag,
 		binFlag,

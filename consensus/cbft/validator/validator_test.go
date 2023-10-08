@@ -204,7 +204,7 @@ func TestStaticAgency(t *testing.T) {
 }
 
 func genesisBlockForTesting(db ethdb.Database, addr common.Address, balance *big.Int) (*types.Block, *params.ChainConfig) {
-	buf, err := ioutil.ReadFile("../../../eth/downloader/testdata/hskchain.json")
+	buf, err := ioutil.ReadFile("../../../eth/downloader/testdata/appchain.json")
 	if err != nil {
 		return nil, nil
 	}

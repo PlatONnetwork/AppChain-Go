@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"strings"
 
-	hskchain "github.com/PlatONnetwork/PlatON-Go"
+	appchain "github.com/PlatONnetwork/PlatON-Go"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/abi"
 	"github.com/PlatONnetwork/PlatON-Go/accounts/abi/bind"
 	"github.com/PlatONnetwork/PlatON-Go/common"
@@ -21,7 +21,7 @@ var (
 	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
-	_ = hskchain.NotFound
+	_ = appchain.NotFound
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
@@ -37,29 +37,29 @@ var RootchainMetaData = &bind.MetaData{
 // Deprecated: Use RootchainMetaData.ABI instead.
 var RootchainABI = RootchainMetaData.ABI
 
-// Rootchain is an auto generated Go binding around an hskchain contract.
+// Rootchain is an auto generated Go binding around an appchain contract.
 type Rootchain struct {
 	RootchainCaller     // Read-only binding to the contract
 	RootchainTransactor // Write-only binding to the contract
 	RootchainFilterer   // Log filterer for contract events
 }
 
-// RootchainCaller is an auto generated read-only Go binding around an hskchain contract.
+// RootchainCaller is an auto generated read-only Go binding around an appchain contract.
 type RootchainCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// RootchainTransactor is an auto generated write-only Go binding around an hskchain contract.
+// RootchainTransactor is an auto generated write-only Go binding around an appchain contract.
 type RootchainTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// RootchainFilterer is an auto generated log filtering Go binding around an hskchain contract events.
+// RootchainFilterer is an auto generated log filtering Go binding around an appchain contract events.
 type RootchainFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// RootchainSession is an auto generated Go binding around an hskchain contract,
+// RootchainSession is an auto generated Go binding around an appchain contract,
 // with pre-set call and transact options.
 type RootchainSession struct {
 	Contract     *Rootchain        // Generic contract binding to set the session for
@@ -67,31 +67,31 @@ type RootchainSession struct {
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// RootchainCallerSession is an auto generated read-only Go binding around an hskchain contract,
+// RootchainCallerSession is an auto generated read-only Go binding around an appchain contract,
 // with pre-set call options.
 type RootchainCallerSession struct {
 	Contract *RootchainCaller // Generic contract caller binding to set the session for
 	CallOpts bind.CallOpts    // Call options to use throughout this session
 }
 
-// RootchainTransactorSession is an auto generated write-only Go binding around an hskchain contract,
+// RootchainTransactorSession is an auto generated write-only Go binding around an appchain contract,
 // with pre-set transact options.
 type RootchainTransactorSession struct {
 	Contract     *RootchainTransactor // Generic contract transactor binding to set the session for
 	TransactOpts bind.TransactOpts    // Transaction auth options to use throughout this session
 }
 
-// RootchainRaw is an auto generated low-level Go binding around an hskchain contract.
+// RootchainRaw is an auto generated low-level Go binding around an appchain contract.
 type RootchainRaw struct {
 	Contract *Rootchain // Generic contract binding to access the raw methods on
 }
 
-// RootchainCallerRaw is an auto generated low-level read-only Go binding around an hskchain contract.
+// RootchainCallerRaw is an auto generated low-level read-only Go binding around an appchain contract.
 type RootchainCallerRaw struct {
 	Contract *RootchainCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// RootchainTransactorRaw is an auto generated low-level write-only Go binding around an hskchain contract.
+// RootchainTransactorRaw is an auto generated low-level write-only Go binding around an appchain contract.
 type RootchainTransactorRaw struct {
 	Contract *RootchainTransactor // Generic write-only contract binding to access the raw methods on
 }
@@ -691,7 +691,7 @@ type RootchainNewHeaderBlockIterator struct {
 	event    string              // Event name to use for unpacking event data
 
 	logs chan types.Log        // Log channel receiving the found contract events
-	sub  hskchain.Subscription // Subscription for errors, completion and termination
+	sub  appchain.Subscription // Subscription for errors, completion and termination
 	done bool                  // Whether the subscription completed delivering logs
 	fail error                 // Occurred error to stop iteration
 }
@@ -856,7 +856,7 @@ type RootchainOwnershipTransferredIterator struct {
 	event    string              // Event name to use for unpacking event data
 
 	logs chan types.Log        // Log channel receiving the found contract events
-	sub  hskchain.Subscription // Subscription for errors, completion and termination
+	sub  appchain.Subscription // Subscription for errors, completion and termination
 	done bool                  // Whether the subscription completed delivering logs
 	fail error                 // Occurred error to stop iteration
 }
@@ -1009,7 +1009,7 @@ type RootchainResetHeaderBlockIterator struct {
 	event    string              // Event name to use for unpacking event data
 
 	logs chan types.Log        // Log channel receiving the found contract events
-	sub  hskchain.Subscription // Subscription for errors, completion and termination
+	sub  appchain.Subscription // Subscription for errors, completion and termination
 	done bool                  // Whether the subscription completed delivering logs
 	fail error                 // Occurred error to stop iteration
 }

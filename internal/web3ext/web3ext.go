@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// package web3ext contains hskchain specific web3.js extensions.
+// package web3ext contains appchain specific web3.js extensions.
 package web3ext
 
 var Modules = map[string]string{
 	"admin":    AdminJs,
 	"debug":    DebugJs,
-	"hskchain": PlatonJs,
+	"appchain": PlatonJs,
 	"miner":    MinerJs,
 	"net":      NetJs,
 	"personal": PersonalJs,
@@ -393,86 +393,86 @@ web3._extend({
 
 const PlatonJs = `
 web3._extend({
-	property: 'hskchain',
+	property: 'appchain',
 	methods: [
 		new web3._extend.Method({
 		name: 'chainId',
-			call: 'hskchain_chainId',
+			call: 'appchain_chainId',
 			params: 0
 		}),
 		new web3._extend.Method({
 			name: 'sign',
-			call: 'hskchain_sign',
+			call: 'appchain_sign',
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputAddressFormatter, null]
 		}),
 		new web3._extend.Method({
 			name: 'resend',
-			call: 'hskchain_resend',
+			call: 'appchain_resend',
 			params: 3,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter, web3._extend.utils.fromDecimal, web3._extend.utils.fromDecimal]
 		}),
 		new web3._extend.Method({
 			name: 'signTransaction',
-			call: 'hskchain_signTransaction',
+			call: 'appchain_signTransaction',
 			params: 1,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'estimateGas',
-			call: 'hskchain_estimateGas',
+			call: 'appchain_estimateGas',
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputCallFormatter, web3._extend.formatters.inputBlockNumberFormatter],
 			outputFormatter: web3._extend.utils.toDecimal
 		}),
 		new web3._extend.Method({
 			name: 'submitTransaction',
-			call: 'hskchain_submitTransaction',
+			call: 'appchain_submitTransaction',
 			params: 1,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'fillTransaction',
-			call: 'hskchain_fillTransaction',
+			call: 'appchain_fillTransaction',
 			params: 1,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter]
 		}),
 	    new web3._extend.Method({
 			name: 'getHeaderByNumber',
-			call: 'hskchain_getHeaderByNumber',
+			call: 'appchain_getHeaderByNumber',
 			params: 1
 		}),
 		new web3._extend.Method({
 			name: 'getHeaderByHash',
-			call: 'hskchain_getHeaderByHash',
+			call: 'appchain_getHeaderByHash',
 			params: 1
 		}),
 		new web3._extend.Method({
 			name: 'getBlockByNumber',
-			call: 'hskchain_getBlockByNumber',
+			call: 'appchain_getBlockByNumber',
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter, function (val) { return !!val; }]
 		}),
 		new web3._extend.Method({
 			name: 'getBlockByHash',
-			call: 'hskchain_getBlockByHash',
+			call: 'appchain_getBlockByHash',
 			params: 2,
 			inputFormatter: [null, function (val) { return !!val; }]
 		}),
 		new web3._extend.Method({
 			name: 'getBlockQuorumCertByHash',
-			call: 'hskchain_getBlockQuorumCertByHash',
+			call: 'appchain_getBlockQuorumCertByHash',
 			params: 1
 		}),
 		new web3._extend.Method({
 			name: 'getRawTransaction',
-			call: 'hskchain_getRawTransactionByHash',
+			call: 'appchain_getRawTransactionByHash',
 			params: 1
 		}),
 		new web3._extend.Method({
 			name: 'getRawTransactionFromBlock',
 			call: function(args) {
-				return (web3._extend.utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'hskchain_getRawTransactionByBlockHashAndIndex' : 'hskchain_getRawTransactionByBlockNumberAndIndex';
+				return (web3._extend.utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'appchain_getRawTransactionByBlockHashAndIndex' : 'appchain_getRawTransactionByBlockNumberAndIndex';
 			},
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter, web3._extend.utils.toHex]
@@ -481,7 +481,7 @@ web3._extend({
 	properties: [
 		new web3._extend.Property({
 			name: 'pendingTransactions',
-			getter: 'hskchain_pendingTransactions',
+			getter: 'appchain_pendingTransactions',
 			outputFormatter: function(txs) {
 				var formatted = [];
 				for (var i = 0; i < txs.length; i++) {

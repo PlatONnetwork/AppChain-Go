@@ -36,7 +36,7 @@ const (
 )
 
 // protocolName is the official short name of the protocol used during capability negotiation.
-var protocolName = "hskchain"
+var protocolName = "appchain"
 
 // ProtocolVersions are the upported versions of the eth protocol (first is primary).
 var ProtocolVersions = []uint{eth65, eth63, eth62}
