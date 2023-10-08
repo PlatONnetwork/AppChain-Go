@@ -23,7 +23,6 @@ appchain:
 all:
 	build/build_deps.sh
 	$(GORUN) build/ci.go install
-	@mv $(GOBIN)/appchain $(GOBIN)/appchain
 	@mv $(GOBIN)/keytool $(GOBIN)/appchain-key
 
 all-debug:
