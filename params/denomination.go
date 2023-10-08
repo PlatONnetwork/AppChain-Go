@@ -19,9 +19,9 @@ package params
 // These are the multipliers for ether denominations.
 // Example: To get the hashi value of an amount in 'ghashi', use
 //
-//	new(big.Int).Mul(value, big.NewInt(params.GHashi))
+//	new(big.Int).Mul(value, big.NewInt(params.GVon))
 const (
-	Hashi  = 1
-	GHashi = 1e9
-	HSK    = 1e18
+	Hashi = 1
+	GVon  = 1e9
+	LAX   = 1e18
 )

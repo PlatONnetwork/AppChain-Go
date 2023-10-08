@@ -79,7 +79,7 @@ var (
 	MainnetChainConfig = &ChainConfig{
 		ChainID:     big.NewInt(20230315),
 		PIP7ChainID: big.NewInt(20230315),
-		AddressHRP:  "hsk",
+		AddressHRP:  "lax",
 		EmptyBlock:  "on",
 		EIP155Block: big.NewInt(1),
 		Cbft: &CbftConfig{
