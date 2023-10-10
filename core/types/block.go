@@ -258,22 +258,7 @@ func (h *Header) SealHash() (hash common.Hash) {
 
 func (h *Header) _sealHash() (hash common.Hash) {
 	extra := h.Extra
-	if h.Number.Uint64() == 1 {
-		log.Warn("seal header", "ParentHash", h.ParentHash.Hex())
-		log.Warn("seal header", "Coinbase", h.Coinbase.Hex())
-		log.Warn("seal header", "Root", h.Root.Hex())
-		log.Warn("seal header", "TxHash", h.TxHash.Hex())
-		log.Warn("seal header", "ReceiptHash", h.ReceiptHash.Hex())
 
-		bloom, _ := h.Bloom.MarshalText()
-		log.Warn("seal header", "Bloom", hexutil.Encode(bloom))
-		log.Warn("seal header", "GasLimit", h.GasLimit)
-		log.Warn("seal header", "GasUsed", h.GasUsed)
-		log.Warn("seal header", "Time", h.Time)
-		log.Warn("seal header", "Extra", hexutil.Encode(h.Extra))
-		nonce, _ := h.Nonce.MarshalText()
-		log.Warn("seal header", "Time", hexutil.Encode(nonce))
-	}
 	hasher := sha3.NewLegacyKeccak256()
 	if len(h.Extra) > 32 {
 		extra = h.Extra[0:32]
