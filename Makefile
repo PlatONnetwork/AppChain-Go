@@ -16,7 +16,6 @@ GORUN = env GO111MODULE=on GOPATH=$(GPATH) go run
 appchain:
 	build/build_deps.sh
 	$(GORUN) build/ci.go install ./cmd/appchain
-	@mv $(GOBIN)/appchain $(GOBIN)/appchain
 	@echo "Done building."
 	@echo "Run \"$(GOBIN)/appchain\" to launch PlatON-AppChain."
 
