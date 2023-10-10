@@ -22,6 +22,7 @@ import (
 	"hash"
 	"math/big"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/PlatONnetwork/AppChain-Go/common/math"
@@ -58,6 +59,47 @@ func (h *testHasher) Update(key, val []byte) {
 
 func (h *testHasher) Hash() common.Hash {
 	return common.BytesToHash(h.hasher.Sum(nil))
+}
+func Test_sealHash2(t *testing.T) {
+	header := new(Header)
+
+	header.ParentHash = common.BytesToHash(hexutil.MustDecode("0xef99021b30d7caab822ff0629ba213a9be72d241b89cfe4a555d231066445f32"))
+
+	coinbase, err := common.StringToAddress("0x1a57A5924C11691a1120A952FeC87B005bA11e75")
+	if err != nil {
+		t.Fatal(err)
+	}
+	header.Coinbase = coinbase
+
+	header.Root = common.BytesToHash(hexutil.MustDecode("0xd6577cfd7dc0eb4ac937edfa1ff878fe253044799c28448664cbd101e1a9db69"))
+	header.TxHash = common.BytesToHash(hexutil.MustDecode("0xd84e10d732662132f79c0f156d2a5744ac086af1f2dd7e79061e59cfd00ad0db"))
+	header.ReceiptHash = common.BytesToHash(hexutil.MustDecode("0x27c539ea5678c560835cc2beadbc28fa773b46bd1e89a3f62626cd13d57bdffb"))
+	header.Bloom = BytesToBloom(hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000080000000000000008000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000020000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"))
+	header.Number = common.Big1
+
+	gasLimit, err := strconv.ParseInt("201403126", 10, 64)
+	if err != nil {
+		t.Fatal(err)
+	}
+	header.GasLimit = uint64(gasLimit)
+
+	gasUsed, err := strconv.ParseInt("21508", 10, 64)
+	if err != nil {
+		t.Fatal(err)
+	}
+	header.GasUsed = uint64(gasUsed)
+
+	time, err := strconv.ParseInt("1696927699078", 10, 64)
+	if err != nil {
+		t.Fatal(err)
+	}
+	header.Time = uint64(time)
+	header.Extra = hexutil.MustDecode("0xda830104008868736b636861696e86676f312e3230856c696e7578000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001e49d73")
+
+	header.Nonce = EncodeNonce(hexutil.MustDecode("0x03eaa12a2503b4968818bdc0f95f7da28c21417a83fa4220364b8524869f280e6f7bef29c3a4c2314fa7f5b0bdfb28c40c9e05c823ea853a14c0a3898dcce4024a1f6a59599f7adff1ad7f05b2b4d3f9af"))
+
+	sealHash := header._sealHash()
+	fmt.Println(sealHash.Hex())
 }
 
 // from bcValidBlockTest.json, "SimpleTx"
