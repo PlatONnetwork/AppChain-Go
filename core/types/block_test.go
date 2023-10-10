@@ -22,6 +22,7 @@ import (
 	"hash"
 	"math/big"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/PlatONnetwork/AppChain-Go/common/math"
@@ -58,6 +59,51 @@ func (h *testHasher) Update(key, val []byte) {
 
 func (h *testHasher) Hash() common.Hash {
 	return common.BytesToHash(h.hasher.Sum(nil))
+}
+
+func Test_sealHash(t *testing.T) {
+
+	hasher := sha3.NewLegacyKeccak256()
+
+	parentHash := common.BytesToHash(hexutil.MustDecode("0xef99021b30d7caab822ff0629ba213a9be72d241b89cfe4a555d231066445f32"))
+	coinbase, _ := common.StringToAddress("hsk1rft6tyjvz9535yfq49f0ajrmqpd6z8n45uxnck")
+	root := common.BytesToHash(hexutil.MustDecode("0x0a3790512bca18581f67e583b82536930db384304d68986d0ea3b6604ed3694c"))
+	txHash := common.BytesToHash(hexutil.MustDecode("0xd84e10d732662132f79c0f156d2a5744ac086af1f2dd7e79061e59cfd00ad0db"))
+	receiptHash := common.BytesToHash(hexutil.MustDecode("0x27c539ea5678c560835cc2beadbc28fa773b46bd1e89a3f62626cd13d57bdffb"))
+	bloom := BytesToBloom(hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000080000000000000008000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000020000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"))
+	number := common.Big1
+	gasLimit, _ := strconv.ParseInt("0xc012af6", 16, 64)
+	gasLimitUint64 := uint64(gasLimit)
+
+	gasUsed, _ := strconv.ParseInt("0x5404", 16, 64)
+	gasUsedUint64 := uint64(gasUsed)
+
+	time, _ := strconv.ParseInt("0x65236e1a", 16, 64)
+	timeUint64 := uint64(time)
+	extra := hexutil.MustDecode("0xda830104008868736b636861696e86676f312e3230856c696e75780000000000")
+
+	var nonce BlockNonce
+	nonce.UnmarshalText(hexutil.MustDecode("0x03eaa12a2503b496"))
+
+	rlp.Encode(hasher, []interface{}{
+		parentHash,
+		coinbase,
+		root,
+		txHash,
+		receiptHash,
+		bloom,
+		number,
+		gasLimitUint64,
+		gasUsedUint64,
+		timeUint64,
+		extra,
+		nonce,
+	})
+
+	var hash common.Hash
+	hasher.Sum(hash[:0])
+	fmt.Println(hash.Hex())
+
 }
 
 // from bcValidBlockTest.json, "SimpleTx"

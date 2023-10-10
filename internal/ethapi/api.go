@@ -22,6 +22,7 @@ import (
 	"errors"
 	"fmt"
 	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
 	"math/big"
 	"time"
 
@@ -658,6 +659,10 @@ func (s *PublicBlockChainAPI) GetHeaderByHash(ctx context.Context, hash common.H
 func (s *PublicBlockChainAPI) GetBlockByNumber(ctx context.Context, number rpc.BlockNumber, fullTx bool) (map[string]interface{}, error) {
 	block, err := s.b.BlockByNumber(ctx, number)
 	if block != nil && err == nil {
+		pk, err1 := crypto.SigToPub(block.Header().SealHash().Bytes(), block.Header().Signature())
+		if err1 == nil {
+			log.Warn("GetBlockByNumber", "blockNumber", block.NumberU64(), "blockHash", block.Hash().Hex(), "extraData", hexutil.Encode(block.Extra()), "sealHash", block.Header().SealHash().Hex(), "signature", hexutil.Encode(block.Header().Signature()), "NodeId", discover.PubkeyID(pk).String())
+		}
 		response, err := s.rpcMarshalBlock(block, true, fullTx)
 		if err == nil && number == rpc.PendingBlockNumber {
 			// Pending blocks need to nil out a few fields

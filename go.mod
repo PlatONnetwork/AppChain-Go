@@ -3,6 +3,7 @@ module github.com/PlatONnetwork/AppChain-Go
 go 1.18
 
 require (
+	github.com/AlayaNetwork/Alaya-Go v0.16.3
 	github.com/AlayaNetwork/graphql-go v1.2.1-0.20211227063951-8d66eefcb4e3
 	github.com/PlatONnetwork/wagon v0.6.1-0.20201026015350-67507c2a7b96
 	github.com/VictoriaMetrics/fastcache v1.5.7
@@ -63,8 +64,9 @@ require (
 )
 
 require (
-	github.com/AlayaNetwork/Alaya-Go v0.16.2 // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
+	github.com/btcsuite/btcutil v1.0.2 // indirect
+	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
 	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/edsrzf/mmap-go v1.0.1-0.20190108065903-904c4ced31cd // indirect
