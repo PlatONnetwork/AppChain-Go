@@ -18,15 +18,18 @@ import (
 func (m *Monitor) ConnectRootChain(rootChainConfig *config.RootChainContractConfig) {
 	monitor.rootChainConfig = rootChainConfig
 	if monitor.rootChainConfig.PlatonRPCAddr == "" {
-		log.Warn("the rpc address for platon is empty, please check if it is required")
+		log.Error("Failed to find Platon's RPC address, please check the configuration")
+		panic("")
 		return
 	}
 	client, err := ethclient.Dial(monitor.rootChainConfig.PlatonRPCAddr)
 	if err != nil {
 		log.Error("Failed to connect to Platon's RPC address", "addr", monitor.rootChainConfig.PlatonRPCAddr, "error", err)
+		panic("")
 		return
 	}
 	client.SetNameSpace("platon")
+	log.Info("connect to root chain success.")
 	monitor.rootChainClient = client
 }
 
