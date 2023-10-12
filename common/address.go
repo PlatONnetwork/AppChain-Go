@@ -277,7 +277,7 @@ func (a *Address) UnmarshalJSON(input []byte) error {
 		return &json.UnmarshalTypeError{Value: err.Error(), Type: addressT}
 	}
 	if !CheckAddressHRP(hrpDecode) {
-		log.Warn("hrpDecode not compare the current net", "want", GetAddressHRP(), "have", hrpDecode)
+		log.Trace("hrpDecode not compare the current net", "want", GetAddressHRP(), "have", hrpDecode)
 	}
 	a.SetBytes(v)
 	return nil
