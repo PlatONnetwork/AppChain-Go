@@ -90,9 +90,7 @@ func (em *EventManager) Listen() error {
 	}
 	client.SetNameSpace("platon")
 	newHeadChan := make(chan *types.Header)
-	if err := em.subscribeRootChainNewHead(newHeadChan, client); err != nil {
-		return err
-	}
+	go em.subscribeRootChainNewHead(newHeadChan, client)
 
 	defer func() {
 		client.Close()
