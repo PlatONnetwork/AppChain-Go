@@ -90,14 +90,9 @@ func (em *EventManager) Listen() error {
 	}
 	client.SetNameSpace("platon")
 	newHeadChan := make(chan *types.Header)
-	newHeadSubscribe, err := client.SubscribeNewHead(context.Background(), newHeadChan)
-	if err != nil {
-		close(newHeadChan)
-		log.Error("listening to the block header fails", "error", err)
-		return err
-	}
+	go em.subscribeRootChainNewHead(newHeadChan, client)
+
 	defer func() {
-		newHeadSubscribe.Unsubscribe()
 		client.Close()
 	}()
 
@@ -108,10 +103,6 @@ func (em *EventManager) Listen() error {
 		case <-em.exit:
 			log.Warn("event listener exit")
 			return nil
-		case err := <-newHeadSubscribe.Err():
-			log.Error("subscription failure", "error", err)
-			// TODO 处理订阅区块头失败的情况
-			return err
 		case resultBlock := <-em.bftResultCh:
 			// Clear irreversible, already processed rootChain events
 			stopBlockNumber := types.DecodeStakeExtra(resultBlock.Extra())
@@ -173,6 +164,34 @@ func (em *EventManager) Listen() error {
 			em.mu.Unlock()
 		}
 	}
+}
+
+func (em *EventManager) subscribeRootChainNewHead(headerChan chan *types.Header, client *ethclient.Client) error {
+	var newHeadSubscribe appchain.Subscription
+	var subChan chan *types.Header
+	defer func() {
+		newHeadSubscribe.Unsubscribe()
+	}()
+reSubscribe:
+	subChan = make(chan *types.Header)
+	newHeadSubscribe, err := client.SubscribeNewHead(context.Background(), subChan)
+	if err != nil {
+		log.Error("listening to the block header fails", "error", err)
+		return err
+	}
+	for {
+		select {
+		case <-em.exit:
+			log.Warn("event listener exit")
+			return nil
+		case err := <-newHeadSubscribe.Err():
+			log.Error("subscription failure && resubscribe", "error", err)
+			goto reSubscribe
+		case newHead := <-subChan:
+			headerChan <- newHead
+		}
+	}
+	return nil
 }
 
 type BlockNumberListSort []uint64
