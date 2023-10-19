@@ -15,13 +15,15 @@ GORUN = env GO111MODULE=on GOPATH=$(GPATH) go run
 
 appchain:
 	build/build_deps.sh
-	$(GORUN) build/ci.go install ./cmd/sappchain
+	$(GORUN) build/ci.go install ./cmd/appchain
+	@mv $(GOBIN)/appchain $(GOBIN)/sappchain
 	@echo "Done building."
 	@echo "Run \"$(GOBIN)/appchain\" to launch PlatON-AppChain."
 
 all:
 	build/build_deps.sh
 	$(GORUN) build/ci.go install
+	@mv $(GOBIN)/appchain $(GOBIN)/sappchain
 	@mv $(GOBIN)/keytool $(GOBIN)/sappchain-key
 
 all-debug:
