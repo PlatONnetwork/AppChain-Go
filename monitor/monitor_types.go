@@ -1,10 +1,10 @@
 package monitor
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/x/restricting"
-	"github.com/PlatONnetwork/AppChain-Go/x/staking"
-	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/x/restricting"
+	"github.com/PlatONnetwork/PlatON-Go/x/staking"
+	"github.com/PlatONnetwork/PlatON-Go/x/xcom"
 	"math/big"
 )
 
