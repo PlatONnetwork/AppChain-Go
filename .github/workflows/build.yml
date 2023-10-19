@@ -25,15 +25,15 @@ jobs:
       - name: make all
         run: go mod tidy && make all
 
-      - name: Upload hskchain
+      - name: Upload appchain
         uses: actions/upload-artifact@v3
         with:
-          path: build/bin/hsk-chain
+          path: build/bin/appchain
 
-      - name: Upload hsk-chain-key
+      - name: Upload appchain-key
         uses: actions/upload-artifact@v3
         with:
-          path: build/bin/hsk-chain-key
+          path: build/bin/appchain-key
 
       - name: Upload ctool
         uses: actions/upload-artifact@v3

@@ -26,17 +26,17 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts"
-	"github.com/PlatONnetwork/AppChain-Go/accounts/keystore"
-	"github.com/PlatONnetwork/AppChain-Go/accounts/usbwallet"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/log"
-	"github.com/PlatONnetwork/AppChain-Go/p2p"
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
-	"github.com/PlatONnetwork/AppChain-Go/rpc"
+	"github.com/PlatONnetwork/PlatON-Go/accounts"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/keystore"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/usbwallet"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/p2p"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/rpc"
 )
 
 const (
@@ -54,7 +54,7 @@ const (
 // all registered services.
 type Config struct {
 	// Name sets the instance name of the node. It must not contain the / character and is
-	// used in the devp2p node identifier. The instance name of hashkey-chain is "hskchain". If no
+	// used in the devp2p node identifier. The instance name of appchain is "appchain". If no
 	// value is specified, the basename of the current executable is used.
 	Name string `toml:"-"`
 
@@ -270,8 +270,8 @@ func (c *Config) ExtRPCEnabled() bool {
 // NodeName returns the devp2p node identifier.
 func (c *Config) NodeName() string {
 	name := c.name()
-	if name == "hskchain" || name == "hskchain-testnet" || name == "hskchain-betanet" || name == "hskchain-innertestnet" || name == "hskchain-innerdevnet" {
-		name = "hashkey-chain"
+	if name == "appchain" || name == "appchain-testnet" || name == "appchain-betanet" || name == "appchain-innertestnet" || name == "appchain-innerdevnet" {
+		name = "appchain"
 	}
 	if c.UserIdent != "" {
 		name += "/" + c.UserIdent
@@ -295,8 +295,8 @@ func (c *Config) name() string {
 	return c.Name
 }
 
-// These resources are resolved differently for "hskchain" instances.
-var isOldHskChainResource = map[string]bool{
+// These resources are resolved differently for "appchain" instances.
+var isOldappchainResource = map[string]bool{
 	"chaindata":          true,
 	"nodes":              true,
 	"nodekey":            true,
@@ -328,15 +328,15 @@ func (c *Config) ResolvePath(path string) string {
 		return ""
 	}
 	// Backwards-compatibility: ensure that data directory files created
-	// by hskchain 1.4 are used if they exist.
-	if warn, isOld := isOldHskChainResource[path]; isOld {
+	// by appchain 1.4 are used if they exist.
+	if warn, isOld := isOldappchainResource[path]; isOld {
 		oldpath := ""
-		if c.name() == "hskchain" {
+		if c.name() == "appchain" {
 			oldpath = filepath.Join(c.DataDir, path)
 		}
 		if oldpath != "" && common.FileExist(oldpath) {
 			if warn {
-				c.warnOnce(&c.oldGethResourceWarning, "Using deprecated resource file %s, please move this file to the 'hskchain' subdirectory of datadir.", oldpath)
+				c.warnOnce(&c.oldGethResourceWarning, "Using deprecated resource file %s, please move this file to the 'appchain' subdirectory of datadir.", oldpath)
 			}
 			return oldpath
 		}

@@ -25,16 +25,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/ethdb/memorydb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb/memorydb"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus"
-	"github.com/PlatONnetwork/AppChain-Go/core/rawdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/ethdb"
+	"github.com/PlatONnetwork/PlatON-Go/consensus"
+	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/ethdb"
 )
 
 var (
@@ -51,7 +51,7 @@ func randBytes(n int) []byte {
 }
 
 func newBlockChainForTesting(db ethdb.Database) (*BlockChain, error) {
-	buf, err := ioutil.ReadFile("../eth/downloader/testdata/hskchain.json")
+	buf, err := ioutil.ReadFile("../eth/downloader/testdata/appchain.json")
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func newBlockChainForTesting(db ethdb.Database) (*BlockChain, error) {
 }
 
 func TestCleaner(t *testing.T) {
-	frdir, err := ioutil.TempDir("", "hskchain")
+	frdir, err := ioutil.TempDir("", "appchain")
 	if err != nil {
 		t.Fatalf("failed to create temp freezer dir: %v", err)
 	}
@@ -134,7 +134,7 @@ func TestCleaner(t *testing.T) {
 }
 
 func TestStopCleaner(t *testing.T) {
-	frdir, err := ioutil.TempDir("", "hskchain")
+	frdir, err := ioutil.TempDir("", "appchain")
 	if err != nil {
 		t.Fatalf("failed to create temp freezer dir: %v", err)
 	}

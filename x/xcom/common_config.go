@@ -20,14 +20,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/params"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 	"math/big"
 	"sync"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 // plugin rule key
@@ -74,19 +74,19 @@ const (
 var (
 	one, _ = new(big.Int).SetString("1000000000000000000", 10)
 
-	// 10 HSK
+	// 10 LAX
 	DelegateLowerLimit, _ = new(big.Int).SetString("10000000000000000000", 10)
 
-	// 1W HSK
+	// 1W LAX
 	DelegateUpperLimit, _ = new(big.Int).SetString("10000000000000000000000", 10)
 
 	// hard code genesis staking balance
-	// 15W HSK
+	// 15W LAX
 	GeneStakingAmount, _ = new(big.Int).SetString("150000000000000000000000", 10)
 
 	// 10W
 	StakeLowerLimit, _ = new(big.Int).SetString("100000000000000000000000", 10)
-	// 1000W HSK
+	// 1000W LAX
 	StakeUpperLimit, _ = new(big.Int).SetString("10000000000000000000000000", 10)
 
 	FloorMinimumRelease = new(big.Int).Mul(new(big.Int).SetUint64(100), one)
@@ -229,7 +229,7 @@ func getDefaultEMConfig(netId int8) *EconomicModel {
 		cdfundBalance *big.Int
 	)
 
-	// 3.22361981  thousand millions HSK
+	// 3.22361981  thousand millions LAX
 	if cdfundBalance, ok = new(big.Int).SetString("322361981000000000000000000", 10); !ok {
 		return nil
 	}
@@ -428,14 +428,14 @@ func getDefaultEMConfig(netId int8) *EconomicModel {
 func CheckStakeThreshold(threshold *big.Int) error {
 
 	if threshold.Cmp(StakeLowerLimit) < 0 || threshold.Cmp(StakeUpperLimit) > 0 {
-		return common.InvalidParameter.Wrap(fmt.Sprintf("The StakeThreshold must be [%d, %d] HSK", StakeLowerLimit, StakeUpperLimit))
+		return common.InvalidParameter.Wrap(fmt.Sprintf("The StakeThreshold must be [%d, %d] LAX", StakeLowerLimit, StakeUpperLimit))
 	}
 	return nil
 }
 
 func CheckOperatingThreshold(threshold *big.Int) error {
 	if threshold.Cmp(DelegateLowerLimit) < 0 || threshold.Cmp(DelegateUpperLimit) > 0 {
-		return common.InvalidParameter.Wrap(fmt.Sprintf("The OperatingThreshold must be [%d, %d] HSK ", DelegateLowerLimit, DelegateUpperLimit))
+		return common.InvalidParameter.Wrap(fmt.Sprintf("The OperatingThreshold must be [%d, %d] LAX ", DelegateLowerLimit, DelegateUpperLimit))
 	}
 	return nil
 }

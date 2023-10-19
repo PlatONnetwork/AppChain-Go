@@ -25,12 +25,12 @@ import (
 
 	"gopkg.in/urfave/cli.v1"
 
-	platon "github.com/PlatONnetwork/AppChain-Go"
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/common/vm"
-	"github.com/PlatONnetwork/AppChain-Go/ethclient"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	platon "github.com/PlatONnetwork/PlatON-Go"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/ethclient"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 )
 
 func CallPPosContract(client *ethclient.Client, funcType uint16, params ...interface{}) ([]byte, error) {

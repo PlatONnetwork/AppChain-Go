@@ -25,29 +25,29 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus"
+	"github.com/PlatONnetwork/PlatON-Go/consensus"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/executor"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/executor"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/evidence"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/evidence"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/rules"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/rules"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/utils"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/utils"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
 
-	ctypes "github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
+	ctypes "github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
 	"github.com/stretchr/testify/assert"
 )
 

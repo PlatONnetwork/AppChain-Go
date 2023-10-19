@@ -23,30 +23,30 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/x/xcom"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/common/vm"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/reward"
+	"github.com/PlatONnetwork/PlatON-Go/x/reward"
 
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/plugin"
+	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/mock"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
-	"github.com/PlatONnetwork/AppChain-Go/x/staking"
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/common/mock"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/x/staking"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 )
 
 func generateStk(rewardPer uint16, delegateTotal *big.Int, blockNumber uint64) (staking.ValArrIndexQueue, staking.ValidatorQueue, staking.Candidate, staking.Delegation) {
@@ -118,7 +118,7 @@ func TestWithdrawDelegateRewardWithReward(t *testing.T) {
 	})
 
 	stkDB := staking.NewStakingDBWithDB(chain.SnapDB)
-	index, queue, can, delegate := generateStk(1000, big.NewInt(params.HSK*3), 10)
+	index, queue, can, delegate := generateStk(1000, big.NewInt(params.LAX*3), 10)
 	chain.AddBlockWithSnapDB(true, func(hash common.Hash, header *types.Header, sdb snapshotdb.DB) error {
 		if err := stkDB.SetEpochValIndex(hash, index); err != nil {
 			return err
@@ -299,10 +299,10 @@ func TestWithdrawDelegateRewardWithMultiNode(t *testing.T) {
 	})
 
 	stkDB := staking.NewStakingDBWithDB(chain.SnapDB)
-	index, queue, can, delegate := generateStk(1000, big.NewInt(params.HSK*3), xutil.CalcBlocksEachEpoch()*2+10)
-	_, queue2, can2, delegate2 := generateStk(1000, big.NewInt(params.HSK*3), 10)
+	index, queue, can, delegate := generateStk(1000, big.NewInt(params.LAX*3), xutil.CalcBlocksEachEpoch()*2+10)
+	_, queue2, can2, delegate2 := generateStk(1000, big.NewInt(params.LAX*3), 10)
 	queue = append(queue, queue2...)
-	_, queue3, can3, delegate3 := generateStk(1000, big.NewInt(params.HSK*3), xutil.CalcBlocksEachEpoch()+10)
+	_, queue3, can3, delegate3 := generateStk(1000, big.NewInt(params.LAX*3), xutil.CalcBlocksEachEpoch()+10)
 	queue = append(queue, queue3...)
 	chain.AddBlockWithSnapDB(true, func(hash common.Hash, header *types.Header, sdb snapshotdb.DB) error {
 		if err := stkDB.SetEpochValIndex(hash, index); err != nil {

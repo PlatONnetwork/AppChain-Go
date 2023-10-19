@@ -13,13 +13,13 @@ import (
 
 	"github.com/btcsuite/btcd/btcutil/bech32"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/bech32util"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/common/bech32util"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 )
 
 const (
-	DefaultAddressHRP = "hsk"
+	DefaultAddressHRP = "lax"
 )
 
 var currentAddressHRP string

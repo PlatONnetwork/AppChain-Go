@@ -28,9 +28,9 @@ import (
 	"sync"
 	"time"
 
-	json2 "github.com/PlatONnetwork/AppChain-Go/common/json"
+	json2 "github.com/PlatONnetwork/PlatON-Go/common/json"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 const (
@@ -40,9 +40,9 @@ const (
 	unsubscribeMethodSuffix  = "_unsubscribe"
 	notificationMethodSuffix = "_subscription"
 	ethMethodPrefix          = "eth_"
-	platonMethodPrefix       = "hskchain_"
+	platonMethodPrefix       = "appchain_"
 	ethMethod                = "eth"
-	platonMethod             = "hskchain"
+	platonMethod             = "appchain"
 
 	defaultWriteTimeout = 10 * time.Second // used if context has no deadline
 )

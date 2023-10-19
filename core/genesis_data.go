@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/params"
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
-	"github.com/PlatONnetwork/AppChain-Go/x/plugin"
+	"github.com/PlatONnetwork/PlatON-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
 
-	"github.com/PlatONnetwork/AppChain-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/log"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/vm"
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/core/state"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
-	"github.com/PlatONnetwork/AppChain-Go/x/staking"
-	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/vm"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/state"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/x/staking"
+	"github.com/PlatONnetwork/PlatON-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 )
 
 func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genesis, stateDB *state.StateDB) (common.Hash, error) {
@@ -62,7 +62,6 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 	}
 
 	for index := 0; index < length; index++ {
-
 		node := initQueue[index]
 
 		var keyHex bls.PublicKeyHex
@@ -85,9 +84,9 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 			StakingBlockNum: uint64(0),
 			Description: staking.Description{
 				ExternalId: "",
-				NodeName:   "hskchain.node." + fmt.Sprint(index+1),
-				Website:    "www.hskchain.network",
-				Details:    "The HashKey-Chain Node",
+				NodeName:   "appchain.node." + fmt.Sprint(index+1),
+				Website:    "www.appchain.network",
+				Details:    "The PlatON-AppChain Node",
 			},
 		}
 
@@ -128,13 +127,11 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 			return lastHash, fmt.Errorf("Failed to Store CanMutable Info: rlp encodeing failed. nodeId:%s, error:%s",
 				base.NodeId.String(), err.Error())
 		} else {
-
 			lastHash, err = putbasedbFn(mutableKey, val, lastHash)
 			if nil != err {
 				return lastHash, fmt.Errorf("Failed to Store CanMutable Info: PutBaseDB failed. nodeId:%s, error:%s",
 					base.NodeId.String(), err.Error())
 			}
-
 		}
 
 		// about can power ...
@@ -159,7 +156,6 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 			StakingAddress:  base.StakingAddress,
 		}
 		validatorQueue[index] = validator
-
 	}
 
 	// store the account staking Reference Count
@@ -169,82 +165,83 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 			xcom.CDFAccount().String(), err.Error())
 	}
 
-	validatorArr, err := rlp.EncodeToBytes(validatorQueue)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to rlp encodeing genesis validators. error:%s", err.Error())
-	}
+	if len(validatorQueue) > 0 {
+		validatorArr, err := rlp.EncodeToBytes(validatorQueue)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to rlp encodeing genesis validators. error:%s", err.Error())
+		}
 
-	/**
-	Epoch
-	*/
-	// build epoch validators indexInfo
-	verifierIndex := &staking.ValArrIndex{
-		Start: 1,
-		End:   xutil.CalcBlocksEachEpoch(),
-	}
-	epochIndexArr := make(staking.ValArrIndexQueue, 0)
-	epochIndexArr = append(epochIndexArr, verifierIndex)
+		/**
+		Epoch
+		*/
+		// build epoch validators indexInfo
+		verifierIndex := &staking.ValArrIndex{
+			Start: 1,
+			End:   xutil.CalcBlocksEachEpoch(),
+		}
+		epochIndexArr := make(staking.ValArrIndexQueue, 0)
+		epochIndexArr = append(epochIndexArr, verifierIndex)
 
-	// current epoch start and end indexs
-	epoch_index, err := rlp.EncodeToBytes(epochIndexArr)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to Store Epoch Validators start and end index: rlp encodeing failed. error:%s", err.Error())
-	}
+		// current epoch start and end indexs
+		epoch_index, err := rlp.EncodeToBytes(epochIndexArr)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to Store Epoch Validators start and end index: rlp encodeing failed. error:%s", err.Error())
+		}
 
-	lastHash, err = putbasedbFn(staking.GetEpochIndexKey(), epoch_index, lastHash)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to Store Epoch Validators start and end index: PutBaseDB failed. error:%s", err.Error())
-	}
+		lastHash, err = putbasedbFn(staking.GetEpochIndexKey(), epoch_index, lastHash)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to Store Epoch Validators start and end index: PutBaseDB failed. error:%s", err.Error())
+		}
 
-	// Epoch validators
-	lastHash, err = putbasedbFn(staking.GetEpochValArrKey(verifierIndex.Start, verifierIndex.End), validatorArr, lastHash)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to Store Epoch Validators: PutBaseDB failed. error:%s", err.Error())
-	}
+		// Epoch validators
+		lastHash, err = putbasedbFn(staking.GetEpochValArrKey(verifierIndex.Start, verifierIndex.End), validatorArr, lastHash)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to Store Epoch Validators: PutBaseDB failed. error:%s", err.Error())
+		}
 
-	/**
-	Round
-	*/
-	// build previous round validators indexInfo
-	pre_indexInfo := &staking.ValArrIndex{
-		Start: 0,
-		End:   0,
-	}
-	// build current round validators indexInfo
-	curr_indexInfo := &staking.ValArrIndex{
-		Start: 1,
-		End:   xutil.ConsensusSize(),
-	}
-	roundIndexArr := make(staking.ValArrIndexQueue, 0)
-	roundIndexArr = append(roundIndexArr, pre_indexInfo)
-	roundIndexArr = append(roundIndexArr, curr_indexInfo)
+		/**
+		Round
+		*/
+		// build previous round validators indexInfo
+		pre_indexInfo := &staking.ValArrIndex{
+			Start: 0,
+			End:   0,
+		}
+		// build current round validators indexInfo
+		curr_indexInfo := &staking.ValArrIndex{
+			Start: 1,
+			End:   xutil.ConsensusSize(),
+		}
+		roundIndexArr := make(staking.ValArrIndexQueue, 0)
+		roundIndexArr = append(roundIndexArr, pre_indexInfo)
+		roundIndexArr = append(roundIndexArr, curr_indexInfo)
 
-	// round index
-	round_index, err := rlp.EncodeToBytes(roundIndexArr)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to Store Round Validators start and end indexs: rlp encodeing failed. error:%s", err.Error())
+		// round index
+		round_index, err := rlp.EncodeToBytes(roundIndexArr)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to Store Round Validators start and end indexs: rlp encodeing failed. error:%s", err.Error())
+		}
+		lastHash, err = putbasedbFn(staking.GetRoundIndexKey(), round_index, lastHash)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to Store Round Validators start and end indexs: PutBaseDB failed. error:%s", err.Error())
+		}
+
+		// Previous Round validator
+		lastHash, err = putbasedbFn(staking.GetRoundValArrKey(pre_indexInfo.Start, pre_indexInfo.End), validatorArr, lastHash)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to Store Previous Round Validators: PutBaseDB failed. error:%s", err.Error())
+		}
+
+		// Current Round validator
+		lastHash, err = putbasedbFn(staking.GetRoundValArrKey(curr_indexInfo.Start, curr_indexInfo.End), validatorArr, lastHash)
+		if nil != err {
+			return lastHash, fmt.Errorf("Failed to Store Current Round Validators: PutBaseDB failed. error:%s", err.Error())
+		}
+
+		log.Info("Call genesisStakingData, Store genesis pposHash by stake data", "pposHash", lastHash.Hex())
+
+		stateDB.SetState(vm.StakingContractAddr, staking.GetPPOSHASHKey(), lastHash.Bytes())
 	}
-	lastHash, err = putbasedbFn(staking.GetRoundIndexKey(), round_index, lastHash)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to Store Round Validators start and end indexs: PutBaseDB failed. error:%s", err.Error())
-	}
-
-	// Previous Round validator
-	lastHash, err = putbasedbFn(staking.GetRoundValArrKey(pre_indexInfo.Start, pre_indexInfo.End), validatorArr, lastHash)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to Store Previous Round Validators: PutBaseDB failed. error:%s", err.Error())
-	}
-
-	// Current Round validator
-	lastHash, err = putbasedbFn(staking.GetRoundValArrKey(curr_indexInfo.Start, curr_indexInfo.End), validatorArr, lastHash)
-	if nil != err {
-		return lastHash, fmt.Errorf("Failed to Store Current Round Validators: PutBaseDB failed. error:%s", err.Error())
-	}
-
-	log.Info("Call genesisStakingData, Store genesis pposHash by stake data", "pposHash", lastHash.Hex())
-
-	stateDB.SetState(vm.StakingContractAddr, staking.GetPPOSHASHKey(), lastHash.Bytes())
-
 	return lastHash, nil
 }
 
@@ -257,7 +254,7 @@ func genesisPluginState(g *Genesis, statedb *state.StateDB, snapDB snapshotdb.Ba
 
 	// Store genesis yearEnd reward balance item
 
-	// Store genesis Issue for HSK
+	// Store genesis Issue for LAX
 	plugin.SetYearEndCumulativeIssue(statedb, 0, genesisIssue)
 
 	log.Info("Write genesis version into genesis block", "genesis version", fmt.Sprintf("%d/%s", g.Config.GenesisVersion, params.FormatVersion(g.Config.GenesisVersion)))

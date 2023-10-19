@@ -18,8 +18,8 @@
 package fetcher
 
 import (
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/types"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/types"
 	"github.com/stretchr/testify/assert"
 	"sync"
 	"testing"

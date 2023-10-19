@@ -25,14 +25,14 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/utils"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/utils"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/consensus"
+	"github.com/PlatONnetwork/PlatON-Go/common/consensus"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -3,10 +3,10 @@ package processor
 import (
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/core/vm/solidity/checkpoint"
-	stypes "github.com/PlatONnetwork/AppChain-Go/core/vm/solidity/types"
-	"github.com/PlatONnetwork/AppChain-Go/event"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/core/vm/solidity/checkpoint"
+	stypes "github.com/PlatONnetwork/PlatON-Go/core/vm/solidity/types"
+	"github.com/PlatONnetwork/PlatON-Go/event"
 )
 
 type PendingCheckpoint checkpoint.ICheckpointSigAggregatorPendingCheckpoint

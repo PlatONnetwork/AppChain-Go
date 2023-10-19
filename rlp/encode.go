@@ -23,7 +23,7 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/PlatONnetwork/AppChain-Go/rlp/internal/rlpstruct"
+	"github.com/PlatONnetwork/PlatON-Go/rlp/internal/rlpstruct"
 )
 
 var (

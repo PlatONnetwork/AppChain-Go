@@ -26,12 +26,12 @@ import (
 
 	"github.com/docker/docker/pkg/reexec"
 
-	"github.com/PlatONnetwork/AppChain-Go/internal/cmdtest"
-	"github.com/PlatONnetwork/AppChain-Go/rpc"
+	"github.com/PlatONnetwork/PlatON-Go/internal/cmdtest"
+	"github.com/PlatONnetwork/PlatON-Go/rpc"
 )
 
 func tmpdir(t *testing.T) string {
-	dir, err := ioutil.TempDir("", "hskchain-test")
+	dir, err := ioutil.TempDir("", "appchain-test")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,8 +46,8 @@ type testplaton struct {
 }
 
 func init() {
-	// Run the app if we've been exec'd as "hskchain-test" in runPlatON.
-	reexec.Register("hskchain-test", func() {
+	// Run the app if we've been exec'd as "appchain-test" in runPlatON.
+	reexec.Register("appchain-test", func() {
 		if err := app.Run(os.Args); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -64,7 +64,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-// spawns hskchain with the given command line args. If the args don't set --datadir, the
+// spawns appchain with the given command line args. If the args don't set --datadir, the
 // child g gets a temporary data directory.
 func runPlatON(t *testing.T, args ...string) *testplaton {
 	tt := &testplaton{}
@@ -89,9 +89,9 @@ func runPlatON(t *testing.T, args ...string) *testplaton {
 		}()
 	}
 
-	// Boot "hskchain". This actually runs the test binary but the TestMain
+	// Boot "appchain". This actually runs the test binary but the TestMain
 	// function will prevent any tests from running.
-	tt.Run("hskchain-test", args...)
+	tt.Run("appchain-test", args...)
 
 	return tt
 }

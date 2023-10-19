@@ -19,7 +19,7 @@ package state
 import (
 	"math/big"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 // journalEntry is a modification entry in the state change journal that can be

@@ -27,16 +27,16 @@ import (
 	"reflect"
 	"unicode"
 
-	"github.com/PlatONnetwork/AppChain-Go/internal/ethapi"
+	"github.com/PlatONnetwork/PlatON-Go/internal/ethapi"
 
 	cli "gopkg.in/urfave/cli.v1"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/cmd/utils"
-	"github.com/PlatONnetwork/AppChain-Go/eth"
-	"github.com/PlatONnetwork/AppChain-Go/node"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/cmd/utils"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/node"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 	"github.com/naoina/toml"
 )
 
@@ -118,13 +118,13 @@ func defaultNodeConfig() node.Config {
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(gitCommit, gitDate)
-	cfg.HTTPModules = append(cfg.HTTPModules, "hskchain")
-	cfg.WSModules = append(cfg.WSModules, "hskchain")
-	cfg.IPCPath = "hskchain.ipc"
+	cfg.HTTPModules = append(cfg.HTTPModules, "appchain")
+	cfg.WSModules = append(cfg.WSModules, "appchain")
+	cfg.IPCPath = "appchain.ipc"
 	return cfg
 }
 
-// makeConfigNode loads hskchain configuration and creates a blank node instance.
+// makeConfigNode loads appchain configuration and creates a blank node instance.
 func makeConfigNode(ctx *cli.Context) (*node.Node, platonConfig) {
 
 	// Load defaults.
@@ -176,7 +176,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, platonConfig) {
 	return stack, cfg
 }
 
-// makeFullNode loads hskchain configuration and creates the backend.
+// makeFullNode loads appchain configuration and creates the backend.
 func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) {
 
 	stack, cfg := makeConfigNode(ctx)

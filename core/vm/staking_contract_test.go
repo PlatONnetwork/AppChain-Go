@@ -25,28 +25,28 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/x/staking"
-	"github.com/PlatONnetwork/AppChain-Go/x/xutil"
+	"github.com/PlatONnetwork/PlatON-Go/x/staking"
+	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/types"
-	"github.com/PlatONnetwork/AppChain-Go/crypto"
-	"github.com/PlatONnetwork/AppChain-Go/params"
-	"github.com/PlatONnetwork/AppChain-Go/x/gov"
+	"github.com/PlatONnetwork/PlatON-Go/core/types"
+	"github.com/PlatONnetwork/PlatON-Go/crypto"
+	"github.com/PlatONnetwork/PlatON-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/x/gov"
 
-	"github.com/PlatONnetwork/AppChain-Go/node"
+	"github.com/PlatONnetwork/PlatON-Go/node"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/mock"
+	"github.com/PlatONnetwork/PlatON-Go/common/mock"
 
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
-	"github.com/PlatONnetwork/AppChain-Go/rlp"
-	"github.com/PlatONnetwork/AppChain-Go/x/plugin"
-	"github.com/PlatONnetwork/AppChain-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
+	"github.com/PlatONnetwork/PlatON-Go/x/xcom"
 )
 
 func runContractSendTransaction(contract *StakingContract, params [][]byte, title string, t *testing.T) {
@@ -1366,16 +1366,16 @@ func TestStakingContract_DelegateMerge(t *testing.T) {
 	var proofHex bls.SchnorrProofHex
 	proofHex.UnmarshalText(proofByte)
 
-	stakingAmount := new(big.Int).SetUint64(params.HSK)
+	stakingAmount := new(big.Int).SetUint64(params.LAX)
 	stakingAmount.Mul(stakingAmount, new(big.Int).SetUint64(1000000))
 	chain.StateDB.AddBalance(stakingAdd, stakingAmount)
-	chain.StateDB.AddBalance(stakingAdd, new(big.Int).SetUint64(params.HSK))
+	chain.StateDB.AddBalance(stakingAdd, new(big.Int).SetUint64(params.LAX))
 
-	delAmount := new(big.Int).SetUint64(params.HSK)
+	delAmount := new(big.Int).SetUint64(params.LAX)
 	delAmount.Mul(delAmount, new(big.Int).SetUint64(100))
 	chain.StateDB.AddBalance(delAdd, delAmount)
 	chain.StateDB.AddBalance(delAdd, delAmount)
-	chain.StateDB.AddBalance(delAdd, new(big.Int).SetUint64(params.HSK))
+	chain.StateDB.AddBalance(delAdd, new(big.Int).SetUint64(params.LAX))
 
 	createStaking := func(hash common.Hash, header *types.Header, statedb *mock.MockStateDB, sdb snapshotdb.DB) error {
 		toStaking := newStakingContact(stakingAdd, hash, header.Number, statedb, sdb, initGas)
@@ -1401,7 +1401,7 @@ func TestStakingContract_DelegateMerge(t *testing.T) {
 	}
 	execFunc := []mock.Transaction{createStaking, delegateFunc, withDrewStaking, createStaking, delegateFunc}
 
-	delLastAmount := new(big.Int).SetUint64(params.HSK)
+	delLastAmount := new(big.Int).SetUint64(params.LAX)
 	delLastAmount.Mul(delLastAmount, new(big.Int).SetUint64(200))
 
 	afterTxHook := func(hash common.Hash, header *types.Header, sdb snapshotdb.DB) error {

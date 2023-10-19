@@ -19,19 +19,19 @@ package console
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/console/prompt"
+	"github.com/PlatONnetwork/PlatON-Go/console/prompt"
 	"io"
 	"reflect"
 	"strings"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts/scwallet"
-	"github.com/PlatONnetwork/AppChain-Go/common/hexutil"
-	"github.com/PlatONnetwork/AppChain-Go/internal/jsre"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/scwallet"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
+	"github.com/PlatONnetwork/PlatON-Go/internal/jsre"
 	"github.com/dop251/goja"
 
-	"github.com/PlatONnetwork/AppChain-Go/accounts/usbwallet"
-	"github.com/PlatONnetwork/AppChain-Go/rpc"
+	"github.com/PlatONnetwork/PlatON-Go/accounts/usbwallet"
+	"github.com/PlatONnetwork/PlatON-Go/rpc"
 )
 
 // bridge is a collection of JavaScript utility methods to bride the .js runtime
@@ -355,12 +355,12 @@ func (b *bridge) SleepBlocks(call jsre.Call) (goja.Value, error) {
 	// Poll the current block number until either it or a timeout is reached.
 	deadline := time.Now().Add(time.Duration(sleep) * time.Second)
 	var lastNumber hexutil.Uint64
-	if err := b.client.Call(&lastNumber, "hskchain_blockNumber"); err != nil {
+	if err := b.client.Call(&lastNumber, "appchain_blockNumber"); err != nil {
 		return nil, err
 	}
 	for time.Now().Before(deadline) {
 		var number hexutil.Uint64
-		if err := b.client.Call(&number, "hskchain_blockNumber"); err != nil {
+		if err := b.client.Call(&number, "appchain_blockNumber"); err != nil {
 			return nil, err
 		}
 		if number != lastNumber {

@@ -2843,7 +2843,7 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
     function Web3 (provider) {
       this._requestManager = new RequestManager(provider);
       this.currentProvider = provider;
-      this.hskchain = new Eth(this);
+      this.appchain = new Eth(this);
       this.db = new DB(this);
       // this.shh = new Shh(this);
       this.net = new Net(this);
@@ -2923,8 +2923,8 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
           inputFormatter: utils.toDecimal
         }),
         new Property({
-          name: 'version.hskchain',
-          getter: 'hskchain_protocolVersion',
+          name: 'version.appchain',
+          getter: 'appchain_protocolVersion',
           inputFormatter: utils.toDecimal
         })
         // new Property({
@@ -4526,7 +4526,7 @@ var inputAddressFormatter = function (address) {
       var format = this.unpackOutput.bind(this);
 
       return {
-        method: this._constant ? 'hskchain_call' : 'hskchain_sendTransaction',
+        method: this._constant ? 'appchain_call' : 'appchain_sendTransaction',
         callback: callback,
         params: [payload],
         format: format
@@ -5536,15 +5536,15 @@ var inputAddressFormatter = function (address) {
     var transfer = require('../transfer');
 
     var blockCall = function (args) {
-      return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "hskchain_getBlockByHash" : "hskchain_getBlockByNumber";
+      return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "appchain_getBlockByHash" : "appchain_getBlockByNumber";
     };
 
     var transactionFromBlockCall = function (args) {
-      return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'hskchain_getTransactionByBlockHashAndIndex' : 'hskchain_getTransactionByBlockNumberAndIndex';
+      return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'appchain_getTransactionByBlockHashAndIndex' : 'appchain_getTransactionByBlockNumberAndIndex';
     };
 
     var getBlockTransactionCountCall = function (args) {
-      return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'hskchain_getBlockTransactionCountByHash' : 'hskchain_getBlockTransactionCountByNumber';
+      return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'appchain_getBlockTransactionCountByHash' : 'appchain_getBlockTransactionCountByNumber';
     };
 
     function Eth(web3) {
@@ -5586,13 +5586,13 @@ var inputAddressFormatter = function (address) {
     var methods = function () {
       var getAddressHrp = new Method({
         name: 'getAddressHrp',
-        call: 'hskchain_getAddressHrp',
+        call: 'appchain_getAddressHrp',
         params: 0,
       });
 
       var getBalance = new Method({
         name: 'getBalance',
-        call: 'hskchain_getBalance',
+        call: 'appchain_getBalance',
         params: 2,
         inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: formatters.outputBigNumberFormatter
@@ -5600,14 +5600,14 @@ var inputAddressFormatter = function (address) {
 
       var getStorageAt = new Method({
         name: 'getStorageAt',
-        call: 'hskchain_getStorageAt',
+        call: 'appchain_getStorageAt',
         params: 3,
         inputFormatter: [null, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
       });
 
       var getCode = new Method({
         name: 'getCode',
-        call: 'hskchain_getCode',
+        call: 'appchain_getCode',
         params: 2,
         inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
       });
@@ -5630,7 +5630,7 @@ var inputAddressFormatter = function (address) {
 
       var getTransaction = new Method({
         name: 'getTransaction',
-        call: 'hskchain_getTransactionByHash',
+        call: 'appchain_getTransactionByHash',
         params: 1,
         outputFormatter: formatters.outputTransactionFormatter
       });
@@ -5645,14 +5645,14 @@ var inputAddressFormatter = function (address) {
 
       var getTransactionReceipt = new Method({
         name: 'getTransactionReceipt',
-        call: 'hskchain_getTransactionReceipt',
+        call: 'appchain_getTransactionReceipt',
         params: 1,
         outputFormatter: formatters.outputTransactionReceiptFormatter
       });
 
       var getTransactionCount = new Method({
         name: 'getTransactionCount',
-        call: 'hskchain_getTransactionCount',
+        call: 'appchain_getTransactionCount',
         params: 2,
         inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: utils.toDecimal
@@ -5660,42 +5660,42 @@ var inputAddressFormatter = function (address) {
 
       var sendRawTransaction = new Method({
         name: 'sendRawTransaction',
-        call: 'hskchain_sendRawTransaction',
+        call: 'appchain_sendRawTransaction',
         params: 1,
         inputFormatter: [null]
       });
 
       var sendTransaction = new Method({
         name: 'sendTransaction',
-        call: 'hskchain_sendTransaction',
+        call: 'appchain_sendTransaction',
         params: 1,
         inputFormatter: [formatters.inputTransactionFormatter]
       });
 
       var signTransaction = new Method({
         name: 'signTransaction',
-        call: 'hskchain_signTransaction',
+        call: 'appchain_signTransaction',
         params: 1,
         inputFormatter: [formatters.inputTransactionFormatter]
       });
 
       var sign = new Method({
         name: 'sign',
-        call: 'hskchain_sign',
+        call: 'appchain_sign',
         params: 2,
         inputFormatter: [formatters.inputAddressFormatter, null]
       });
 
       var call = new Method({
         name: 'call',
-        call: 'hskchain_call',
+        call: 'appchain_call',
         params: 2,
         inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
       });
 
       var estimateGas = new Method({
         name: 'estimateGas',
-        call: 'hskchain_estimateGas',
+        call: 'appchain_estimateGas',
         params: 1,
         inputFormatter: [formatters.inputCallFormatter],
         outputFormatter: utils.toDecimal
@@ -5704,7 +5704,7 @@ var inputAddressFormatter = function (address) {
 
       var evidences = new Method({
         name: 'evidences',
-        call: 'hskchain_evidences',
+        call: 'appchain_evidences',
         params: 0
       });
 
@@ -5734,26 +5734,26 @@ var inputAddressFormatter = function (address) {
       return [
         new Property({
           name: 'syncing',
-          getter: 'hskchain_syncing',
+          getter: 'appchain_syncing',
           outputFormatter: formatters.outputSyncingFormatter
         }),
         new Property({
           name: 'gasPrice',
-          getter: 'hskchain_gasPrice',
+          getter: 'appchain_gasPrice',
           outputFormatter: formatters.outputBigNumberFormatter
         }),
         new Property({
           name: 'accounts',
-          getter: 'hskchain_accounts'
+          getter: 'appchain_accounts'
         }),
         new Property({
           name: 'blockNumber',
-          getter: 'hskchain_blockNumber',
+          getter: 'appchain_blockNumber',
           outputFormatter: utils.toDecimal
         }),
         new Property({
           name: 'protocolVersion',
-          getter: 'hskchain_protocolVersion'
+          getter: 'appchain_protocolVersion'
         })
       ];
     };
@@ -5978,13 +5978,13 @@ var inputAddressFormatter = function (address) {
           case 'latest':
             args.shift();
             this.params = 0;
-            return 'hskchain_newBlockFilter';
+            return 'appchain_newBlockFilter';
           case 'pending':
             args.shift();
             this.params = 0;
-            return 'hskchain_newPendingTransactionFilter';
+            return 'appchain_newPendingTransactionFilter';
           default:
-            return 'hskchain_newFilter';
+            return 'appchain_newFilter';
         }
       };
 
@@ -5996,19 +5996,19 @@ var inputAddressFormatter = function (address) {
 
       var uninstallFilter = new Method({
         name: 'uninstallFilter',
-        call: 'hskchain_uninstallFilter',
+        call: 'appchain_uninstallFilter',
         params: 1
       });
 
       var getLogs = new Method({
         name: 'getLogs',
-        call: 'hskchain_getFilterLogs',
+        call: 'appchain_getFilterLogs',
         params: 1
       });
 
       var poll = new Method({
         name: 'poll',
-        call: 'hskchain_getFilterChanges',
+        call: 'appchain_getFilterChanges',
         params: 1
       });
 
@@ -6571,7 +6571,7 @@ var inputAddressFormatter = function (address) {
       };
 
       self.requestManager.startPolling({
-        method: 'hskchain_syncing',
+        method: 'appchain_syncing',
         params: [],
       }, self.pollId, onMessage, self.stopWatching.bind(self));
 

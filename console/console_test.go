@@ -20,25 +20,25 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/console/prompt"
+	"github.com/PlatONnetwork/PlatON-Go/console/prompt"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/PlatONnetwork/AppChain-Go/core/snapshotdb"
+	"github.com/PlatONnetwork/PlatON-Go/core/snapshotdb"
 
-	"github.com/PlatONnetwork/AppChain-Go/core"
-	"github.com/PlatONnetwork/AppChain-Go/crypto/bls"
+	"github.com/PlatONnetwork/PlatON-Go/core"
+	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 
-	"github.com/PlatONnetwork/AppChain-Go/p2p/discover"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 
-	"github.com/PlatONnetwork/AppChain-Go/eth"
-	"github.com/PlatONnetwork/AppChain-Go/internal/jsre"
-	"github.com/PlatONnetwork/AppChain-Go/node"
-	_ "github.com/PlatONnetwork/AppChain-Go/x/xcom"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/internal/jsre"
+	"github.com/PlatONnetwork/PlatON-Go/node"
+	_ "github.com/PlatONnetwork/PlatON-Go/x/xcom"
 )
 
 const (
@@ -199,39 +199,39 @@ func TestApi(t *testing.T) {
 	_, err := tester.console.jsre.Run(`
 		console.log("aaaaaaa");
 		console.log("instance: " + web3.version.node);
-		console.log("at block: " + hskchain.blockNumber + " (" + new Date(1000 * hskchain.getBlock(hskchain.blockNumber).timestamp) + ")");
+		console.log("at block: " + appchain.blockNumber + " (" + new Date(1000 * appchain.getBlock(appchain.blockNumber).timestamp) + ")");
 		console.log(" datadir: " + admin.datadir);
-		console.log(" protocolVersion: " + hskchain.protocolVersion);
-		console.log(" sync: " + hskchain.syncing);
-		console.log("",hskchain.protocolVersion)
-		console.log("syncing",hskchain.syncing)
-		console.log("gasPrice",hskchain.gasPrice)
-		console.log("accounts",hskchain.accounts)
-		console.log("blockNumber",hskchain.blockNumber)
-		console.log("getBalance",hskchain.getBalance("lat1sczumw7md5ny4f6zuaczph9utr7decvzlw0wsq"))
-		console.log("getStorageAt",hskchain.getStorageAt("lat1sczumw7md5ny4f6zuaczph9utr7decvzlw0wsq"))
-		console.log("getTransactionCount",hskchain.getTransactionCount("lat1sczumw7md5ny4f6zuaczph9utr7decvzlw0wsq"))
-		console.log("getBlockTransactionCountByHash or ByNumber",hskchain.getBlockTransactionCount("1234"))
-		//console.log("getCode",hskchain.getCode("0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"))
+		console.log(" protocolVersion: " + appchain.protocolVersion);
+		console.log(" sync: " + appchain.syncing);
+		console.log("",appchain.protocolVersion)
+		console.log("syncing",appchain.syncing)
+		console.log("gasPrice",appchain.gasPrice)
+		console.log("accounts",appchain.accounts)
+		console.log("blockNumber",appchain.blockNumber)
+		console.log("getBalance",appchain.getBalance("lat1sczumw7md5ny4f6zuaczph9utr7decvzlw0wsq"))
+		console.log("getStorageAt",appchain.getStorageAt("lat1sczumw7md5ny4f6zuaczph9utr7decvzlw0wsq"))
+		console.log("getTransactionCount",appchain.getTransactionCount("lat1sczumw7md5ny4f6zuaczph9utr7decvzlw0wsq"))
+		console.log("getBlockTransactionCountByHash or ByNumber",appchain.getBlockTransactionCount("1234"))
+		//console.log("getCode",appchain.getCode("0x8605cdbbdb6d264aa742e77020dcbc58fcdce182"))
 		//adr = personal.newAccount("123456")
 		//personal.unlockAccount(adr,"123456",30)
-		//console.log("sign",hskchain.sign(adr, "0xdeadbeaf"))
-		//console.log("sendTransaction",hskchain.sendTransaction({from:adr,to:adr,value:0,gas:0,gasPrice:0}))
-		//console.log("sendRawTransaction",hskchain.sendRawTransaction({from:hskchain.accounts[0],to:hskchain.accounts[1],value:10,gas:88888,gasPrice:3333}))
-		//console.log("call",hskchain.call({from:hskchain.accounts[0],to:hskchain.accounts[1],value:10,gas:88888,gasPrice:3333}))
-		//console.log("estimateGas",hskchain.estimateGas({from:hskchain.accounts[0],to:hskchain.accounts[1],value:10,gas:88888,gasPrice:3333}))
-		//console.log("getBlockByHash or number",hskchain.getBlock("0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"))
-		//console.log("getTransactionByHash",hskchain.getTransaction("0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"))
-		//console.log("getTransactionByBlockHashAndIndex",hskchain.getTransactionFromBlock(["0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b", "1"]))
-		//console.log("getTransactionReceipt",hskchain.getTransactionReceipt())
-		//console.log("newFilter",hskchain.newFilter())
-		//console.log("newBlockFilter",hskchain.newBlockFilter())
-		//console.log("newPendingTransactionFilter",hskchain.newPendingTransactionFilter())
-		//console.log("uninstallFilter",hskchain.uninstallFilter())
-		//console.log("getFilterChanges",hskchain.getFilterChanges())
-		//console.log("getFilterLogs",hskchain.getFilterLogs())
-		//console.log("getLogs",hskchain.getLogs({"topics":["0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"]}))
-		//console.log("signTransaction",hskchain.signTransaction())
+		//console.log("sign",appchain.sign(adr, "0xdeadbeaf"))
+		//console.log("sendTransaction",appchain.sendTransaction({from:adr,to:adr,value:0,gas:0,gasPrice:0}))
+		//console.log("sendRawTransaction",appchain.sendRawTransaction({from:appchain.accounts[0],to:appchain.accounts[1],value:10,gas:88888,gasPrice:3333}))
+		//console.log("call",appchain.call({from:appchain.accounts[0],to:appchain.accounts[1],value:10,gas:88888,gasPrice:3333}))
+		//console.log("estimateGas",appchain.estimateGas({from:appchain.accounts[0],to:appchain.accounts[1],value:10,gas:88888,gasPrice:3333}))
+		//console.log("getBlockByHash or number",appchain.getBlock("0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"))
+		//console.log("getTransactionByHash",appchain.getTransaction("0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"))
+		//console.log("getTransactionByBlockHashAndIndex",appchain.getTransactionFromBlock(["0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b", "1"]))
+		//console.log("getTransactionReceipt",appchain.getTransactionReceipt())
+		//console.log("newFilter",appchain.newFilter())
+		//console.log("newBlockFilter",appchain.newBlockFilter())
+		//console.log("newPendingTransactionFilter",appchain.newPendingTransactionFilter())
+		//console.log("uninstallFilter",appchain.uninstallFilter())
+		//console.log("getFilterChanges",appchain.getFilterChanges())
+		//console.log("getFilterLogs",appchain.getFilterLogs())
+		//console.log("getLogs",appchain.getLogs({"topics":["0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"]}))
+		//console.log("signTransaction",appchain.signTransaction())
 		//console.log("test personal",personal.openWallet("adad"))
 	`)
 	if err != nil {

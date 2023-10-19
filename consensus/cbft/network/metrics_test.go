@@ -20,11 +20,11 @@ package network
 import (
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/metrics"
+	"github.com/PlatONnetwork/PlatON-Go/metrics"
 
-	"github.com/PlatONnetwork/AppChain-Go/consensus/cbft/protocols"
+	"github.com/PlatONnetwork/PlatON-Go/consensus/cbft/protocols"
 
-	"github.com/PlatONnetwork/AppChain-Go/p2p"
+	"github.com/PlatONnetwork/PlatON-Go/p2p"
 	"github.com/stretchr/testify/assert"
 )
 

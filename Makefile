@@ -13,18 +13,16 @@ GO ?= latest
 GPATH = $(shell go env GOPATH)
 GORUN = env GO111MODULE=on GOPATH=$(GPATH) go run
 
-hskchain:
+appchain:
 	build/build_deps.sh
-	$(GORUN) build/ci.go install ./cmd/hskchain
-	@mv $(GOBIN)/hskchain $(GOBIN)/shskchain
+	$(GORUN) build/ci.go install ./cmd/sappchain
 	@echo "Done building."
-	@echo "Run \"$(GOBIN)/hsk-chain\" to launch HashKey-Chain."
+	@echo "Run \"$(GOBIN)/appchain\" to launch PlatON-AppChain."
 
 all:
 	build/build_deps.sh
 	$(GORUN) build/ci.go install
-	@mv $(GOBIN)/hskchain $(GOBIN)/shskchain
-	@mv $(GOBIN)/keytool $(GOBIN)/hskchain-key
+	@mv $(GOBIN)/keytool $(GOBIN)/sappchain-key
 
 all-debug:
 	build/build_deps.sh

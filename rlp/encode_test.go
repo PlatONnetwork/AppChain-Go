@@ -27,7 +27,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/PlatONnetwork/AppChain-Go/common/math"
+	"github.com/PlatONnetwork/PlatON-Go/common/math"
 )
 
 type testEncoder struct {

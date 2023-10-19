@@ -1,4 +1,4 @@
-module github.com/PlatONnetwork/AppChain-Go
+module github.com/PlatONnetwork/PlatON-Go
 
 go 1.18
 
@@ -90,3 +90,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 	gotest.tools/v3 v3.4.0 // indirect
 )
+
+replace github.com/PlatONnetwork/PlatON-Go => github.com/PlatONnetwork/AppChain-Go v1.4.0

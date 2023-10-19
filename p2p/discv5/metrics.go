@@ -1,6 +1,6 @@
 package discv5
 
-import "github.com/PlatONnetwork/AppChain-Go/metrics"
+import "github.com/PlatONnetwork/PlatON-Go/metrics"
 
 var (
 	ingressTrafficMeter = metrics.NewRegisteredMeter("discv5/InboundTraffic", nil)

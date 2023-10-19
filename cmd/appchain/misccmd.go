@@ -18,9 +18,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/PlatONnetwork/AppChain-Go/cmd/utils"
-	"github.com/PlatONnetwork/AppChain-Go/eth"
-	"github.com/PlatONnetwork/AppChain-Go/params"
+	"github.com/PlatONnetwork/PlatON-Go/cmd/utils"
+	"github.com/PlatONnetwork/PlatON-Go/eth"
+	"github.com/PlatONnetwork/PlatON-Go/params"
 	"gopkg.in/urfave/cli.v1"
 	"os"
 	"runtime"
@@ -47,7 +47,7 @@ The output of this command is supposed to be machine-readable.
 )
 
 func version(ctx *cli.Context) error {
-	fmt.Println("HashKey-Chain")
+	fmt.Println("AppChain")
 	fmt.Println("Version:", params.VersionWithMeta)
 	if gitCommit != "" {
 		fmt.Println("Git Commit:", gitCommit)
@@ -65,17 +65,17 @@ func version(ctx *cli.Context) error {
 }
 
 func license(_ *cli.Context) error {
-	fmt.Println(`HashKey-Chain is free software: you can redistribute it and/or modify
+	fmt.Println(`AppChain-Go is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-HashKey-Chain is distributed in the hope that it will be useful,
+AppChain-Go is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with HashKey-Chain. If not, see <http://www.gnu.org/licenses/>.`)
+along with AppChain-Go. If not, see <http://www.gnu.org/licenses/>.`)
 	return nil
 }

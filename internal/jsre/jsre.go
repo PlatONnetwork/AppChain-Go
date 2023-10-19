@@ -28,7 +28,7 @@ import (
 
 	"github.com/dop251/goja"
 
-	"github.com/PlatONnetwork/AppChain-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common"
 )
 
 // JSRE is a JS runtime environment embedding the goja interpreter.
