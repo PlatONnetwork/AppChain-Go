@@ -39,13 +39,13 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 	}
 
 	// Check the balance of Staking Account
-	needStaking := new(big.Int).Mul(xcom.GeneStakingAmount, big.NewInt(int64(length)))
+	/*needStaking := new(big.Int).Mul(xcom.GeneStakingAmount, big.NewInt(int64(length)))
 	remain := stateDB.GetBalance(xcom.CDFAccount())
 
 	if remain.Cmp(needStaking) < 0 {
 		return prevHash, fmt.Errorf("Failed to store genesis staking data, the balance of '%s' is no enough. "+
 			"balance: %s, need staking: %s", xcom.CDFAccount().String(), remain.String(), needStaking.String())
-	}
+	}*/
 
 	initQueue := g.Config.Cbft.InitialNodes
 
@@ -94,8 +94,8 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 		mutable := &staking.CandidateMutable{
 			Status:             staking.Valided,
 			StakingEpoch:       uint32(0),
-			Shares:             new(big.Int).Set(xcom.GeneStakingAmount),
-			Released:           new(big.Int).Set(xcom.GeneStakingAmount),
+			Shares:             new(big.Int).Set(xcom.StakeThreshold()),
+			Released:           new(big.Int).Set(xcom.StakeThreshold()),
 			ReleasedHes:        new(big.Int).SetInt64(0),
 			RestrictingPlan:    new(big.Int).SetInt64(0),
 			RestrictingPlanHes: new(big.Int).SetInt64(0),
@@ -269,10 +269,10 @@ func genesisPluginState(g *Genesis, statedb *state.StateDB, snapDB snapshotdb.Ba
 	activeVersionListBytes, _ := json.Marshal(activeVersionList)
 	statedb.SetState(vm.GovContractAddr, gov.KeyActiveVersions(), activeVersionListBytes)
 
-	err := plugin.NewRestrictingPlugin(nil).InitGenesisRestrictingPlans(statedb)
+	/*err := plugin.NewRestrictingPlugin(nil).InitGenesisRestrictingPlans(statedb)
 	if err != nil {
 		return fmt.Errorf("Failed to init genesis restricting plans, err:%s", err.Error())
-	}
+	}*/
 	genesisReward := statedb.GetBalance(vm.RewardManagerPoolAddr)
 	plugin.SetYearEndBalance(statedb, 0, genesisReward)
 	log.Info("Set SetYearEndBalance", "genesisReward", genesisReward)
