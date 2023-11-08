@@ -3730,10 +3730,12 @@ type StakinginfoStaked struct {
 	ValidatorId     *big.Int
 	Nonce           *big.Int
 	ActivationEpoch *big.Int
-	Amount          *big.Int
-	Total           *big.Int
-	Pubkeys         []byte
-	Raw             types.Log // Blockchain specific contextual infos
+	Amount          *big.Int //此次质押数量
+	Total           *big.Int //总质押数量
+	//todo: 2023/11/01, 考虑增加一个node_name，把在PlatON上质押时的节点名称带到应用链
+	//NodeName		string
+	Pubkeys []byte
+	Raw     types.Log // Blockchain specific contextual infos
 }
 
 // FilterStaked is a free log retrieval operation binding the contract event 0x42aca3a8d2d8ba37d07af1816267145b860bb56fd509c7d123053e57951feda5.
