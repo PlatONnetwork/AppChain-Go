@@ -22,11 +22,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/helper"
-	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/stakinginfo"
-	"github.com/PlatONnetwork/PlatON-Go/monitor"
-	"math/big"
-
 	"github.com/PlatONnetwork/PlatON-Go/common"
 	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
 	"github.com/PlatONnetwork/PlatON-Go/common/vm"
@@ -35,13 +30,17 @@ import (
 	"github.com/PlatONnetwork/PlatON-Go/crypto"
 	"github.com/PlatONnetwork/PlatON-Go/crypto/bls"
 	"github.com/PlatONnetwork/PlatON-Go/log"
+	"github.com/PlatONnetwork/PlatON-Go/monitor"
 	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
 	"github.com/PlatONnetwork/PlatON-Go/params"
 	"github.com/PlatONnetwork/PlatON-Go/rlp"
+	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/helper"
+	"github.com/PlatONnetwork/PlatON-Go/rootchain/innerbindings/stakinginfo"
 	"github.com/PlatONnetwork/PlatON-Go/x/plugin"
 	"github.com/PlatONnetwork/PlatON-Go/x/staking"
 	"github.com/PlatONnetwork/PlatON-Go/x/xcom"
 	"github.com/PlatONnetwork/PlatON-Go/x/xutil"
+	"math/big"
 )
 
 const (
@@ -187,7 +186,8 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 
 	amount := new(big.Int).Set(event.Amount)
 	canMutable := &staking.CandidateMutable{
-		Status:               staking.Valided,
+		Status: staking.Valided,
+		// todo: 2023/11/01 这个shares是不是应该是totalAmount?
 		Shares:               amount,
 		Released:             new(big.Int).SetInt64(0),
 		ReleasedHes:          new(big.Int).SetInt64(0),
@@ -371,8 +371,12 @@ func (stkc *StakingContract) stakeStateSync(input []byte) ([]byte, error) {
 	log.Info("stakeStateSync", "BlockNumber", args.BlockNumber)
 	stakeFuncMap := stkc.stakeInfoFunc()
 
-	// 这个event是把platon的log, 在应用链把这个log作为调用内置合约的local tx的参数时，经过了EncodeRLP，其中只包含 address / topic / data，
-	// 而特殊节点，作为同步节点，只同步区块信息，交易信息，并重放交易，而不会监听platon上的事件，
+	//
+	// 应用链的出块节点，需要监听PlatON的event,并把感兴趣的event（质押相关），
+	// 包装成为调用应用链内置合约的local tx的input参数，但是这个input，只是包含address / topic / data（经过了EncodeRLP，目前是这样实现的）
+	//
+	// 而特殊节点，需要采集这个event涉及的交易在platon上的txHash, txBlockNumber;
+	// 但是作为同步节点，只同步本链的区块信息，交易信息，并重放交易，而不会监听platon上的事件，
 	// 所以，在解析这个local tx时，发生在platon的质押信息，丢失了txHash, blockNumber， txIndex等信息
 	// 特殊节点要想办法把这些信息补齐。方法是：
 	// 通过连接到platon的ethclient，按需获取一段区块内的相关事件，然后遍历这些事件，和此处rlp decode得到的log比较，相同时补齐相关信息
@@ -387,6 +391,7 @@ func (stkc *StakingContract) stakeStateSync(input []byte) ([]byte, error) {
 
 	for _, event := range args.Events {
 		var rootChainLog types.Log
+		// decode出来的rootChainLog，不满足特殊节采集数据的需要，因此还要去PlatON上获取完整的log
 		if err := rootChainLog.DecodeRLP(rlp.NewStream(bytes.NewReader(event), 0)); err != nil {
 			return nil, err
 		}
