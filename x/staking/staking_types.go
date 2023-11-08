@@ -892,7 +892,8 @@ type ValidatorEx struct {
 }
 
 func (vex *ValidatorEx) String() string {
-	return fmt.Sprintf(`{"NodeId": "%s","BlsPubKey": "%s","StakingAddress": "%s","Shares": "%s","ValidatorTerm": %d}`,
+	return fmt.Sprintf(`{"ValidatorId": "%s", "NodeId": "%s","BlsPubKey": "%s","StakingAddress": "%s","Shares": "%s","ValidatorTerm": %d}`,
+		vex.ValidatorId.String(),
 		vex.NodeId.String(),
 		fmt.Sprintf("%x", vex.BlsPubKey.Bytes()),
 		fmt.Sprintf("%x", vex.StakingAddress.Bytes()),
