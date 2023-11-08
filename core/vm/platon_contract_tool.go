@@ -18,6 +18,7 @@ package vm
 
 import (
 	"reflect"
+	"runtime"
 	"strconv"
 
 	"github.com/PlatONnetwork/PlatON-Go/common"
@@ -29,6 +30,7 @@ import (
 func execPlatonContract(input []byte, command map[uint16]interface{}) (ret []byte, err error) {
 	// verify the tx data by contracts method
 	_, fn, params, err := plugin.VerifyTxData(input, command)
+	log.Debug("to execute Platon contract", "funcName", runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name(), "params", params)
 	if nil != err {
 		log.Error("Failed to verify contract tx before exec", "err", err)
 		return xcom.NewResult(common.InvalidParameter, nil), err
