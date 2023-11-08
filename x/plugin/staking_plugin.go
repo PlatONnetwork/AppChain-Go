@@ -3995,6 +3995,7 @@ func (sk *StakingPlugin) GetNodeVersion(blockHash common.Hash) (staking.Validato
 
 		canVersion := &staking.ValidatorEx{
 			NodeId:         can.NodeId,
+			ValidatorId:    can.ValidatorId,
 			ProgramVersion: can.ProgramVersion,
 		}
 		queue = append(queue, canVersion)
