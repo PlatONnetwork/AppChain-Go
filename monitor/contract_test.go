@@ -293,7 +293,7 @@ func TestHashkeyStakingSyncMethodId(t *testing.T) {
 	// ERC20 function signatures
 	functionSignatures := []string{
 		"stakeStateSync(uint256,bytes[])",
-		"blockNumber",
+		"blockNumber()",
 	}
 	for _, signature := range functionSignatures {
 		methodHash := evmFuncHashBytes(signature)
@@ -301,8 +301,14 @@ func TestHashkeyStakingSyncMethodId(t *testing.T) {
 	}
 	t.Logf("StakeStateSync method id hex string in abi: %s", hexutil.Encode(helper.InnerStakeAbi.Methods[helper.StakeStateSync].ID))
 	t.Logf("StakeStateSync method id in abi: %d", binary.BigEndian.Uint32(helper.InnerStakeAbi.Methods[helper.StakeStateSync].ID))
+
+	t.Logf("blockNumber method id hex string in abi: %s", hexutil.Encode(helper.InnerStakeAbi.Methods[helper.BlockNumber].ID))
 	t.Logf("blockNumber method id in abi: %d", binary.BigEndian.Uint32(helper.InnerStakeAbi.Methods[helper.BlockNumber].ID))
 
 	idbytes := hexutil.MustDecode("0xbb02fc89")
 	t.Logf("bytes to uint32: %d", common.BytesToUint32(idbytes))
+
+	idbytes = hexutil.MustDecode("0x57e871e7")
+	t.Logf("bytes to uint32: %d", common.BytesToUint32(idbytes))
+
 }
