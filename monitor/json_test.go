@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
 	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
 	"github.com/PlatONnetwork/PlatON-Go/x/staking"
 	"math/big"
@@ -87,7 +88,7 @@ func TestValidatorEx(t *testing.T) {
 }
 
 func TestRootChainTx_Staking(t *testing.T) {
-	staking := Staking{common.Address{0x01}, uint64(1), discover.NodeID{0x02}, uint64(1443324423)}
+	staking := Staking{common.Address{0x01}, (*hexutil.Big)(big.NewInt(1)), discover.NodeID{0x02}, (*hexutil.Big)(big.NewInt(1443324423))}
 	rootChainTxParam := RootChainTxParam{uint64(1000), common.Hash{0x1}, 1}
 	rootChainTx := &RootChainTx{Stake, common.Hash{0x02}, staking, rootChainTxParam}
 

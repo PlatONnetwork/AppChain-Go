@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"github.com/PlatONnetwork/PlatON-Go/common"
+	"github.com/PlatONnetwork/PlatON-Go/common/hexutil"
 	"github.com/PlatONnetwork/PlatON-Go/core/rawdb"
 	"github.com/PlatONnetwork/PlatON-Go/core/state"
 	"github.com/PlatONnetwork/PlatON-Go/p2p/discover"
@@ -19,9 +20,9 @@ func TestTestBigNumber(t *testing.T) {
 
 	testBigNumber := Staking{
 		common.Address{0x1},
-		validatorId.Uint64(),
+		(*hexutil.Big)(validatorId),
 		discover.NodeID{0x02},
-		uint64(5445),
+		(*hexutil.Big)(big.NewInt(5445)),
 	}
 	json := ToJsonString(testBigNumber)
 
@@ -34,7 +35,7 @@ func TestTestBigNumber(t *testing.T) {
 	testBigNumber.ValidatorId = testId
 
 	t.Logf("testId==testBigNumber.ValidatorId:%t", testBigNumber.ValidatorId == testId)
-	t.Logf("testId==validatorId.Uint64:%t", validatorId.Uint64() == testId)
+	t.Logf("testId==validatorId.Uint64:%t", (*hexutil.Big)(validatorId) == testId)
 	t.Log(validatorId.Uint64())
 	t.Log(testBig.ValidatorId)
 }
