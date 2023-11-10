@@ -84,8 +84,8 @@ var (
 	// 15W LAX
 	GeneStakingAmount, _ = new(big.Int).SetString("150000000000000000000000", 10)
 
-	// 10W
-	StakeLowerLimit, _ = new(big.Int).SetString("100000000000000000000000", 10)
+	// 100
+	StakeLowerLimit, _ = new(big.Int).SetString("100000000000000000000", 10)
 	// 1000W LAX
 	StakeUpperLimit, _ = new(big.Int).SetString("10000000000000000000000000", 10)
 
