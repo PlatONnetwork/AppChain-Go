@@ -74,7 +74,7 @@ func genesisStakingData(prevHash common.Hash, snapdb snapshotdb.BaseDB, g *Genes
 		}
 
 		base := &staking.CandidateBase{
-			ValidatorId:     new(big.Int).SetBytes(node.Node.ID.Bytes()),
+			ValidatorId:     new(big.Int).SetInt64(int64(index + 1)),
 			NodeId:          node.Node.ID,
 			BlsPubKey:       keyHex,
 			StakingAddress:  node.Account,
