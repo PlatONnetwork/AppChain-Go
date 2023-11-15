@@ -1604,22 +1604,6 @@ func (sk *StakingPlugin) GetVerifierCandidateInfo(blockHash common.Hash, blockNu
 	return queue, nil
 }
 
-func (sk *StakingPlugin) GetVerifierListFilterInitNode(blockHash common.Hash, blockNumber uint64, isCommit bool) (staking.ValidatorExQueue, error) {
-	nodeList, err := sk.GetVerifierList(blockHash, blockNumber, isCommit)
-	if err != nil {
-		return nil, err
-	}
-	returnList := make(staking.ValidatorExQueue, 0, len(nodeList))
-	if nodeList.IsNotEmpty() {
-		for i := 0; i < len(nodeList); i++ {
-			if nodeList[i].StakingBlockNum > 0 {
-				returnList = append(returnList, nodeList[i])
-			}
-		}
-	}
-	return returnList, nil
-}
-
 func (sk *StakingPlugin) GetVerifierList(blockHash common.Hash, blockNumber uint64, isCommit bool) (staking.ValidatorExQueue, error) {
 	verifierList, err := sk.getVerifierList(blockHash, blockNumber, isCommit)
 	if nil != err {
