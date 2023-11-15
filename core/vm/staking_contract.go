@@ -167,6 +167,9 @@ func (stkc *StakingContract) handleStaked(vLog *types.Log) ([]byte, error) {
 		StakingBlockNum: blockNumber.Uint64(),
 		StakingTxIndex:  txIndex,
 		ProgramVersion:  originVersion,
+		Description: staking.Description{
+			Details: event.Desc,
+		},
 	}
 
 	amount := new(big.Int).Set(event.Amount)
